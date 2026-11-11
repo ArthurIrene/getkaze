@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – Menu (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.fj-fade{animation:fjfade .35s ease-out both}
+@keyframes fjfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.fj-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; position: relative">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px 0 16px">
+    <a href="T1-Home.dc.html" style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; text-decoration: none">Kinigi Hills</a>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN</span>
+      <div style="display: flex; height: 32px; border: 1px solid {{ t.ink }}; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 600">
+        <button type="button" onClick="{{ setRwf }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ rwfBg }}; color: {{ rwfFg }}">RWF</button>
+        <button type="button" onClick="{{ setUsd }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ usdBg }}; color: {{ usdFg }}">USD</button>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ inMenu }}" hint-placeholder-val="{{ true }}">
+  <sc-if value="{{ isQr }}" hint-placeholder-val="{{ false }}">
+    <div style="margin: 4px 16px 0; height: 44px; border-radius: 999px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 14px">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 4 h6 v6 h-6 Z M14 4 h6 v6 h-6 Z M4 14 h6 v6 h-6 Z M14 14 h2 M18 14 h2 v2 M14 18 h2 v2 M18 20 h2" fill="none" stroke="{{ t.onAccent }}" stroke-width="1.6" stroke-linecap="round"></path></svg>
+      Ordering for {{ spotName }}
+    </div>
+  </sc-if>
+
+  <!-- Title with a drawn plate -->
+  <div style="position: relative; padding: 18px 16px 0; height: 176px; box-sizing: border-box">
+    <span style="font-family: Caveat, cursive; font-size: 26px; color: {{ t.accent }}; line-height: 1">open to all</span>
+    <h1 style="margin: 2px 0 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 46px; line-height: 1; letter-spacing: -0.02em">At our table</h1>
+    <div style="display: flex; gap: 8px; margin-top: 14px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; border: 1px dashed {{ t.ink }}; border-radius: 999px; padding: 5px 10px">7:00 – 21:00</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; border: 1px dashed {{ t.ink }}; border-radius: 999px; padding: 5px 10px">NON-GUESTS WELCOME</span>
+    </div>
+    <svg viewBox="0 0 120 120" width="112" height="112" aria-hidden="true" style="position: absolute; right: -18px; top: 2px">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="{{ t.ink }}" stroke-width="1.4"></circle>
+      <circle cx="60" cy="60" r="36" fill="none" stroke="{{ t.ink }}" stroke-width="1" stroke-dasharray="3 4"></circle>
+      <path d="M44 56 q8 -10 16 -2 q8 -10 16 2 M48 68 q12 6 24 0" fill="none" stroke="{{ t.accent }}" stroke-width="1.8" stroke-linecap="round"></path>
+    </svg>
+  </div>
+
+  <!-- Category tabs -->
+  <div style="display: flex; gap: 8px; overflow-x: auto; padding: 22px 16px 6px; scrollbar-width: none">
+    <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
+      <button type="button" onClick="{{ c.pick }}" style="cursor: pointer; flex: 0 0 auto; height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; background: {{ c.bg }}; color: {{ c.fg }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 14px">{{ c.name }}</button>
+    </sc-for>
+  </div>
+
+  <!-- Pick of the day -->
+  <div class="fj-fade" style="margin: 14px 16px 0; height: 190px; border-radius: 22px; background: {{ pick.bg }}; color: #FBF7F0; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden">
+    <span style="align-self: flex-start; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; border: 1px solid #FBF7F0; border-radius: 999px; padding: 3px 8px">CLAUDINE'S PICK</span>
+    <svg viewBox="0 0 48 48" width="110" height="110" aria-hidden="true" style="position: absolute; right: 14px; top: 34px"><path d="{{ pick.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <div style="display: flex; flex-direction: column; gap: 4px; max-width: 200px">
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 24px; line-height: 1.05">{{ pick.name }}</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 17px">{{ pick.price }}</span>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div style="padding: 10px 16px 0; display: flex; flex-direction: column">
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="4">
+      <div style="border-bottom: 1.5px dashed {{ t.line }}; padding: 14px 0; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; gap: 12px; align-items: center">
+          <button type="button" onClick="{{ it.tap }}" style="cursor: pointer; flex: 1 1 auto; border: 0; background: transparent; color: {{ t.ink }}; padding: 0; display: flex; gap: 12px; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="flex: 0 0 52px; width: 52px; height: 52px; border-radius: 999px; background: {{ it.bg }}; display: flex; align-items: center; justify-content: center">
+              <svg viewBox="0 0 48 48" width="30" height="30" aria-hidden="true"><path d="{{ it.icon }}" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 3px">
+              <span style="font-weight: 600; font-size: 15px">{{ it.name }}</span>
+              <span style="display: flex; gap: 6px; align-items: center">
+                <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 15px">{{ it.price }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: {{ t.muted }}">{{ it.prep }}</span>
+                <sc-if value="{{ it.veg }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: {{ t.accent }}; border: 1px solid {{ t.accent }}; border-radius: 999px; padding: 1px 6px">VEG</span>
+                </sc-if>
+              </span>
+            </span>
+          </button>
+          <sc-if value="{{ it.canAdd }}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{ it.plus }}" aria-label="Add to order" style="cursor: pointer; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font-size: 22px; line-height: 1">+</button>
+          </sc-if>
+          <sc-if value="{{ it.inCart }}" hint-placeholder-val="{{ false }}">
+            <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 4px; border-radius: 999px; background: {{ t.accent }}; color: {{ t.onAccent }}">
+              <button type="button" onClick="{{ it.minus }}" aria-label="Remove one" style="cursor: pointer; width: 36px; height: 36px; border: 0; border-radius: 999px; background: transparent; color: {{ t.onAccent }}; font-size: 20px">−</button>
+              <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 16px; min-width: 12px; text-align: center">{{ it.qty }}</span>
+              <button type="button" onClick="{{ it.plus }}" aria-label="Add one" style="cursor: pointer; width: 36px; height: 36px; border: 0; border-radius: 999px; background: transparent; color: {{ t.onAccent }}; font-size: 20px">+</button>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ it.open }}" hint-placeholder-val="{{ false }}">
+          <span class="fj-fade" style="padding-left: 64px; font-family: Caveat, cursive; font-size: 21px; line-height: 1.2">{{ it.line }}</span>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <span style="padding: 12px 16px 0; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">TAP A DISH FOR DETAILS · ALLERGIES? ASK US</span>
+
+  </sc-if>
+
+  <!-- Checkout: one step at a time -->
+  <sc-if value="{{ inCheckout }}" hint-placeholder-val="{{ false }}">
+    <div style="padding: 8px 16px 0; display: flex; justify-content: space-between; align-items: center">
+      <button type="button" onClick="{{ backStep }}" style="cursor: pointer; border: 0; background: transparent; color: {{ t.ink }}; padding: 8px 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px">← {{ backLabel }}</button>
+      <div style="display: flex; gap: 6px">
+        <sc-for list="{{ dots }}" as="dt" hint-placeholder-count="3">
+          <span style="width: {{ dt.w }}; height: 6px; border-radius: 999px; background: {{ dt.bg }}"></span>
+        </sc-for>
+      </div>
+    </div>
+    <sc-if value="{{ isQr }}" hint-placeholder-val="{{ false }}">
+      <div style="margin: 8px 16px 0; height: 40px; border-radius: 999px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px">{{ spotName }}</div>
+    </sc-if>
+
+    <!-- Step 1: order -->
+    <sc-if value="{{ step1 }}" hint-placeholder-val="{{ true }}">
+      <div class="fj-fade" style="padding: 18px 16px 0; display: flex; flex-direction: column; gap: 14px">
+        <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 40px; line-height: 1; letter-spacing: -0.02em">Your order</h1>
+        <sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1.5px dashed {{ t.line }}">
+            <span style="flex: 0 0 48px; width: 48px; height: 48px; border-radius: 999px; background: {{ l.bg }}; display: flex; align-items: center; justify-content: center">
+              <svg viewBox="0 0 48 48" width="28" height="28" aria-hidden="true"><path d="{{ l.icon }}" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </span>
+            <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 15px">{{ l.name }}</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 14px">{{ l.sum }}</span></span>
+            <div style="display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 2px; border-radius: 999px; border: 1.5px solid {{ t.ink }}">
+              <button type="button" onClick="{{ l.minus }}" aria-label="Remove one" style="cursor: pointer; width: 34px; height: 34px; border: 0; background: transparent; color: {{ t.ink }}; font-size: 18px">−</button>
+              <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 16px; min-width: 12px; text-align: center">{{ l.qty }}</span>
+              <button type="button" onClick="{{ l.plus }}" aria-label="Add one" style="cursor: pointer; width: 34px; height: 34px; border: 0; background: transparent; color: {{ t.ink }}; font-size: 18px">+</button>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px">Total</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 30px">{{ subtotal }}</span></div>
+        <button type="button" onClick="{{ confirmOrder }}" style="cursor: pointer; height: 56px; border: 0; border-radius: 16px; background: {{ t.accent }}; color: {{ t.onAccent }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 16px">Confirm order →</button>
+      </div>
+    </sc-if>
+
+    <!-- Step 2: how -->
+    <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="padding: 18px 16px 0; display: flex; flex-direction: column; gap: 12px">
+        <h1 style="margin: 0 0 6px; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 40px; line-height: 1; letter-spacing: -0.02em">How?</h1>
+        <sc-for list="{{ modes }}" as="md" hint-placeholder-count="3">
+          <button type="button" onClick="{{ md.pick }}" style="cursor: pointer; height: 112px; border: 0; border-radius: 22px; background: {{ md.bg }}; color: #FBF7F0; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-family: Inter, system-ui, sans-serif">
+            <span style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px">
+              <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">{{ md.name }}</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; opacity: 0.9">{{ md.sub }}</span>
+            </span>
+            <svg viewBox="0 0 24 24" width="52" height="52" aria-hidden="true"><path d="{{ md.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- Step 3: when -->
+    <sc-if value="{{ step3 }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="padding: 18px 16px 0; display: flex; flex-direction: column; gap: 14px">
+        <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 40px; line-height: 1; letter-spacing: -0.02em">{{ step3Title }}</h1>
+        <sc-if value="{{ isTable }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; justify-content: center; align-items: center; gap: 22px; padding: 6px 0">
+            <button type="button" onClick="{{ pplMinus }}" aria-label="Fewer people" style="cursor: pointer; width: 52px; height: 52px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font-size: 24px">−</button>
+            <span style="display: flex; flex-direction: column; align-items: center"><span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 44px; line-height: 1">{{ ppl }}</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}">PEOPLE</span></span>
+            <button type="button" onClick="{{ pplPlus }}" aria-label="More people" style="cursor: pointer; width: 52px; height: 52px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font-size: 24px">+</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isDelivery }}" hint-placeholder-val="{{ false }}">
+          <div style="height: 52px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; gap: 10px; padding: 0 14px; font-size: 15px">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 21 s-7 -6.5 -7 -11.5 a7 7 0 0 1 14 0 c0 5 -7 11.5 -7 11.5 Z M12 12.5 a2.5 2.5 0 1 0 0 -5 a2.5 2.5 0 1 0 0 5" fill="none" stroke="{{ t.ink }}" stroke-width="1.6"></path></svg>
+            Near the market, blue gate
+          </div>
+        </sc-if>
+        <sc-if value="{{ needsTime }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 2px 16px; scrollbar-width: none">
+            <sc-for list="{{ days }}" as="dy" hint-placeholder-count="7">
+              <button type="button" onClick="{{ dy.pick }}" style="cursor: pointer; flex: 0 0 64px; height: 68px; border-radius: 16px; border: 1.5px solid {{ dy.border }}; background: {{ dy.bg }}; color: {{ dy.fg }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: Inter, system-ui, sans-serif">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em">{{ dy.top }}</span>
+                <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 22px; line-height: 1">{{ dy.num }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{ parts }}" as="pt" hint-placeholder-count="3">
+              <button type="button" onClick="{{ pt.pick }}" style="cursor: {{ pt.cursor }}; height: 40px; border-radius: 999px; border: 1.5px solid {{ pt.border }}; background: {{ pt.bg }}; color: {{ pt.fg }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 13px">{{ pt.name }}</button>
+            </sc-for>
+          </div>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}">{{ readyLine }}</span>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{ slots }}" as="sl" hint-placeholder-count="8">
+              <button type="button" onClick="{{ sl.pick }}" style="cursor: {{ sl.cursor }}; height: 48px; border-radius: 12px; border: 1.5px solid {{ sl.border }}; background: {{ sl.bg }}; color: {{ sl.fg }}; text-decoration: {{ sl.td }}; font-family: 'IBM Plex Mono', monospace; font-size: 14px">{{ sl.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="height: 52px; border-radius: 14px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 15px">{{ nameValue }}</div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding-top: 4px"><span style="font-size: 14px">{{ totalLabel }}</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">{{ total }}</span></div>
+        <button type="button" onClick="{{ send }}" style="cursor: pointer; height: 56px; border: 0; border-radius: 16px; background: {{ t.accent }}; color: {{ t.onAccent }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 16px">{{ sendLabel }}</button>
+        <span style="font-size: 12px; color: {{ t.muted }}; text-align: center">{{ payHint }}</span>
+      </div>
+    </sc-if>
+
+    <!-- Step 4: sent -->
+    <sc-if value="{{ step4 }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="padding: 40px 16px 0; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+        <div style="width: 132px; height: 132px; border-radius: 999px; border: 2.5px solid {{ t.accent }}; color: {{ t.accent }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transform: rotate(-8deg)">
+          <span style="font-size: 34px; line-height: 1">✓</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em">{{ stampText }}</span>
+        </div>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 30px; line-height: 1.05">{{ doneTitle }}</span>
+        <span style="font-family: Caveat, cursive; font-size: 24px; line-height: 1.2; max-width: 290px">{{ doneLine }}</span>
+        <button type="button" onClick="{{ restart }}" style="cursor: pointer; margin-top: 10px; height: 48px; padding: 0 20px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 14px">Back to the menu</button>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <div style="margin-top: 40px; padding: 24px 16px 96px; background: #2B2620; color: #F4EEE3; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">Kinigi Hills</span>
+    <span style="font-family: Caveat, cursive; font-size: 22px; color: #E9C9A0">murakaza neza</span>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; opacity: 0.8; margin-top: 8px"><span>© Kinigi Hills Lodge</span><a href="#" style="text-decoration: underline">Privacy</a></div>
+  </div>
+
+  <div style="position: sticky; bottom: 0; margin-top: -76px; padding: 12px 16px 14px; background: {{ t.bar }}; border-top: 1px solid {{ t.line }}; display: flex; gap: 10px">
+    <button type="button" onClick="{{ openCheckout }}" style="cursor: pointer; flex: 1 1 0; height: 50px; border: 0; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 15px">{{ barLabel }}</button>
+    <a href="#" style="flex: 0 0 56px; height: 50px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; text-decoration: none" aria-label="Call the restaurant">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2" fill="none" stroke="{{ t.ink }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"ordering":{"editor":"boolean","default":true},"entry":{"editor":"enum","options":["Website (no QR)","QR at Table 4","QR in Room 3"],"default":"Website (no QR)"},"$preview":{"width":360,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cur: 'RWF', cat: 1, open: -1, cart: { '1-1': 2, '3-0': 2 }, slot: -1, mode: 0, ppl: 2, view: 'menu', step: 1, day: 0, part: -1 }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', line: '#433C33', accent: '#8FAF7E', onAccent: '#1E1B17', bar: 'rgba(30,27,23,0.96)', inv: '#F1EADD', invFg: '#1E1B17', invHand: '#3F5B3A', invLine: 'rgba(30,27,23,0.25)' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', line: '#D8CCB8', accent: '#3F5B3A', onAccent: '#FFFFFF', bar: 'rgba(244,238,227,0.96)', inv: '#2B2620', invFg: '#F4EEE3', invHand: '#E9C9A0', invLine: 'rgba(244,238,227,0.3)' };
+    const s = this.state, usd = s.cur === 'USD';
+    const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0 });
+    const money = (rw, us) => usd ? 'USD ' + fmt(us) : 'RWF ' + fmt(rw);
+    const ic = {
+      egg: 'M24 40 c-8 0 -12 -6 -12 -13 c0 -9 6 -19 12 -19 c6 0 12 10 12 19 c0 7 -4 13 -12 13 Z M24 26 a4 4 0 1 0 0.1 0',
+      plate: 'M6 24 h36 a18 14 0 0 1 -36 0 Z M14 18 q4 -6 10 -2 q6 -6 10 2',
+      fish: 'M6 24 q12 -14 28 0 q-16 14 -28 0 Z M34 24 l8 -7 v14 Z M14 22 v0.1',
+      skewer: 'M6 42 L42 6 M14 34 l6 -6 M20 28 l6 -6 M26 22 l6 -6 M12 28 l8 8 M18 22 l8 8 M24 16 l8 8',
+      pot: 'M8 18 h32 v16 a6 6 0 0 1 -6 6 h-20 a6 6 0 0 1 -6 -6 Z M4 18 h40 M18 12 q-2 -4 0 -7 M28 12 q-2 -4 0 -7',
+      leaf: 'M24 42 V22 M24 22 C14 22 10 14 10 6 C20 6 24 14 24 22 C24 14 28 6 38 6 C38 14 34 22 24 22 Z',
+      cup: 'M10 18 h22 v12 a9 9 0 0 1 -9 9 h-4 a9 9 0 0 1 -9 -9 Z M32 21 h3 a4 4 0 0 1 0 8 h-3 M18 12 q-2 -4 0 -7 M24 12 q-2 -4 0 -7',
+      glass: 'M14 6 h20 l-3 34 h-14 Z M15 18 h18',
+      fruit: 'M24 42 a14 14 0 1 1 0.1 0 M24 14 q2 -6 8 -8'
+    };
+    const C = [
+      { name: 'Breakfast', items: [
+        ['Trekker\u2019s breakfast', 10000, 7.5, false, '#B5643C', 'egg', 'Eggs, sausages, toast, fruit and coffee. Ready from 5 a.m.', 15],
+        ['Banana pancakes', 6000, 4.5, true, '#8A6A2E', 'plate', 'Local bananas, honey from the hills.', 10],
+        ['Fresh fruit plate', 5000, 3.5, true, '#3F5B3A', 'fruit', 'Pineapple, passion fruit, tree tomato, mango in season.', 5],
+        ['Spanish omelette', 6000, 4.5, true, '#5B4636', 'egg', 'Potatoes, onions, peppers, toast on the side.', 10]
+      ] },
+      { name: 'Mains', items: [
+        ['Tilapia & chips', 14000, 10, false, '#2B3A4A', 'fish', 'Whole grilled fish, lemon, chips or rice.', 35],
+        ['Goat brochettes', 7000, 5, false, '#B5643C', 'skewer', 'Two skewers, grilled over charcoal, with chips.', 25],
+        ['Beef stew & matoke', 9000, 6.5, false, '#5B4636', 'pot', 'Slow-cooked beef with green bananas.', 15],
+        ['Vegetable curry', 8000, 6, true, '#3F5B3A', 'pot', 'Seasonal vegetables, coconut, rice.', 15]
+      ] },
+      { name: 'Rwandan', items: [
+        ['Isombe & rice', 6000, 4.5, true, '#3F5B3A', 'leaf', 'Cassava leaves cooked with peanut sauce.', 15],
+        ['Ibihaza', 5000, 3.5, true, '#8A6A2E', 'pot', 'Pumpkin and beans, a home-style favourite.', 15],
+        ['Agatogo', 7000, 5, false, '#B5643C', 'pot', 'Plantain stew with vegetables and beef.', 20],
+        ['Sunday buffet', 12000, 8.5, false, '#5B4636', 'plate', 'Every Sunday, 12:00 to 15:00. All you can eat.', 10]
+      ] },
+      { name: 'Drinks', items: [
+        ['Rwandan coffee', 2000, 1.5, true, '#5B4636', 'cup', 'Grown on the hills around Lake Kivu.', 5],
+        ['African tea', 2000, 1.5, true, '#8A6A2E', 'cup', 'Black tea with milk, ginger and spices.', 5],
+        ['Passion fruit juice', 3000, 2, true, '#B5643C', 'glass', 'Fresh, made to order.', 5],
+        ['Local beer', 2500, 2, true, '#2B3A4A', 'glass', 'Cold Rwandan lagers. Ask what\u2019s in the fridge.', 2]
+      ] }
+    ];
+    const cats = C.map((c, i) => ({ name: c.name, bg: s.cat === i ? t.ink : 'transparent', fg: s.cat === i ? t.paper : t.ink, pick: () => this.setState({ cat: i, open: -1 }) }));
+    const cur = C[s.cat].items;
+    const ordering = this.props.ordering !== false;
+    const cart = s.cart;
+    const setQty = (k, n) => { const c = { ...cart }; if (n <= 0) delete c[k]; else c[k] = n; this.setState({ cart: c }); };
+    const SOLD = ['Tilapia & chips'];
+    const items = cur.map((x, i) => {
+      const k = s.cat + '-' + i, q = cart[k] || 0;
+      return { name: x[0], price: money(x[1], x[2]), veg: x[3], bg: x[4], icon: ic[x[5]], line: x[6], prep: x[7] + ' MIN', open: s.open === i,
+        tap: () => this.setState({ open: s.open === i ? -1 : i }),
+        canAdd: ordering && q === 0, inCart: ordering && q > 0, qty: q,
+        plus: () => setQty(k, q + 1), minus: () => setQty(k, q - 1) };
+    });
+    const shown = items.filter(it => SOLD.indexOf(it.name) < 0);
+    let tr = 0, tu = 0, count = 0;
+    const lines = Object.keys(cart).map(k => {
+      const [ci, ii] = k.split('-').map(Number); const x = C[ci].items[ii]; const q = cart[k];
+      tr += x[1] * q; tu += x[2] * q; count += q;
+      return { qty: q, name: x[0], sum: money(x[1] * q, x[2] * q), bg: x[4], icon: ic[x[5]], plus: () => setQty(k, q + 1), minus: () => setQty(k, q - 1) };
+    });
+    let prepMax = 0;
+    Object.keys(cart).forEach(k => { const [ci, ii] = k.split('-').map(Number); prepMax = Math.max(prepMax, C[ci].items[ii][7]); });
+    const entry = this.props.entry || 'Website (no QR)';
+    const isQr = entry.indexOf('QR') === 0, isRoom = entry.indexOf('Room') >= 0;
+    const spotName = isRoom ? 'Room 3' : 'Table 4';
+    const now = 18 * 60 + 50;
+    const mode = isQr ? -1 : s.mode;
+    const M = [
+      { name: 'Pick up', bg: '#3F5B3A', icon: 'M5 8 h14 l-1 12 H6 Z M9 8 V6 a3 3 0 0 1 6 0 V8' },
+      { name: 'Delivery', bg: '#B5643C', icon: 'M3 16 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M16 16 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M8 16 h8 l-2 -6 h-4 M14 10 l2 -4 h3' },
+      { name: 'Eat here', bg: '#5B4636', icon: 'M7 3 v8 a2 2 0 0 0 4 0 V3 M9 11 V21 M16 3 c-2 2 -2 7 0 9 V21' }
+    ];
+    const lead = mode === 1 ? prepMax + 20 : mode === 2 ? Math.max(15, prepMax) : prepMax;
+    const earliest = Math.ceil((now + lead) / 15) * 15;
+    const hm = m => Math.floor(m / 60) + ':' + String(m % 60).padStart(2, '0');
+    const day = s.day || 0;
+    const isToday = day === 0;
+    const PARTS = [['Morning', 7 * 60, 11 * 60 + 30], ['Afternoon', 12 * 60, 16 * 60 + 30], ['Evening', 17 * 60, 20 * 60 + 30]];
+    const minOk = isToday ? earliest : 0;
+    const partOk = PARTS.map(p => p[2] >= minOk);
+    const defPart = partOk.indexOf(true);
+    const part = s.part >= 0 && partOk[s.part] ? s.part : (defPart < 0 ? 2 : defPart);
+    const opts = [];
+    for (let m = PARTS[part][1]; m <= PARTS[part][2]; m += 30) opts.push(m);
+    const firstOk = opts.findIndex(m => m >= minOk);
+    const chosen = s.slot >= 0 && opts[s.slot] >= minOk ? s.slot : firstOk;
+    const slots = opts.map((m, i) => {
+      const ok = m >= minOk, on = i === chosen;
+      return { label: hm(m), cursor: ok ? 'pointer' : 'not-allowed', td: ok ? 'none' : 'line-through',
+        border: on ? t.accent : t.line, bg: on ? t.accent : 'transparent', fg: on ? t.onAccent : (ok ? t.ink : t.line),
+        pick: () => { if (ok) this.setState({ slot: i }); } };
+    });
+    const DN = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const days = [0, 1, 2, 3, 4, 5, 6].map(i => {
+      const d = 10 + i, dow = (2 + i) % 7, on = i === day;
+      return { top: i === 0 ? 'TODAY' : i === 1 ? 'TMRW' : DN[dow], num: String(d), border: on ? t.accent : t.ink, bg: on ? t.accent : 'transparent', fg: on ? t.onAccent : t.ink,
+        pick: () => this.setState({ day: i, part: -1, slot: -1 }) };
+    });
+    const parts = PARTS.map((p, i) => ({ name: p[0], cursor: partOk[i] ? 'pointer' : 'not-allowed', border: i === part ? t.ink : t.line, bg: i === part ? t.ink : 'transparent', fg: i === part ? t.paper : (partOk[i] ? t.ink : t.line),
+      pick: () => { if (partOk[i]) this.setState({ part: i, slot: -1 }); } }));
+    const dayWord = isToday ? 'today' : day === 1 ? 'tomorrow' : DN[(2 + day) % 7].charAt(0) + DN[(2 + day) % 7].slice(1).toLowerCase() + ' ' + (10 + day) + ' Nov';
+    const feeR = 2000, feeU = 1.5;
+    const subs = ['READY IN ~' + prepMax + ' MIN', 'MUSANZE TOWN · +' + money(feeR, feeU), 'WE HOLD YOUR TABLE'];
+    const modes = M.map((m, i) => ({ ...m, sub: subs[i], pick: () => this.setState({ mode: i, slot: -1, part: -1, step: 3 }) }));
+    const chosenTime = (chosen >= 0 ? hm(opts[chosen]) : '') + ' ' + dayWord;
+    const step = s.view === 'checkout' ? s.step : 0;
+    const flow = isQr ? [1, 3] : [1, 2, 3];
+    const dots = flow.map(f => ({ w: f === step ? '20px' : '6px', bg: f <= step ? t.accent : t.line }));
+    const payHint = isQr ? (isRoom ? 'We bring it to Room 3. Pay at reception: cash, MoMo or Airtel.' : 'The kitchen replies on WhatsApp. Pay when served: cash, MoMo or Airtel.')
+      : ['The kitchen confirms on WhatsApp. Pay on pickup: cash, MoMo or Airtel.', 'We confirm on WhatsApp. Pay the rider: cash or MoMo.', 'We confirm your table on WhatsApp. Pay at the table.'][mode];
+    const p = cur.find(x => SOLD.indexOf(x[0]) < 0) || cur[0];
+    return {
+      t, cats, items: shown, lines,
+      showOrder: ordering && (count > 0 || !isQr), total: count ? (mode === 1 ? money(tr + feeR, tu + feeU) : money(tr, tu)) : '—',
+      isQr, isWeb: !isQr, spotName, slots, prepMax, payHint, modes, days, parts,
+      isDelivery: mode === 1, isTable: mode === 2,
+      hasItems: count > 0, noItems: count === 0,
+      feeLabel: money(feeR, feeU),
+      ppl: s.ppl, pplMinus: () => this.setState({ ppl: Math.max(1, s.ppl - 1) }), pplPlus: () => this.setState({ ppl: Math.min(20, s.ppl + 1) }),
+      inMenu: s.view === 'menu', inCheckout: s.view === 'checkout', dots,
+      step1: step === 1, step2: step === 2, step3: step === 3, step4: step === 4,
+      subtotal: money(tr, tu), needsTime: !isQr,
+      backLabel: step === 1 || step === 4 ? 'MENU' : 'BACK',
+      backStep: () => { if (step === 1 || step === 4) this.setState({ view: 'menu' }); else if (step === 2) this.setState({ step: 1 }); else this.setState({ step: isQr ? 1 : (count ? 2 : 1), view: count || isQr ? 'checkout' : 'menu' }); },
+      openCheckout: () => { if (count > 0) this.setState({ view: 'checkout', step: 1 }); else if (!isQr) this.setState({ view: 'checkout', step: 3, mode: 2, slot: -1 }); },
+      confirmOrder: () => this.setState({ step: isQr ? 3 : 2 }),
+      step3Title: isQr ? 'Almost done' : mode === 0 ? 'Pick-up time' : mode === 1 ? 'Deliver to' : (count ? 'Your table' : 'Reserve a table'),
+      totalLabel: mode === 1 ? 'Total with delivery' : 'Total',
+      send: () => this.setState({ step: 4 }),
+      stampText: isQr ? 'SENT' : mode === 2 && !count ? 'REQUESTED' : 'ORDER SENT',
+      doneTitle: 'Thank you, Anna!',
+      doneLine: isQr ? 'Your food is on its way to ' + spotName + '.' : mode === 0 ? 'Ready at ' + chosenTime + '. We confirm on WhatsApp.' : mode === 1 ? 'At your door around ' + chosenTime + '. We confirm on WhatsApp.' : 'Table for ' + s.ppl + ' at ' + chosenTime + '. We confirm on WhatsApp.',
+      restart: () => this.setState({ view: 'menu', step: 1, cart: { '1-1': 2, '3-0': 2 }, slot: -1 }),
+      timeLabel: ['Pick-up time', 'Delivery time', 'Arrival time'][Math.max(0, mode)],
+      readyLine: isToday ? 'TODAY FROM ' + hm(earliest) + ' · KITCHEN NEEDS ~' + lead + ' MIN' : (mode === 2 ? 'YOUR FOOD IS READY WHEN YOU ARRIVE' : 'COOKED FRESH FOR YOUR TIME'),
+      timeHint: mode === 2 ? 'We hold your table 15 minutes after your time.' : 'Earlier times are greyed out: we need ~' + lead + ' minutes.',
+      nameValue: isQr ? 'Anna' : 'Anna · +49 … 7342',
+      nameLabel: isQr ? 'Your name (optional)' : 'Your name and phone',
+      sendLabel: isQr ? 'Send order to the kitchen' : mode === 0 ? 'Send pick-up order' : mode === 1 ? 'Send delivery order' : (count ? 'Reserve & pre-order' : 'Reserve a table'),
+      barLabel: ordering && count > 0 ? 'View order · ' + count + ' items · ' + money(tr, tu) : (isQr ? 'Add dishes to order' : 'Reserve a table'),
+      pick: { name: p[0], price: money(p[1], p[2]), bg: p[4], icon: ic[p[5]] },
+      rwfBg: usd ? 'transparent' : t.ink, rwfFg: usd ? t.ink : t.paper,
+      usdBg: usd ? t.ink : 'transparent', usdFg: usd ? t.paper : t.ink,
+      setRwf: () => this.setState({ cur: 'RWF' }), setUsd: () => this.setState({ cur: 'USD' })
+    };
+  }
+}
+</script>
+</body>
+</html>

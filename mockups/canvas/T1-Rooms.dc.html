@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – Rooms (phone) v2 minimal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.fj-row{scroll-snap-type:x mandatory;scrollbar-width:none}
+.fj-row::-webkit-scrollbar{display:none}
+.fj-row > *{scroll-snap-align:start}
+.fj-fade{animation:fjfade .35s ease-out both}
+@keyframes fjfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){
+  .fj-rise{animation:fjrise linear both;animation-timeline:view();animation-range:entry 0% entry 50%}
+  @keyframes fjrise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+}
+@media (prefers-reduced-motion: reduce){.fj-rise,.fj-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; position: relative">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px 0 16px">
+    <a href="T1-Home.dc.html" style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; text-decoration: none">Kinigi Hills</a>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN</span>
+      <div style="display: flex; height: 32px; border: 1px solid {{ t.ink }}; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 600">
+        <span onClick="{{ setRwf }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ rwfBg }}; color: {{ rwfFg }}">RWF</span>
+        <span onClick="{{ setUsd }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ usdBg }}; color: {{ usdFg }}">USD</span>
+      </div>
+      <span style="width: 34px; height: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px" aria-label="Menu">
+        <span style="width: 18px; height: 2px; background: {{ t.ink }}"></span><span style="width: 18px; height: 2px; background: {{ t.ink }}"></span>
+      </span>
+    </div>
+  </div>
+
+  <div style="padding: 18px 16px 4px; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 44px; line-height: 1; letter-spacing: -0.02em">Rooms</h1>
+    <span style="font-family: Caveat, cursive; font-size: 28px; color: {{ t.accent }}; line-height: 1">four rooms, one view</span>
+    <div style="display: flex; gap: 8px; margin-top: 4px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; border: 1px dashed {{ t.ink }}; border-radius: 999px; padding: 5px 10px">PER NIGHT</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; border: 1px dashed {{ t.ink }}; border-radius: 999px; padding: 5px 10px">BREAKFAST INCL.</span>
+    </div>
+  </div>
+
+  <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="4">
+    <div class="fj-rise" style="padding: 30px 0 0; display: flex; flex-direction: column; gap: 14px">
+      <div style="position: relative">
+        <div class="fj-row" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px">
+          <sc-for list="{{ room.frames }}" as="f" hint-placeholder-count="3">
+            <div style="flex: 0 0 310px; height: 300px; border-radius: 22px; background: {{ f.bg }}; display: flex; align-items: center; justify-content: center">
+              <svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true"><path d="{{ f.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </div>
+          </sc-for>
+        </div>
+        <span style="position: absolute; left: 28px; top: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; background: #FBF7F0; color: #2B2620; padding: 4px 8px; border-radius: 6px">Nº {{ room.no }}</span>
+        <div style="position: absolute; left: 0; right: 0; bottom: 12px; display: flex; justify-content: center; gap: 6px">
+          <span style="width: 18px; height: 6px; border-radius: 999px; background: #FBF7F0"></span>
+          <span style="width: 6px; height: 6px; border-radius: 999px; background: rgba(251,247,240,0.55)"></span>
+          <span style="width: 6px; height: 6px; border-radius: 999px; background: rgba(251,247,240,0.55)"></span>
+        </div>
+      </div>
+      <div style="padding: 0 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+        <h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px; line-height: 1.05; letter-spacing: -0.01em">{{ room.name }}</h2>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; white-space: nowrap; padding-top: 3px">{{ room.price }}</span>
+      </div>
+      <div style="padding: 0 16px; display: flex; gap: 18px">
+        <sc-for list="{{ room.amen }}" as="a" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="{{ a.icon }}" fill="none" stroke="{{ t.ink }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; color: {{ t.muted }}">{{ a.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ room.open }}" hint-placeholder-val="{{ false }}">
+        <p class="fj-fade" style="margin: 0 16px; font-family: Caveat, cursive; font-size: 22px; line-height: 1.25">{{ room.line }}</p>
+      </sc-if>
+      <div style="padding: 0 16px; display: flex; gap: 10px">
+        <span onClick="{{ room.toggle }}" style="cursor: pointer; flex: 0 0 auto; height: 48px; padding: 0 16px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; font-weight: 600; font-size: 14px">{{ room.moreLabel }}</span>
+        <a href="T1-Booking.dc.html" style="flex: 1 1 0; height: 48px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; text-decoration: none">Check dates</a>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="margin: 40px 16px 0">
+    <div onClick="{{ toggleInfo }}" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-top: 1.5px dashed {{ t.line }}; border-bottom: 1.5px dashed {{ t.line }}">
+      <span style="font-weight: 600; font-size: 15px">Check-in, children &amp; payment</span><span style="font-size: 20px">{{ infoSign }}</span>
+    </div>
+    <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; padding-top: 12px">
+        <span>Check-in from 14:00 (early for trekkers on request) · check-out by 10:00</span>
+        <span>Children under 5 stay free</span>
+        <span>Cash (RWF, USD), MTN MoMo, Airtel Money</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="margin-top: 40px; padding: 24px 16px 96px; background: #2B2620; color: #F4EEE3; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">Kinigi Hills</span>
+    <span style="font-family: Caveat, cursive; font-size: 22px; color: #E9C9A0">murakaza neza</span>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; opacity: 0.8; margin-top: 8px"><span>© Kinigi Hills Lodge</span><a href="#" style="text-decoration: underline">Privacy</a></div>
+  </div>
+
+  <div style="position: sticky; bottom: 0; margin-top: -76px; padding: 12px 16px 14px; background: {{ t.bar }}; border-top: 1px solid {{ t.line }}; display: flex; gap: 10px">
+    <a href="T1-Booking.dc.html" style="flex: 1 1 0; height: 50px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; text-decoration: none">Check availability</a>
+    <a href="#" style="flex: 0 0 56px; height: 50px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; text-decoration: none" aria-label="Chat on WhatsApp">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z" fill="none" stroke="{{ t.ink }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":3150}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cur: 'RWF', open: -1, info: false }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', line: '#433C33', accent: '#8FAF7E', onAccent: '#1E1B17', bar: 'rgba(30,27,23,0.96)' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', line: '#D8CCB8', accent: '#3F5B3A', onAccent: '#FFFFFF', bar: 'rgba(244,238,227,0.96)' };
+    const s = this.state, usd = s.cur === 'USD';
+    const I = {
+      bed: 'M3 18 V8 M3 14 H21 V18 M21 14 V12 a3 3 0 0 0 -3 -3 H11 V14 M5 11 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0',
+      shower: 'M8 4 H16 V7 M12 7 V8 M9 11 v2 M12 11 v3 M15 11 v2 M10 16 v2 M14 16 v2',
+      view: 'M4 4 H20 V20 H4 Z M4 12 H20 M6 18 L10 13 L13 16 L16 12 L19 18',
+      wifi: 'M3 9 a13 13 0 0 1 18 0 M6 12.5 a8.5 8.5 0 0 1 12 0 M9 16 a4 4 0 0 1 6 0 M12 19.5 v0.1',
+      fire: 'M12 21 C6 21 6 14 9.5 11 C9.5 14 12 14 12 11.5 C12 8 14.5 6 14.5 3.5 C18 8 19 11 17 15.5 C16 19 14.5 21 12 21 Z',
+      people: 'M9 11 a3 3 0 1 0 0 -6 a3 3 0 1 0 0 6 M3 20 a6 6 0 0 1 12 0 M16 11 a2.5 2.5 0 1 0 0 -5 M15 14 a5 5 0 0 1 6 6',
+      desk: 'M3 9 H21 M5 9 V19 M19 9 V19 M14 9 V14 H19'
+    };
+    const bed = 'M8 44 V24 M8 36 H56 V44 M56 36 V30 a6 6 0 0 0 -6 -6 H26 V36 M12 30 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0';
+    const view = 'M12 12 H52 V52 H12 Z M12 32 H52 M16 48 L26 36 L32 42 L40 30 L48 48';
+    const shower = 'M20 14 H40 V20 M30 20 V22 M22 30 v4 M30 30 v6 M38 30 v4 M26 40 v4 M34 40 v4 M14 52 H50';
+    const fire = 'M32 52 C18 52 18 36 26 28 C26 36 32 36 32 30 C32 22 38 18 38 12 C46 22 48 30 44 40 C42 48 38 52 32 52 Z M16 56 h32';
+    const mk = (a, b, c, i3) => [{ bg: a, icon: bed }, { bg: b, icon: view }, { bg: c, icon: i3 }];
+    const R = [
+      { no: '1', name: 'Garden Single', line: 'Quiet, facing the garden. Made for solo trekkers who want an early night.', amen: [['bed', '1 BED'], ['people', '1'], ['shower', 'SHOWER'], ['wifi', 'WI-FI']], rwf: '45,000', usd: '35', frames: mk('#5E7048', '#8E9C70', '#5B4636', shower) },
+      { no: '2', name: 'Garden Double', line: 'Queen bed, a writing desk and morning sun on the garden.', amen: [['bed', 'QUEEN'], ['people', '2'], ['desk', 'DESK'], ['wifi', 'WI-FI']], rwf: '60,000', usd: '45', frames: mk('#3F5B3A', '#7C8B5A', '#5B4636', shower) },
+      { no: '3', name: 'Volcano View Double', line: 'Our favourite. A private balcony facing Sabyinyo and Bisoke at sunrise.', amen: [['bed', 'QUEEN'], ['people', '2'], ['view', 'VIEW'], ['wifi', 'WI-FI']], rwf: '80,000', usd: '60', frames: mk('#9C6E4E', '#B79A7E', '#2B3A4A', shower) },
+      { no: '4', name: 'Family Cottage', line: 'Two bedrooms around a fireplace, for families or a small trekking group.', amen: [['bed', '2 ROOMS'], ['people', '4'], ['fire', 'FIRE'], ['wifi', 'WI-FI']], rwf: '100,000', usd: '75', frames: mk('#5B4636', '#9C6E4E', '#B5643C', fire) }
+    ];
+    const rooms = R.map((r, i) => ({
+      ...r,
+      amen: r.amen.map(([k, l]) => ({ icon: I[k], label: l })),
+      price: usd ? 'USD ' + r.usd : 'RWF ' + r.rwf,
+      open: s.open === i,
+      moreLabel: s.open === i ? 'Less −' : 'More +',
+      toggle: () => this.setState({ open: s.open === i ? -1 : i })
+    }));
+    return {
+      t, rooms,
+      infoOpen: s.info, infoSign: s.info ? '−' : '+',
+      toggleInfo: () => this.setState({ info: !s.info }),
+      rwfBg: usd ? 'transparent' : t.ink, rwfFg: usd ? t.ink : t.paper,
+      usdBg: usd ? t.ink : 'transparent', usdFg: usd ? t.paper : t.ink,
+      setRwf: () => this.setState({ cur: 'RWF' }), setUsd: () => this.setState({ cur: 'USD' })
+    };
+  }
+}
+</script>
+</body>
+</html>

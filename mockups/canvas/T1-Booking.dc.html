@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – Check availability (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>body{margin:0}a{color:inherit}</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <!-- Header -->
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px 0 16px">
+    <a href="T1-Home.dc.html" style="display: flex; flex-direction: column; line-height: 1; text-decoration: none">
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 19px">Kinigi Hills</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: {{ t.muted }}; letter-spacing: 0.14em; margin-top: 4px">LODGE · MUSANZE</span>
+    </a>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN ▾</span>
+      <div style="display: flex; height: 32px; border: 1px solid {{ t.ink }}; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 600">
+        <span onClick="{{ setRwf }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ rwfBg }}; color: {{ rwfFg }}">RWF</span>
+        <span onClick="{{ setUsd }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ usdBg }}; color: {{ usdFg }}">USD</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div style="padding: 14px 16px 4px; display: flex; flex-direction: column; gap: 6px">
+    <a href="T1-Rooms.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.08em; text-decoration: none">← ROOMS</a>
+    <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 36px; line-height: 1; letter-spacing: -0.02em">Check availability</h1>
+    <span style="font-family: Caveat, cursive; font-size: 24px; color: {{ t.accent }}; line-height: 1">takes a minute</span>
+  </div>
+
+  <!-- 1 Room -->
+  <div style="padding: 22px 0 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="padding: 0 16px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">1 · ROOM</span>
+    <div style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 4px; scrollbar-width: none">
+      <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+        <div onClick="{{ r.pick }}" style="cursor: pointer; flex: 0 0 150px; border-radius: 16px; background: {{ t.card }}; border: 2px solid {{ r.border }}; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 70px; background: {{ r.bg }}"></div>
+          <div style="padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px">
+            <span style="font-weight: 600; font-size: 14px; line-height: 1.2">{{ r.name }}</span>
+            <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 15px">{{ r.price }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 2 Dates -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">2 · DATES</span>
+    <div style="background: {{ t.card }}; border-radius: 18px; padding: 14px 12px 12px">
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 10px">
+        <span style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid {{ t.line }}; color: {{ t.muted }}">‹</span>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 18px">December 2026</span>
+        <span style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid {{ t.ink }}">›</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}; text-align: center; padding-bottom: 6px">
+        <span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="35">
+          <span onClick="{{ d.pick }}" style="height: 40px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: {{ d.fw }}; border-radius: {{ d.radius }}; background: {{ d.bg }}; color: {{ d.fg }}; text-decoration: {{ d.td }}; cursor: {{ d.cursor }}">{{ d.label }}</span>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 14px; padding: 12px 4px 0; font-size: 11px; color: {{ t.muted }}">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: {{ t.accent }}"></span>your stay</span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: {{ t.booked }}"></span><span style="text-decoration: line-through">booked</span></span>
+        <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; border: 1px solid {{ t.line }}"></span>free</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 Guests -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">3 · GUESTS</span>
+    <div style="background: {{ t.card }}; border-radius: 14px; padding: 4px 14px">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: 56px; border-bottom: 1px solid {{ t.line }}">
+        <div style="display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 15px">Adults</span></div>
+        <div style="display: flex; align-items: center; gap: 14px">
+          <span onClick="{{ adMinus }}" style="width: 36px; height: 36px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer">−</span>
+          <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 18px; width: 14px; text-align: center">{{ adults }}</span>
+          <span onClick="{{ adPlus }}" style="width: 36px; height: 36px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer">+</span>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; height: 56px">
+        <div style="display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 15px">Children</span></div>
+        <div style="display: flex; align-items: center; gap: 14px">
+          <span onClick="{{ chMinus }}" style="width: 36px; height: 36px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer">−</span>
+          <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 18px; width: 14px; text-align: center">{{ children }}</span>
+          <span onClick="{{ chPlus }}" style="width: 36px; height: 36px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer">+</span>
+        </div>
+      </div>
+    </div>
+    <span style="font-size: 12px; color: {{ t.muted }}">{{ capNote }}</span>
+  </div>
+
+  <!-- Summary -->
+  <div style="margin: 24px 16px 0; padding: 18px; border-radius: 18px; background: {{ t.sumBg }}; color: {{ t.sumFg }}; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Caveat, cursive; font-size: 24px; line-height: 1; color: {{ t.sumHand }}">your stay</span>
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 20px">{{ roomName }}</span>
+    <span style="font-size: 14px">{{ dateLine }}</span>
+    <span style="font-size: 14px">{{ guestLine }}</span>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid {{ t.sumLine }}; padding-top: 12px; margin-top: 4px">
+      <span style="font-size: 13px">{{ calcLine }}</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">{{ total }}</span>
+    </div>
+    <span style="font-size: 12px; opacity: 0.8">Breakfast incl. · pay at the lodge</span>
+  </div>
+
+  <!-- 4 Pay -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">4 · HOW YOU'D LIKE TO PAY</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{ pays }}" as="p" hint-placeholder-count="4">
+        <button type="button" onClick="{{ p.pick }}" style="cursor: pointer; height: 76px; border-radius: 16px; background: {{ t.card }}; border: 2px solid {{ p.border }}; color: {{ t.ink }}; padding: 10px 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: Inter, system-ui, sans-serif">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ p.icon }}" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-size: 13px; font-weight: 600; line-height: 1.15">{{ p.name }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <span style="font-size: 12px; line-height: 1.5; color: {{ t.muted }}">{{ payNote }}</span>
+  </div>
+
+  <!-- 4 Details -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">5 · YOUR DETAILS</span>
+    <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Full name</span><div style="height: 48px; border-radius: 12px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 15px">Anna Becker</div></div>
+    <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Phone or WhatsApp</span><div style="height: 48px; border-radius: 12px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: {{ t.muted }}">+49 …</div></div>
+    <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Email (optional)</span><div style="height: 48px; border-radius: 12px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 15px; color: {{ t.muted }}">name@email.com</div></div>
+    <span onClick="{{ toggleNote }}" style="cursor: pointer; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px">{{ noteLabel }}</span>
+    <sc-if value="{{ noteOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="height: 84px; border-radius: 12px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; padding: 12px 14px; box-sizing: border-box; font-size: 15px; color: {{ t.muted }}">Late arrival? Permits? A driver?</div>
+    </sc-if>
+  </div>
+
+  <!-- Send -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}; letter-spacing: 0.1em">6 · SEND YOUR REQUEST</span>
+    <sc-if value="{{ inbox }}" hint-placeholder-val="{{ true }}">
+      <span style="font-size: 13px; font-weight: 600">Send me updates by</span>
+      <div style="display: flex; gap: 8px">
+        <sc-for list="{{ chans }}" as="c" hint-placeholder-count="2">
+          <button type="button" onClick="{{ c.pick }}" style="cursor: pointer; flex: 1 1 0; height: 44px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; background: {{ c.bg }}; color: {{ c.fg }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 14px">{{ c.name }}</button>
+        </sc-for>
+      </div>
+      <a href="T1-Sent.dc.html" style="margin-top: 6px; height: 54px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; text-decoration: none">Send request</a>
+      <span style="font-size: 12px; line-height: 1.5; color: {{ t.muted }}">Nothing to pay now. When the lodge confirms, you get the payment details by {{ chanName }}. <a href="#" style="text-decoration: underline">Privacy</a></span>
+    </sc-if>
+    <sc-if value="{{ launch }}" hint-placeholder-val="{{ false }}">
+      <a href="#" style="height: 54px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; text-decoration: none">Send by WhatsApp</a>
+      <a href="#" style="height: 54px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; text-decoration: none">Send by email</a>
+      <span style="font-size: 12px; line-height: 1.5; color: {{ t.muted }}">Goes straight to the lodge. Nothing to pay now; they reply with payment details. <a href="#" style="text-decoration: underline">Privacy</a></span>
+    </sc-if>
+  </div>
+
+  <!-- Message preview -->
+  <div style="margin: 18px 16px 0">
+    <span onClick="{{ togglePrev }}" style="cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: {{ t.muted }}">{{ prevLabel }}</span>
+    <sc-if value="{{ prevOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top: 10px; padding: 14px; border: 1.5px dashed {{ t.line }}; border-radius: 14px; font-size: 13px; line-height: 1.55; white-space: pre-line">{{ message }}</div>
+    </sc-if>
+  </div>
+
+  <div style="margin-top: 36px; padding: 22px 16px 28px; background: #2B2620; color: #F4EEE3; display: flex; justify-content: space-between; font-size: 12px">
+    <span>© Kinigi Hills Lodge</span><span>Questions? <a href="#" style="text-decoration: underline">Chat on WhatsApp</a></span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"launchMode":{"editor":"boolean","default":false},"$preview":{"width":360,"height":2250}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cur: 'RWF', room: 2, ci: 11, co: 14, adults: 2, children: 0, note: false, prev: false, pay: 1, chan: 0 }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', line: '#433C33', accent: '#8FAF7E', onAccent: '#1E1B17', range: '#34402E', booked: '#3A342D', bookedFg: '#7D7366', sumBg: '#F1EADD', sumFg: '#1E1B17', sumHand: '#3F5B3A', sumLine: 'rgba(30,27,23,0.2)' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', line: '#D8CCB8', accent: '#3F5B3A', onAccent: '#FFFFFF', range: '#DCE3CF', booked: '#E5DDCF', bookedFg: '#9A8F80', sumBg: '#2B2620', sumFg: '#F4EEE3', sumHand: '#E9C9A0', sumLine: 'rgba(244,238,227,0.25)' };
+    const s = this.state, usd = s.cur === 'USD';
+    const R = [
+      { name: 'Garden Single', bg: '#5E7048', cap: 1, rwf: 45000, usd: 35, booked: [3, 4, 12, 13, 22, 23, 24] },
+      { name: 'Garden Double', bg: '#3F5B3A', cap: 2, rwf: 60000, usd: 45, booked: [8, 9, 10, 19, 20, 27, 28] },
+      { name: 'Volcano View Double', bg: '#9C6E4E', cap: 2, rwf: 80000, usd: 60, booked: [5, 6, 7, 18, 19, 20, 24, 25, 26] },
+      { name: 'Family Cottage', bg: '#5B4636', cap: 4, rwf: 100000, usd: 75, booked: [1, 2, 15, 16, 17, 30, 31] }
+    ];
+    const fmt = n => n.toLocaleString('en-US');
+    const money = (rw, us) => usd ? 'USD ' + fmt(us) : 'RWF ' + fmt(rw);
+    const room = R[s.room];
+    const rooms = R.map((r, i) => ({ name: r.name, bg: r.bg, cap: r.cap, price: money(r.rwf, r.usd), border: i === s.room ? t.accent : 'transparent', pick: () => this.setState({ room: i, ci: null, co: null, adults: Math.min(s.adults, r.cap) }) }));
+    const isBooked = d => room.booked.indexOf(d) >= 0;
+    const days = [{ label: '', bg: 'transparent', fg: t.ink, td: 'none', fw: '400', radius: '10px', cursor: 'default', pick: () => {} }];
+    for (let d = 1; d <= 31; d++) {
+      const b = isBooked(d);
+      const end = d === s.ci || d === s.co;
+      const mid = s.ci && s.co && d > s.ci && d < s.co;
+      days.push({
+        label: String(d),
+        bg: end ? t.accent : mid ? t.range : b ? t.booked : 'transparent',
+        fg: end ? t.onAccent : b ? t.bookedFg : t.ink,
+        td: b && !end ? 'line-through' : 'none',
+        fw: end ? '700' : '500',
+        radius: '10px',
+        cursor: b ? 'not-allowed' : 'pointer',
+        pick: () => {
+          if (b) return;
+          if (!s.ci || (s.ci && s.co) || d <= s.ci) { this.setState({ ci: d, co: null }); return; }
+          for (let x = s.ci; x < d; x++) if (isBooked(x)) { this.setState({ ci: d, co: null }); return; }
+          this.setState({ co: d });
+        }
+      });
+    }
+    const wd = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const dayName = d => wd[(d) % 7];
+    const nights = s.ci && s.co ? s.co - s.ci : 0;
+    const dateLine = nights ? dayName(s.ci) + ' ' + s.ci + ' → ' + dayName(s.co) + ' ' + s.co + ' Dec 2026 · ' + nights + (nights === 1 ? ' night' : ' nights') : (s.ci ? 'Check-in ' + dayName(s.ci) + ' ' + s.ci + ' Dec · now tap check-out' : 'Pick your dates above');
+    const guestLine = s.adults + (s.adults === 1 ? ' adult' : ' adults') + (s.children ? ', ' + s.children + (s.children === 1 ? ' child' : ' children') : '');
+    const total = nights ? money(room.rwf * nights, room.usd * nights) : '—';
+    const calcLine = nights ? nights + ' × ' + money(room.rwf, room.usd) : 'Total';
+    const P = [
+      { name: 'At the lodge (cash or card)', icon: 'M3 10 L12 4 L21 10 M5 10 V20 H19 V10 M10 20 V14 H14 V20' },
+      { name: 'MTN MoMo', icon: 'M7 3 H17 V21 H7 Z M11 18 h2 M10 7 h4' },
+      { name: 'Airtel Money', icon: 'M7 3 H17 V21 H7 Z M11 18 h2 M9 9 l3 3 l3 -3' },
+      { name: 'Bank transfer', icon: 'M3 9 L12 4 L21 9 M5 9 V17 M10 9 V17 M14 9 V17 M19 9 V17 M3 20 H21' }
+    ];
+    const pays = P.map((p, i) => ({ ...p, border: s.pay === i ? t.accent : 'transparent', pick: () => this.setState({ pay: i }) }));
+    const payNotes = [
+      'You pay the lodge in person, at check-in.',
+      'A deposit may be asked to hold your room. The lodge sends its MoMo pay code with the confirmation.',
+      'A deposit may be asked to hold your room. The lodge sends its Airtel Money details with the confirmation.',
+      'Good for paying from abroad. The lodge sends its bank details with the confirmation.'
+    ];
+    const C = ['Email', 'WhatsApp'];
+    const chans = C.map((c, i) => ({ name: c, bg: s.chan === i ? t.ink : 'transparent', fg: s.chan === i ? t.paper : t.ink, pick: () => this.setState({ chan: i }) }));
+    const message = 'Hello Kinigi Hills! I would like to request:\n' + room.name + '\n' + (nights ? s.ci + ' to ' + s.co + ' Dec 2026 (' + nights + (nights === 1 ? ' night' : ' nights') + ')' : 'Dates: to confirm') + '\n' + guestLine + '\nQuoted total: ' + total + '\nI would like to pay by: ' + P[s.pay].name + '\nName: Anna Becker';
+    return {
+      t, rooms, days,
+      rwfBg: usd ? 'transparent' : t.ink, rwfFg: usd ? t.ink : t.paper,
+      usdBg: usd ? t.ink : 'transparent', usdFg: usd ? t.paper : t.ink,
+      setRwf: () => this.setState({ cur: 'RWF' }), setUsd: () => this.setState({ cur: 'USD' }),
+      adults: s.adults, children: s.children,
+      adMinus: () => this.setState({ adults: Math.max(1, s.adults - 1) }),
+      adPlus: () => this.setState({ adults: Math.min(room.cap, s.adults + 1) }),
+      chMinus: () => this.setState({ children: Math.max(0, s.children - 1) }),
+      chPlus: () => this.setState({ children: Math.min(3, s.children + 1) }),
+      capNote: 'Sleeps up to ' + room.cap + '.',
+      roomName: room.name, dateLine, guestLine, total, calcLine, message,
+      pays, payNote: payNotes[s.pay], chans, chanName: s.chan === 0 ? 'email' : 'WhatsApp',
+      inbox: !this.props.launchMode, launch: !!this.props.launchMode,
+      noteOpen: s.note, noteLabel: s.note ? '− Remove note' : '+ Add a note', toggleNote: () => this.setState({ note: !s.note }),
+      prevOpen: s.prev, prevLabel: s.prev ? 'HIDE MESSAGE −' : 'PREVIEW THE MESSAGE +', togglePrev: () => this.setState({ prev: !s.prev })
+    };
+  }
+}
+</script>
+</body>
+</html>

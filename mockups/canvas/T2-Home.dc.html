@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T2 Imigongo – Home (phone) · Twin Lakes Bistro demo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&amp;family=DM+Sans:wght@400;500;700&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.im-fade{animation:imfade .3s ease-out both}
+@keyframes imfade{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){
+  .im-slide{animation:imslide linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  @keyframes imslide{from{transform:translateX(0)}to{transform:translateX(-240px)}}
+  .im-slide-r{animation:imslider linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  @keyframes imslider{from{transform:translateX(-240px)}to{transform:translateX(0)}}
+}
+@media (prefers-reduced-motion: reduce){.im-fade,.im-slide,.im-slide-r{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.bg }}; color: {{ t.ink }}; font-family: 'DM Sans', system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden">
+
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <pattern id="imZig" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M0 14 L6 4 L12 14 L18 4 L24 14" fill="none" stroke="{{ t.ink }}" stroke-width="3" stroke-linejoin="miter"></path></pattern>
+      <pattern id="imZigClay" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M0 14 L6 4 L12 14 L18 4 L24 14" fill="none" stroke="{{ t.clay }}" stroke-width="3"></path></pattern>
+      <pattern id="imDia" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 2 L18 10 L10 18 L2 10 Z" fill="none" stroke="{{ t.onInk }}" stroke-width="1.6"></path></pattern>
+      <pattern id="imStep" width="32" height="16" patternUnits="userSpaceOnUse"><path d="M0 16 V12 H4 V8 H8 V4 H12 V0 H20 V4 H24 V8 H28 V12 H32 V16 Z" fill="{{ t.clay }}"></path></pattern>
+      <pattern id="imStepInk" width="32" height="16" patternUnits="userSpaceOnUse"><path d="M0 16 V12 H4 V8 H8 V4 H12 V0 H20 V4 H24 V8 H28 V12 H32 V16 Z" fill="{{ t.ink }}"></path></pattern>
+    </defs>
+  </svg>
+
+  <!-- Header -->
+  <div style="height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 14px">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true"><path d="M14 1 L27 14 L14 27 L1 14 Z" fill="{{ t.ink }}"></path><path d="M14 7 L21 14 L14 21 L7 14 Z" fill="{{ t.clay }}"></path><path d="M14 11 L17 14 L14 17 L11 14 Z" fill="{{ t.bg }}"></path></svg>
+      <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 15px; letter-spacing: 0.02em; line-height: 1">TWIN LAKES<br><span style="font-size: 9px; letter-spacing: 0.32em; font-weight: 700">BISTRO · BAR</span></span>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 2px solid {{ t.ink }}; font-size: 12px; font-weight: 700">EN</span>
+      <div style="display: flex; height: 32px; border: 2px solid {{ t.ink }}; font-size: 12px; font-weight: 700; box-sizing: border-box">
+        <button type="button" onClick="{{ setRwf }}" style="border: 0; padding: 0 8px; font: 700 12px 'DM Sans', sans-serif; cursor: pointer; background: {{ rwfBg }}; color: {{ rwfFg }}">RWF</button>
+        <button type="button" onClick="{{ setUsd }}" style="border: 0; padding: 0 8px; font: 700 12px 'DM Sans', sans-serif; cursor: pointer; background: {{ usdBg }}; color: {{ usdFg }}">USD</button>
+      </div>
+      <span style="width: 32px; height: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px" aria-label="Menu"><span style="width: 18px; height: 3px; background: {{ t.ink }}"></span><span style="width: 18px; height: 3px; background: {{ t.ink }}"></span></span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div style="position: relative; padding: 12px 14px 0; height: 400px; box-sizing: border-box">
+    <div style="display: flex; align-items: center; gap: 6px">
+      <span style="width: 10px; height: 10px; background: {{ t.clay }}; transform: rotate(45deg)"></span>
+      <span style="font-weight: 700; font-size: 12px; letter-spacing: 0.14em">OPEN NOW · UNTIL 23:00</span>
+    </div>
+    <h1 style="margin: 14px 0 0; font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 40px; line-height: 0.95; letter-spacing: -0.02em; position: relative; z-index: 2">EAT.<br>DRINK.<br>STAY<br>LATE.</h1>
+    <div style="position: absolute; right: -80px; top: 130px; width: 220px; height: 220px; transform: rotate(45deg); overflow: hidden; border: 6px solid {{ t.ink }}; box-sizing: border-box">
+      <div style="position: absolute; inset: -60px; transform: rotate(-45deg); background: #3A2A20">
+        <svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
+          <rect width="200" height="200" fill="#3A2A20"></rect>
+          <rect x="30" y="120" width="140" height="6" fill="#1E1712"></rect>
+          <path d="M60 50 V90 M100 44 V90 M140 50 V90" stroke="#F6EEE2" stroke-width="1.5" opacity="0.7"></path>
+          <circle cx="60" cy="94" r="6" fill="#E9B36A"></circle><circle cx="100" cy="94" r="6" fill="#E9B36A"></circle><circle cx="140" cy="94" r="6" fill="#E9B36A"></circle>
+          <circle cx="78" cy="110" r="12" fill="none" stroke="#F6EEE2" stroke-width="2" opacity="0.7"></circle><circle cx="126" cy="110" r="12" fill="none" stroke="#F6EEE2" stroke-width="2" opacity="0.7"></circle>
+          <text x="100" y="150" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="10" fill="#F6EEE2" opacity="0.8">Photo: the bar at night</text>
+        </svg>
+      </div>
+    </div>
+    <div style="position: absolute; left: 14px; bottom: 26px; display: flex; gap: 8px; z-index: 2">
+      <a href="#" style="height: 50px; padding: 0 18px; background: {{ t.ink }}; color: {{ t.bg }}; display: flex; align-items: center; font-weight: 700; font-size: 15px; text-decoration: none">See the menu</a>
+      <a href="#" style="height: 50px; padding: 0 16px; border: 2px solid {{ t.ink }}; display: flex; align-items: center; font-weight: 700; font-size: 15px; text-decoration: none; box-sizing: border-box; background: {{ t.bg }}">Book a table</a>
+    </div>
+  </div>
+
+  <!-- Sliding pattern bands -->
+  <div style="height: 16px; overflow: hidden"><svg class="im-slide" width="720" height="16" aria-hidden="true" style="display: block"><rect width="720" height="16" fill="url(#imZig)"></rect></svg></div>
+  <div style="height: 16px; overflow: hidden; margin-top: 4px"><svg class="im-slide-r" width="720" height="16" aria-hidden="true" style="display: block"><rect width="720" height="16" fill="url(#imStep)"></rect></svg></div>
+
+  <!-- Tile grid -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 18px 12px 0">
+
+    <!-- Tonight -->
+    <button type="button" onClick="{{ tap0 }}" style="grid-column: span 2; cursor: pointer; border: 0; height: {{ h0 }}; background: {{ t.clay }}; color: {{ t.onClay }}; padding: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: 'DM Sans', sans-serif">
+<span aria-hidden="true" style="position: absolute; inset: 0; background: #5A2E1C; z-index: 0">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" style="display: block; opacity: 0.5"><path d="M20 150 L180 60 M50 135 l14 -14 M80 118 l14 -14 M110 101 l14 -14 M40 120 l20 20 M70 103 l20 20 M100 86 l20 20" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></path></svg>
+      </span>
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: {{ t.clayTint }}; z-index: 0"></span>
+      <span style="position: absolute; right: 8px; top: 8px; z-index: 1; font-size: 10px; background: rgba(0,0,0,0.55); color: #FFFFFF; padding: 2px 6px; font-weight: 500; letter-spacing: 0">Photo: brochettes</span>
+      <span style="position: relative; z-index: 1; font-weight: 700; font-size: 12px; letter-spacing: 0.16em">TONIGHT ONLY</span>
+      <span style="position: relative; z-index: 1; font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 24px; line-height: 1.05">BROCHETTE<br>NIGHT</span>
+      <span style="position: relative; z-index: 1; display: flex; justify-content: space-between; width: 100%; align-items: center"><span style="font-weight: 700; font-size: 16px">{{ specialPrice }}</span><span style="font-size: 20px; font-weight: 700">{{ sign0 }}</span></span>
+      <sc-if value="{{ open0 }}" hint-placeholder-val="{{ false }}"><span class="im-fade" style="position: relative; z-index: 1; font-size: 14px; line-height: 1.45">Two goat brochettes with chips and a cold drink, from 18:00 until they run out.</span></sc-if>
+    </button>
+
+    <!-- Menu (tall) -->
+    <a href="#" style="grid-row: span 2; height: 268px; background: {{ t.ink }}; color: #F6EEE2; padding: 14px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none">
+<span aria-hidden="true" style="position: absolute; inset: 0; background: #3D2A1F; z-index: 0">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" style="display: block; opacity: 0.5"><ellipse cx="100" cy="110" rx="70" ry="22" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></ellipse><path d="M50 104 q50 -40 100 0" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></path><path d="M150 40 v40 M160 40 v40 M155 80 v40" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></path></svg>
+      </span>
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: {{ t.inkTint }}; z-index: 0"></span>
+      <span style="position: absolute; right: 8px; bottom: 8px; z-index: 1; font-size: 10px; background: rgba(0,0,0,0.55); color: #FFFFFF; padding: 2px 6px; font-weight: 500; letter-spacing: 0">Photo: dishes</span>
+      <svg width="164" height="60" aria-hidden="true" style="position: absolute; left: 0; bottom: 0; opacity: 0.3; z-index: 0"><rect width="164" height="60" fill="url(#imDia)"></rect></svg>
+      <span style="position: relative; z-index: 1; font-weight: 700; font-size: 12px; letter-spacing: 0.16em">MENU</span>
+      <span style="display: flex; flex-direction: column; gap: 2px; position: relative; z-index: 1">
+        <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 52px; line-height: 0.9">48</span>
+        <span style="font-weight: 700; font-size: 14px; line-height: 1.2">dishes &amp; drinks</span>
+      </span>
+      <span style="font-weight: 700; font-size: 14px; position: relative; z-index: 1">See all →</span>
+    </a>
+
+    <!-- Order ahead -->
+    <button type="button" onClick="{{ tap1 }}" style="cursor: pointer; height: 130px; border: 0; background: #2E2A26; color: #F6EEE2; padding: 12px; box-sizing: border-box; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: 'DM Sans', sans-serif">
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: #4A3A2C; z-index: 0">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" style="display: block; opacity: 0.5"><path d="M60 70 h80 l-8 100 h-64 Z M80 70 v-14 a20 20 0 0 1 40 0 v14" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></path></svg>
+      </span>
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: {{ t.inkTint }}; z-index: 0"></span>
+      <span style="position: absolute; right: 6px; top: 6px; z-index: 1; font-size: 10px; background: rgba(0,0,0,0.55); color: #FFFFFF; padding: 2px 6px; font-weight: 500; letter-spacing: 0">Photo</span>
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="position: relative; z-index: 1"><path d="M5 8 h14 l-1 12 H6 Z M9 8 V6 a3 3 0 0 1 6 0 V8" fill="none" stroke="#F6EEE2" stroke-width="2" stroke-linejoin="round"></path></svg>
+      <span style="position: relative; z-index: 1; font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 15px; line-height: 1.1">ORDER<br>AHEAD</span>
+      <span style="position: relative; z-index: 1; font-size: 12px; font-weight: 700; color: #F6EEE2">{{ sub1 }}</span>
+    </button>
+
+    <!-- Reserve -->
+    <button type="button" onClick="{{ tap2 }}" style="cursor: pointer; height: 130px; border: 0; background: #2E2A26; color: #F6EEE2; padding: 12px; box-sizing: border-box; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: 'DM Sans', sans-serif">
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: #5B4636; z-index: 0">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" style="display: block; opacity: 0.5"><path d="M30 120 h140 M60 120 v50 M140 120 v50 M100 40 v40" stroke="#F6EEE2" stroke-width="3" fill="none" stroke-linecap="round"></path><circle cx="100" cy="86" r="8" fill="#E9B36A"></circle></svg>
+      </span>
+      <span aria-hidden="true" style="position: absolute; inset: 0; background: {{ t.clayTint }}; z-index: 0"></span>
+      <span style="position: absolute; right: 6px; top: 6px; z-index: 1; font-size: 10px; background: rgba(0,0,0,0.55); color: #FFFFFF; padding: 2px 6px; font-weight: 500; letter-spacing: 0">Photo</span>
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="position: relative; z-index: 1"><path d="M7 3 v8 a2 2 0 0 0 4 0 V3 M9 11 V21 M16 3 c-2 2 -2 7 0 9 V21" fill="none" stroke="#F6EEE2" stroke-width="2" stroke-linecap="round"></path></svg>
+      <span style="position: relative; z-index: 1; font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 15px; line-height: 1.1">BOOK<br>A TABLE</span>
+      <span style="position: relative; z-index: 1; font-size: 12px; font-weight: 700">{{ sub2 }}</span>
+    </button>
+
+    <!-- Find us -->
+    <button type="button" onClick="{{ tap3 }}" style="grid-column: span 2; cursor: pointer; border: 3px solid {{ t.ink }}; height: {{ h3 }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0; position: relative; overflow: hidden; display: flex; flex-direction: column; text-align: left; font-family: 'DM Sans', sans-serif; box-sizing: border-box">
+      <svg viewBox="0 0 330 96" width="100%" height="96" aria-hidden="true" style="display: block; flex: 0 0 96px">
+        <rect width="330" height="96" fill="{{ t.bg }}"></rect>
+        <path d="M0 70 H120 V40 H330 M200 0 V96" fill="none" stroke="{{ t.ink }}" stroke-width="2"></path>
+        <path d="M160 20 L172 32 L160 44 L148 32 Z" fill="{{ t.clay }}" stroke="{{ t.ink }}" stroke-width="2.5"></path>
+        <rect x="0" y="80" width="330" height="16" fill="url(#imStepInk)" opacity="0.18"></rect>
+      </svg>
+      <span style="padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box"><span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 15px">FIND US</span><span style="font-size: 13px; font-weight: 700">2 min from the market {{ sign3 }}</span></span>
+      <sc-if value="{{ open3 }}" hint-placeholder-val="{{ false }}">
+        <span class="im-fade" style="padding: 0 12px 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; width: 100%; box-sizing: border-box">
+          <span style="height: 40px; background: {{ t.ink }}; color: {{ t.bg }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">Directions</span>
+          <span style="height: 40px; border: 2px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-sizing: border-box">Call</span>
+          <span style="height: 40px; border: 2px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-sizing: border-box">WhatsApp</span>
+        </span>
+      </sc-if>
+    </button>
+
+    <!-- Hours -->
+    <button type="button" onClick="{{ tap4 }}" style="cursor: pointer; height: {{ h4 }}; border: 0; background: {{ t.ink }}; color: {{ t.onInk }}; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: 'DM Sans', sans-serif">
+      <span style="font-weight: 700; font-size: 12px; letter-spacing: 0.16em">TODAY</span>
+      <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 17px; line-height: 1.1">11:00<br>– 23:00</span>
+      <sc-if value="{{ open4 }}" hint-placeholder-val="{{ false }}"><span class="im-fade" style="font-size: 12px; line-height: 1.6">Mon–Thu 11–22<br>Fri–Sat 11–01<br>Sun 12–22</span></sc-if>
+      <span style="font-size: 12px; font-weight: 700">{{ sub4 }}</span>
+    </button>
+
+    <!-- Reviews -->
+    <div style="height: {{ h4 }}; border: 3px solid {{ t.ink }}; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden">
+      <span style="font-weight: 700; font-size: 12px; letter-spacing: 0.16em">GUESTS</span>
+      <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 34px; line-height: 1">4.5</span>
+      <span style="font-size: 12px; font-weight: 700">on Google · 210 reviews</span>
+      <svg width="60" height="16" aria-hidden="true" style="position: absolute; right: 0; top: 10px"><rect width="60" height="16" fill="url(#imZigClay)"></rect></svg>
+    </div>
+
+    <!-- WhatsApp -->
+    <a href="#" style="grid-column: span 2; height: 64px; border: 3px solid {{ t.ink }}; box-sizing: border-box; background: {{ t.bg }}; color: {{ t.ink }}; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; text-decoration: none">
+      <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 14px">QUESTIONS? CHAT WITH US</span>
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z" fill="none" stroke="{{ t.ink }}" stroke-width="2" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <div style="margin-top: 22px; height: 16px; overflow: hidden"><svg class="im-slide" width="720" height="16" aria-hidden="true" style="display: block"><rect width="720" height="16" fill="url(#imStepInk)"></rect></svg></div>
+  <div style="background: {{ t.ink }}; color: {{ t.onInk }}; padding: 20px 14px 28px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-family: Unbounded, 'Arial Black', sans-serif; font-weight: 900; font-size: 20px">TWIN LAKES</span>
+    <span style="font-size: 13px; opacity: 0.85">Musanze centre · Rwandan food, cold drinks, good nights</span>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; opacity: 0.75; margin-top: 8px"><span>© Twin Lakes Bistro · demo</span><a href="#" style="text-decoration: underline">Privacy</a></div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"palette":{"editor":"enum","options":["Earth (warm)","Ash & ochre","Classic black & red","Night bar"],"default":"Earth (warm)"},"$preview":{"width":360,"height":1340}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cur: 'RWF', open: -1 }; }
+  renderVals() {
+    const P = {
+      'Earth (warm)': { bg: '#EFE6D6', ink: '#1E1712', onInk: '#EFE6D6', clay: '#A8472A', onClay: '#F6EEE2', ochre: '#C99A3E', onOchre: '#1E1712', soft: '#DDCFB8', band: '#C99A3E' , inkTint: 'rgba(30,23,18,0.55)', clayTint: 'rgba(168,71,42,0.72)' },
+      'Ash & ochre': { bg: '#F1F0EC', ink: '#22201D', onInk: '#F1F0EC', clay: '#7E3423', onClay: '#F4EFE6', ochre: '#C28A2B', onOchre: '#22201D', soft: '#DCDAD3', band: '#C28A2B' , inkTint: 'rgba(34,32,29,0.55)', clayTint: 'rgba(126,52,35,0.72)' },
+      'Classic black & red': { bg: '#F6F4EF', ink: '#111111', onInk: '#F6F4EF', clay: '#8E2F1F', onClay: '#F6F4EF', ochre: '#B9B4AA', onOchre: '#111111', soft: '#E3DFD7', band: '#F6F4EF' , inkTint: 'rgba(17,17,17,0.55)', clayTint: 'rgba(142,47,31,0.72)' },
+      'Night bar': { bg: '#14110E', ink: '#F0E7D8', onInk: '#14110E', clay: '#B04E2E', onClay: '#FFF6EA', ochre: '#D9A94A', onOchre: '#14110E', soft: '#2A241E', band: '#8E3A20' , inkTint: 'rgba(20,17,14,0.55)', clayTint: 'rgba(176,78,46,0.72)' }
+    };
+    const t = P[this.props.palette] || P['Earth (warm)'];
+    const s = this.state, usd = s.cur === 'USD';
+    const o = i => s.open === i;
+    const tap = i => () => this.setState({ open: o(i) ? -1 : i });
+    return {
+      t,
+      specialPrice: usd ? 'USD 7.50 for two' : 'RWF 10,000 for two',
+      open0: o(0), sign0: o(0) ? '−' : '+', h0: o(0) ? '210px' : '150px', tap0: tap(0),
+      sub1: o(1) ? 'Pick up · deliver · from 25 min' : 'Ready in ~25 min', tap1: tap(1),
+      sub2: o(2) ? 'Tonight: tables free from 19:30' : 'Tonight from 19:30', tap2: tap(2),
+      open3: o(3), sign3: o(3) ? '−' : '+', h3: o(3) ? '200px' : '144px', tap3: tap(3),
+      open4: o(4), h4: o(4) ? '190px' : '130px', sub4: o(4) ? 'Tap to close' : 'All week +', tap4: tap(4),
+      rwfBg: usd ? 'transparent' : t.ink, rwfFg: usd ? t.ink : t.bg,
+      usdBg: usd ? t.ink : 'transparent', usdFg: usd ? t.bg : t.ink,
+      setRwf: () => this.setState({ cur: 'RWF' }), setUsd: () => this.setState({ cur: 'USD' })
+    };
+  }
+}
+</script>
+</body>
+</html>

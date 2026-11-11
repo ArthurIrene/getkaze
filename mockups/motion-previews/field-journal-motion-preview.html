@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kinigi Hills Lodge · Field Journal v3 motion preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Caveat:wght@600&family=Inter:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--paper:#F4EEE3;--card:#FBF7F0;--ink:#2B2620;--muted:#5E554A;--line:#D8CCB8;--accent:#3F5B3A;--onaccent:#FFFFFF;--inv:#2B2620;--invfg:#F4EEE3;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#1E1B17;--card:#2A2621;--ink:#F1EADD;--muted:#BBAF9C;--line:#433C33;--accent:#8FAF7E;--onaccent:#1E1B17;--inv:#F1EADD;--invfg:#1E1B17;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#1E1B17;--card:#2A2621;--ink:#F1EADD;--muted:#BBAF9C;--line:#433C33;--accent:#8FAF7E;--onaccent:#1E1B17;--inv:#F1EADD;--invfg:#1E1B17;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;text-align:left}
+.wrap{max-width:480px;margin:0 auto;overflow-x:clip}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.hand{font-family:Caveat,"Comic Sans MS",cursive;color:var(--accent)}
+h2{margin:0;font:900 34px Fraunces,Georgia,serif;letter-spacing:-.02em}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 16px;background:var(--paper)}
+header .logo{font:900 20px Fraunces,Georgia,serif}
+.ctrls{display:flex;gap:6px}
+.pillbtn{height:32px;padding:0 9px;display:flex;align-items:center;border:1px solid var(--ink);border-radius:999px;font-size:12px;font-weight:600}
+.cur{display:flex;border:1px solid var(--ink);border-radius:999px;overflow:hidden}
+.cur button{font-size:12px;font-weight:600;padding:0 9px;height:30px}
+.cur button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.hero{position:relative}
+.hero>svg{display:block;width:100%;height:auto}
+.hero h1{position:absolute;left:16px;top:22px;margin:0;color:#2B2620;font:900 38px/1 Fraunces,Georgia,serif;letter-spacing:-.02em}
+.hero h1 span{display:block;font:600 54px/.95 Caveat,cursive;color:#3F5B3A;letter-spacing:0}
+.draw{stroke-dasharray:1400;stroke-dashoffset:1400;animation:draw 2.8s ease-out .3s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.stamp{position:absolute;right:14px;bottom:-48px;width:112px;height:112px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink)}
+.stamp svg.ring{position:absolute;inset:-1.5px;animation:spin 22s linear infinite}
+.stamp text{fill:var(--ink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stamp i{position:absolute;left:32px;top:32px;width:48px;height:48px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.stamp i path{stroke:var(--onaccent)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:64px 16px 0}
+.fact{border:1.5px dashed var(--ink);border-radius:14px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;transform:rotate(var(--tilt));transition:background .2s,border-color .2s}
+.fact b{font:900 20px/1 Fraunces,Georgia,serif}
+.fact[aria-pressed="true"]{background:var(--card);border-color:var(--accent)}
+.factnote{margin:10px 16px 0;padding:10px 14px;border-radius:12px;background:var(--card);font-size:14px}
+.factnote[hidden]{display:none}
+.strip{padding-top:44px;overflow:hidden}
+.track{display:flex;gap:16px;padding:10px 16px 18px;width:max-content}
+.snap{margin:0;position:relative;width:210px;background:#FBF7F0;color:#2B2620;padding:9px 9px 6px;box-shadow:0 3px 10px rgba(0,0,0,.18);transform:rotate(var(--tilt))}
+.tape{position:absolute;top:-9px;left:66px;width:76px;height:20px;background:rgba(200,145,58,.5)}
+.sbox{height:210px;display:grid;place-items:center}
+figcaption{font:600 22px Caveat,cursive;padding-top:4px}
+.sec{padding:40px 16px 14px;display:flex;justify-content:space-between;align-items:baseline}
+.sec a,.sec .mono{font-family:"IBM Plex Mono",monospace;font-size:12px}
+.row{display:flex;gap:14px;overflow-x:auto;padding:4px 16px 12px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.row>*{scroll-snap-align:start;flex:0 0 auto}
+.room{width:260px;display:flex;flex-direction:column;gap:10px}
+.rimg{position:relative;height:300px;border-radius:20px;overflow:hidden}.rimg svg{display:block;width:260px;height:300px}
+.price{position:absolute;right:12px;top:12px;background:#2B2620;color:#F4EEE3;padding:7px 11px;border-radius:12px;font:700 15px Fraunces,Georgia,serif;transform:rotate(3deg)}
+.room b{font:700 20px Fraunces,Georgia,serif;padding-left:2px}
+.dishes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 16px}
+.dish{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.dimg{width:100%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center}
+.dish b{font-size:13px;line-height:1.2}
+.post{width:200px;height:260px;color:#FBF7F0;border-radius:20px;padding:16px;position:relative}
+.post .front,.post .back{position:absolute;inset:16px;display:flex;flex-direction:column;justify-content:space-between;transition:opacity .3s,transform .3s}
+.post .front svg{align-self:center}
+.post b{font:700 22px/1.05 Fraunces,Georgia,serif}
+.post .back{opacity:0;transform:translateY(8px);pointer-events:none;font-size:14px;line-height:1.45}
+.post[aria-expanded="true"] .front{opacity:0;transform:translateY(-8px)}
+.post[aria-expanded="true"] .back{opacity:1;transform:none}
+.pill{align-self:flex-end;font:500 11px "IBM Plex Mono",monospace;border:1px solid #FBF7F0;border-radius:999px;padding:3px 8px}
+.ask{align-self:flex-start;font-size:13px;font-weight:600;background:#FBF7F0;color:#2B2620;padding:9px 13px;border-radius:999px}
+.host{padding:48px 16px 0;display:flex;gap:18px;align-items:center}
+.pol{margin:0;flex:0 0 120px;position:relative;background:#FBF7F0;color:#2B2620;padding:7px 7px 4px;transform:rotate(-4deg);box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.pol .pimg{height:124px;background:#B5643C;display:flex;align-items:flex-end;justify-content:center}
+.pol figcaption{text-align:center;font-size:17px}
+.host b{display:block;font:900 26px/1.05 Fraunces,Georgia,serif}
+.host button{margin-top:10px;font-family:"IBM Plex Mono",monospace;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.note{margin:14px 16px 0;font:600 23px/1.25 Caveat,cursive}
+.note[hidden]{display:none}
+.review{margin:44px 16px 0;padding:22px 20px;background:var(--inv);color:var(--invfg);border-radius:20px}
+.review q{display:block;font:600 30px/1.1 Caveat,cursive;quotes:"\201C" "\201D"}
+.scores{display:flex;gap:24px;margin-top:16px}.scores b{display:block;font:900 30px/1 Fraunces,Georgia,serif}.scores span{font:500 10px "IBM Plex Mono",monospace;opacity:.8}
+.find{padding:48px 16px 0}
+.map{position:relative;margin-top:14px;border-radius:20px;background:var(--card);overflow:hidden}
+.map svg{display:block;width:100%;height:auto}
+.map .hand{position:absolute;left:57%;top:43%;font-size:22px;color:var(--ink)}
+.acts{display:flex;justify-content:center;gap:22px;margin-top:14px}
+.acts a{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.acts span.c{width:58px;height:58px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center}
+.acts span.c path{stroke:var(--ink)}
+.acts .wa span.c{background:var(--accent)}.acts .wa span.c path{stroke:var(--onaccent)}
+.acc{width:100%;margin-top:14px;display:flex;justify-content:space-between;padding:14px 0;border-top:1.5px dashed var(--line);border-bottom:1.5px dashed var(--line);font-weight:600;font-size:15px}
+.accbody{display:grid;gap:8px;font-size:14px;padding-top:10px}.accbody[hidden]{display:none}
+footer{margin-top:40px;padding:24px 16px 100px;background:#2B2620;color:#F4EEE3}
+footer b{display:block;font:900 26px Fraunces,Georgia,serif}
+footer .hand{color:#E9C9A0;font-size:22px}
+.bar{position:sticky;bottom:0;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line);display:flex;gap:10px;z-index:5}
+.bar .go{flex:1;height:50px;border-radius:14px;background:var(--accent);color:var(--onaccent);display:flex;align-items:center;justify-content:center;font-weight:600}
+.bar .call{flex:0 0 56px;height:50px;border-radius:14px;border:1.5px solid var(--ink);display:grid;place-items:center}
+.bar .call path{stroke:var(--ink)}
+.fadein{animation:fadein .35s ease-out both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){
+ .rise{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
+ .strip .track{animation:slide linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes slide{from{transform:translateX(40px)}to{transform:translateX(-640px)}}
+.js-rise .rise{opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s}
+.js-rise .rise.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.draw{animation:none;stroke-dashoffset:0}.stamp svg.ring,.rise,.strip .track,.fadein{animation:none!important;transform:none}.js-rise .rise{opacity:1;transform:none}.strip{overflow-x:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><span class="logo">Kinigi Hills</span><div class="ctrls"><span class="pillbtn">EN</span><div class="cur" role="group" aria-label="Currency"><button id="rwf" aria-pressed="true">RWF</button><button id="usd" aria-pressed="false">USD</button></div></div></header>
+
+<section class="hero">
+<svg viewBox="0 0 360 440" aria-hidden="true">
+<rect width="360" height="440" fill="#E9C9A0"/><circle cx="262" cy="118" r="38" fill="#F3DDBA"/>
+<polygon points="0,270 48,232 92,172 118,158 144,176 188,230 228,150 254,134 280,152 330,232 360,250 360,440 0,440" fill="#B79A7E"/>
+<rect x="0" y="250" width="360" height="18" fill="#EDE3D2" opacity=".75"/>
+<polygon points="0,318 60,290 130,310 200,276 270,298 360,274 360,440 0,440" fill="#7C8B5A"/>
+<polygon points="0,376 80,352 170,372 250,344 360,366 360,440 0,440" fill="#3F5B3A"/>
+<polygon points="24,362 31,340 38,362" fill="#2F4530"/><polygon points="40,360 48,334 56,360" fill="#2F4530"/><polygon points="312,370 319,348 326,370" fill="#2F4530"/>
+<path d="M210 354 L210 336 L227 323 L244 336 L244 354 Z" fill="#F4EEE3" stroke="#2B2620" stroke-width="1.4"/><rect x="222" y="341" width="9" height="8" fill="#C8913A"/>
+<path class="draw" d="M0 270 L48 232 L92 172 Q118 150 144 176 L188 230 L228 150 Q254 124 280 152 L330 232 L360 250" fill="none" stroke="#2B2620" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<path class="draw" d="M150 80 q8 -6 16 0 q8 -6 16 0 M196 62 q6 -5 12 0 q6 -5 12 0" fill="none" stroke="#2B2620" stroke-width="1.4" stroke-linecap="round"/>
+</svg>
+<h1>Wake up facing<span>the volcanoes</span></h1>
+<a class="stamp" href="#" aria-label="Chat with us on WhatsApp"><svg class="ring" viewBox="0 0 112 112" width="112" height="112" aria-hidden="true"><defs><path id="c" d="M56 56 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0"/></defs><text font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="1.6"><textPath href="#c">CHAT WITH US · MURAKAZA NEZA ·</textPath></text></svg><i><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z" fill="none" stroke-width="1.8" stroke-linejoin="round"/></svg></i></a>
+</section>
+
+<div class="facts"><button class="fact" style="--tilt:-2deg" data-text="15 minutes by car to Volcanoes National Park HQ, where treks start." aria-pressed="false"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M3 26 L12 10 L17 18 L21 12 L29 26 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><b>15’</b></button><button class="fact" style="--tilt:1.5deg" data-text="Breakfast is included, from 5 a.m. on trek days." aria-pressed="false"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7 14 h16 v7 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 Z M23 16 h2 a3 3 0 0 1 0 6 h-2 M12 10 q-2 -3 0 -6 M17 10 q-2 -3 0 -6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Incl.</b></button><button class="fact" style="--tilt:-1deg" data-text="We help you book gorilla and golden monkey permits." aria-pressed="false"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M5 9 h22 v5 a3 3 0 0 0 0 6 v5 h-22 v-5 a3 3 0 0 0 0 -6 Z M13 9 v16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Permits</b></button></div>
+<p class="factnote fadein" id="factnote" hidden></p>
+
+<section class="strip" aria-label="Life at the lodge"><div class="track"><figure class="snap" style="--tilt:-2deg"><i class="tape"></i><div class="sbox" style="background:#5B4636"><svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="M16 26 h28 v14 a12 12 0 0 1 -12 12 h-4 a12 12 0 0 1 -12 -12 Z M44 30 h4 a5 5 0 0 1 0 10 h-4 M26 20 q-3 -5 0 -10 M34 20 q-3 -5 0 -10" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><figcaption>5 a.m. coffee</figcaption></figure><figure class="snap" style="--tilt:1.5deg"><i class="tape"></i><div class="sbox" style="background:#B5643C"><svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="M32 52 C18 52 18 36 26 28 C26 36 32 36 32 30 C32 22 38 18 38 12 C46 22 48 30 44 40 C42 48 38 52 32 52 Z M16 56 h32" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><figcaption>evening fire</figcaption></figure><figure class="snap" style="--tilt:-1deg"><i class="tape"></i><div class="sbox" style="background:#3F5B3A"><svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="M32 56 V30 M32 30 C22 30 18 22 18 14 C28 14 32 22 32 30 C32 22 36 14 46 14 C46 22 42 30 32 30 Z M20 56 h24" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><figcaption>the garden</figcaption></figure><figure class="snap" style="--tilt:2deg"><i class="tape"></i><div class="sbox" style="background:#2B3A4A"><svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="M10 50 L24 30 L32 40 L40 26 L54 50 M20 14 l2 4 l4 1 l-4 1 l-2 4 l-2 -4 l-4 -1 l4 -1 Z M44 12 v4 M42 14 h4" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><figcaption>Bisoke stars</figcaption></figure><figure class="snap" style="--tilt:-1.5deg"><i class="tape"></i><div class="sbox" style="background:#8A6A2E"><svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="M10 30 h44 l-4 22 h-36 Z M18 30 q14 -18 28 0 M24 40 h16" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><figcaption>market day</figcaption></figure></div></section>
+
+<div class="sec rise"><h2>Rooms</h2><a href="#">ALL 4 →</a></div>
+<div class="row"><a class="room" href="#"><div class="rimg"><svg viewBox="0 0 260 300" aria-hidden="true"><rect width="260" height="300" fill="#E2D3B8"/><polygon points="0,170 60,120 100,150 160,80 220,150 260,130 260,300 0,300" fill="#A9B08A"/><polygon points="0,230 80,204 170,224 260,196 260,300 0,300" fill="#5E7048"/><rect x="80" y="178" width="100" height="60" fill="#FBF7F0" stroke="#2B2620" stroke-width="1.4"/><path d="M90 204 h80 M90 220 h80" stroke="#2B2620" stroke-width="1.2"/></svg><span class="price" data-rwf="RWF 45,000" data-usd="USD 35">RWF 45,000</span></div><b>Garden Single</b></a><a class="room" href="#"><div class="rimg"><svg viewBox="0 0 260 300" aria-hidden="true"><rect width="260" height="300" fill="#DCCFB4"/><polygon points="0,170 60,120 100,150 160,80 220,150 260,130 260,300 0,300" fill="#8E9C70"/><polygon points="0,230 80,204 170,224 260,196 260,300 0,300" fill="#3F5B3A"/><rect x="80" y="178" width="100" height="60" fill="#FBF7F0" stroke="#2B2620" stroke-width="1.4"/><path d="M90 204 h80 M90 220 h80" stroke="#2B2620" stroke-width="1.2"/></svg><span class="price" data-rwf="RWF 60,000" data-usd="USD 45">RWF 60,000</span></div><b>Garden Double</b></a><a class="room" href="#"><div class="rimg"><svg viewBox="0 0 260 300" aria-hidden="true"><rect width="260" height="300" fill="#E9C9A0"/><polygon points="0,170 60,120 100,150 160,80 220,150 260,130 260,300 0,300" fill="#B79A7E"/><polygon points="0,230 80,204 170,224 260,196 260,300 0,300" fill="#7C8B5A"/><rect x="80" y="178" width="100" height="60" fill="#FBF7F0" stroke="#2B2620" stroke-width="1.4"/><path d="M90 204 h80 M90 220 h80" stroke="#2B2620" stroke-width="1.2"/></svg><span class="price" data-rwf="RWF 80,000" data-usd="USD 60">RWF 80,000</span></div><b>Volcano View Double</b></a><a class="room" href="#"><div class="rimg"><svg viewBox="0 0 260 300" aria-hidden="true"><rect width="260" height="300" fill="#D9B98F"/><polygon points="0,170 60,120 100,150 160,80 220,150 260,130 260,300 0,300" fill="#9C6E4E"/><polygon points="0,230 80,204 170,224 260,196 260,300 0,300" fill="#5B4636"/><rect x="80" y="178" width="100" height="60" fill="#FBF7F0" stroke="#2B2620" stroke-width="1.4"/><path d="M90 204 h80 M90 220 h80" stroke="#2B2620" stroke-width="1.2"/></svg><span class="price" data-rwf="RWF 100,000" data-usd="USD 75">RWF 100,000</span></div><b>Family Cottage</b></a></div>
+
+<div class="sec rise"><div><span class="hand" style="font-size:24px;display:block;line-height:1">open to all</span><h2>At our table</h2></div><a href="#">MENU →</a></div>
+<div class="dishes"><div class="dish"><div class="dimg" style="background:#B5643C"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><path d="M6 42 L42 6 M14 34 l6 -6 M20 28 l6 -6 M26 22 l6 -6 M12 28 l8 8 M18 22 l8 8 M24 16 l8 8" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b>Goat brochettes</b><span class="mono price2" data-rwf="RWF 7,000" data-usd="USD 5">RWF 7,000</span></div><div class="dish"><div class="dimg" style="background:#3F5B3A"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><path d="M6 24 h36 a18 14 0 0 1 -36 0 Z M14 18 q4 -6 10 -2 q6 -6 10 2" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b>Isombe &amp; rice</b><span class="mono price2" data-rwf="RWF 6,000" data-usd="USD 4.50">RWF 6,000</span></div><div class="dish"><div class="dimg" style="background:#5B4636"><svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><path d="M10 18 h22 v12 a9 9 0 0 1 -9 9 h-4 a9 9 0 0 1 -9 -9 Z M32 21 h3 a4 4 0 0 1 0 8 h-3 M18 12 q-2 -4 0 -7 M24 12 q-2 -4 0 -7" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b>Rwandan coffee</b><span class="mono price2" data-rwf="RWF 2,000" data-usd="USD 1.50">RWF 2,000</span></div></div>
+
+<div class="sec rise" style="padding-top:44px"><h2>Around us</h2><span class="mono">TAP A CARD</span></div>
+<div class="row"><button class="post" style="background:#3F5B3A" aria-expanded="false"><span class="front"><span class="pill">15’</span><svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true"><path d="M2 28 L16 8 L24 18 L30 10 L46 28" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Gorilla trekking</b></span><span class="back"><b>Gorilla trekking</b><span>Permits from the park. We book your driver and packed lunch.</span><span class="ask">Ask us to arrange</span></span></button><button class="post" style="background:#B5643C" aria-expanded="false"><span class="front"><span class="pill">15’</span><svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true"><path d="M8 28 Q8 12 24 12 Q40 12 40 28 M18 12 Q18 4 24 4 Q30 4 30 12" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Golden monkeys</b></span><span class="back"><b>Golden monkeys</b><span>A shorter, playful trek in the bamboo forest.</span><span class="ask">Ask us to arrange</span></span></button><button class="post" style="background:#5B4636" aria-expanded="false"><span class="front"><span class="pill">25’</span><svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true"><path d="M4 28 Q24 -4 44 28 M16 28 Q24 14 32 28" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Musanze Caves</b></span><span class="back"><b>Musanze Caves</b><span>A 2 km walk through old lava tunnels.</span><span class="ask">Ask us to arrange</span></span></button><button class="post" style="background:#2B3A4A" aria-expanded="false"><span class="front"><span class="pill">40’</span><svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true"><path d="M2 18 Q8 14 14 18 T26 18 T38 18 T50 18 M2 26 Q8 22 14 26 T26 26 T38 26" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Twin Lakes</b></span><span class="back"><b>Twin Lakes</b><span>Canoe on Burera and Ruhondo, lunch by the water.</span><span class="ask">Ask us to arrange</span></span></button><button class="post" style="background:#8A6A2E" aria-expanded="false"><span class="front"><span class="pill">10’</span><svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true"><path d="M8 28 L8 16 L24 4 L40 16 L40 28 M20 28 L20 20 L28 20 L28 28" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Cultural village</b></span><span class="back"><b>Cultural village</b><span>Dance, drums and banana beer with local families.</span><span class="ask">Ask us to arrange</span></span></button></div>
+
+<section class="host rise"><figure class="pol"><i class="tape" style="left:32px;width:56px;height:16px;top:-8px"></i><div class="pimg"><svg viewBox="0 0 100 100" width="104" height="104" aria-hidden="true"><circle cx="50" cy="40" r="18" fill="none" stroke="#FBF7F0" stroke-width="2"/><path d="M18 100 Q22 66 50 66 Q78 66 82 100" fill="none" stroke="#FBF7F0" stroke-width="2"/></svg></div><figcaption>Claudine</figcaption></figure>
+<div><b>Muraho! I’m Claudine.</b><button id="hostbtn" aria-expanded="false">READ HER NOTE +</button></div></section>
+<p class="note fadein" id="hostnote" hidden>My family has welcomed trekkers for 9 years. I’ll sort your permits, your driver and breakfast at 5 a.m.</p>
+
+<section class="review rise"><q>Coffee at five, volcanoes at the window.</q><div class="scores"><div><b>4.6</b><span>TRIPADVISOR</span></div><div><b>8.9</b><span>BOOKING.COM</span></div></div></section>
+
+<section class="find rise"><h2>Find us</h2>
+<div class="map"><svg viewBox="0 0 328 200" aria-hidden="true"><path d="M0 156 Q90 124 160 138 T328 106" fill="none" stroke="#8C8170" stroke-opacity=".35" stroke-width="12" stroke-linecap="round"/><path d="M156 138 Q166 92 206 66" fill="none" stroke="#8C8170" stroke-width="1.6" stroke-dasharray="5 5"/><path d="M236 48 l18 -26 l18 26 M266 52 l13 -18 l13 18" fill="none" stroke="#8C8170" stroke-width="1.6"/><circle cx="206" cy="66" r="10" fill="#3F5B3A"/><circle cx="206" cy="66" r="4" fill="#FBF7F0"/></svg><span class="hand">we’re here!</span></div>
+<div class="acts"><a href="#"><span class="c"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 21 s-7 -6.5 -7 -11.5 a7 7 0 0 1 14 0 c0 5 -7 11.5 -7 11.5 Z M12 12.5 a2.5 2.5 0 1 0 0 -5 a2.5 2.5 0 1 0 0 5" fill="none" stroke-width="1.7"/></svg></span>Directions</a><a href="#"><span class="c"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2" fill="none" stroke-width="1.7" stroke-linejoin="round"/></svg></span>Call</a><a class="wa" href="#"><span class="c"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z" fill="none" stroke-width="1.7" stroke-linejoin="round"/></svg></span>WhatsApp</a></div>
+<button class="acc" id="accbtn" aria-expanded="false"><span>Hours &amp; payment</span><span id="accsign">+</span></button>
+<div class="accbody fadein" id="accbody" hidden><span>Reception every day, 6:00 to 22:00</span><span>Cash (RWF, USD), MTN MoMo, Airtel Money</span><span class="mono">KINIGI SECTOR, MUSANZE DISTRICT</span></div>
+</section>
+
+<footer><b>Kinigi Hills</b><span class="hand">murakaza neza</span><div style="display:flex;justify-content:space-between;font-size:12px;opacity:.8;margin-top:10px"><span>© Kinigi Hills Lodge · demo</span><a href="#" style="text-decoration:underline">Privacy</a></div></footer>
+<div class="bar"><a class="go" href="#">Check availability</a><a class="call" href="#" aria-label="Call"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2" fill="none" stroke-width="1.7" stroke-linejoin="round"/></svg></a></div>
+</div>
+<script>
+(function(){
+var r=document.getElementById('rwf'),u=document.getElementById('usd');
+function setCur(c){r.setAttribute('aria-pressed',c==='rwf');u.setAttribute('aria-pressed',c==='usd');document.querySelectorAll('[data-rwf]').forEach(function(p){p.textContent=p.dataset[c]})}
+r.onclick=function(){setCur('rwf')};u.onclick=function(){setCur('usd')};
+var note=document.getElementById('factnote');
+document.querySelectorAll('.fact').forEach(function(f){f.onclick=function(){var on=f.getAttribute('aria-pressed')==='true';document.querySelectorAll('.fact').forEach(function(x){x.setAttribute('aria-pressed','false')});if(on){note.hidden=true}else{f.setAttribute('aria-pressed','true');note.textContent=f.dataset.text;note.hidden=false}}});
+document.querySelectorAll('.post').forEach(function(p){p.onclick=function(){p.setAttribute('aria-expanded',p.getAttribute('aria-expanded')==='true'?'false':'true')}});
+var hb=document.getElementById('hostbtn'),hn=document.getElementById('hostnote');
+hb.onclick=function(){var o=hn.hidden;hn.hidden=!o;hb.setAttribute('aria-expanded',o);hb.textContent=o?'CLOSE NOTE −':'READ HER NOTE +'};
+var ab=document.getElementById('accbtn'),abd=document.getElementById('accbody'),as=document.getElementById('accsign');
+ab.onclick=function(){var o=abd.hidden;abd.hidden=!o;ab.setAttribute('aria-expanded',o);as.textContent=o?'−':'+'};
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduce||(window.CSS&&CSS.supports('animation-timeline: view()')))return;
+document.documentElement.classList.add('js-rise');
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+document.querySelectorAll('.rise').forEach(function(el){io.observe(el)});
+var s=document.querySelector('.strip'),t=s.querySelector('.track'),tick=false;
+function move(){var b=s.getBoundingClientRect(),h=innerHeight,p=Math.min(1,Math.max(0,(h-b.top)/(h+b.height)));t.style.transform='translateX('+(40-680*p)+'px)';tick=false}
+addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(move)}},{passive:true});move();
+})();
+</script>
+</body>
+</html>

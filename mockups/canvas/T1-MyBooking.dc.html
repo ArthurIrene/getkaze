@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – My booking (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.fj-fade{animation:fjfade .35s ease-out both}
+@keyframes fjfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.fj-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+    <a href="T1-Home.dc.html" style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; text-decoration: none">Kinigi Hills</a>
+    <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN</span>
+  </div>
+
+  <!-- Lookup -->
+  <sc-if value="{{ lookup }}" hint-placeholder-val="{{ true }}">
+    <div style="padding: 28px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 44px; line-height: 1; letter-spacing: -0.02em">My booking</h1>
+      <span style="font-family: Caveat, cursive; font-size: 26px; color: {{ t.accent }}; line-height: 1">find it with your code</span>
+    </div>
+    <svg viewBox="0 0 360 150" width="360" height="150" aria-hidden="true" style="display: block; margin-top: 10px">
+      <path d="M0 130 L60 96 L100 50 Q118 36 136 52 L176 96 L214 40 Q232 22 250 42 L300 104 L360 120" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+      <rect x="132" y="92" width="96" height="44" rx="6" fill="{{ t.card }}" stroke="{{ t.ink }}" stroke-width="1.4" transform="rotate(-4 180 114)"></rect>
+      <path d="M146 106 h40 M146 118 h60" stroke="{{ t.ink }}" stroke-width="1.4" stroke-linecap="round" transform="rotate(-4 180 114)"></path>
+    </svg>
+    <div style="margin: 6px 16px 0; padding: 14px; border-radius: 16px; background: {{ t.card }}; display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{ howto }}" as="h" hint-placeholder-count="3">
+        <div style="display: flex; gap: 12px; align-items: center">
+          <span style="flex: 0 0 26px; width: 26px; height: 26px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px">{{ h.n }}</span>
+          <span style="font-size: 14px; line-height: 1.35">{{ h.text }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Booking code</span><div style="height: 56px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 16px; font-family: 'IBM Plex Mono', monospace; font-size: 22px; letter-spacing: 0.1em">KH-7Q4M</div></div>
+      <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Last 4 digits of your phone</span>
+        <div style="display: flex; gap: 8px">
+          <span style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 22px">7</span>
+          <span style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 22px">3</span>
+          <span style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 22px">4</span>
+          <span style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; background: {{ t.card }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 22px">2</span>
+        </div>
+      </div>
+      <span onClick="{{ find }}" style="cursor: pointer; margin-top: 8px; height: 54px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px">Find my booking</span>
+      <span style="font-size: 13px; color: {{ t.muted }}; text-align: center">Lost your code? <a href="#" style="text-decoration: underline; color: {{ t.ink }}">Ask on WhatsApp</a></span>
+    </div>
+  </sc-if>
+
+  <!-- Found -->
+  <sc-if value="{{ found }}" hint-placeholder-val="{{ false }}">
+    <div class="fj-fade" style="padding: 20px 16px 0; display: flex; justify-content: space-between; align-items: center">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ t.muted }}; letter-spacing: 0.1em">KH-7Q4M</span>
+        <h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 34px; line-height: 1; letter-spacing: -0.02em">See you soon, Anna</h1>
+      </div>
+      <div style="flex: 0 0 86px; height: 86px; border-radius: 999px; border: 2.5px solid {{ t.accent }}; color: {{ t.accent }}; display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-8deg)">
+        <span style="font-size: 22px; line-height: 1">✓</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.12em">CONFIRMED</span>
+      </div>
+    </div>
+
+    <!-- Stay card -->
+    <div style="margin: 18px 16px 0; border-radius: 20px; overflow: hidden; background: {{ t.card }}">
+      <div style="height: 120px; background: #9C6E4E; display: flex; align-items: center; justify-content: center">
+        <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><path d="M12 12 H52 V52 H12 Z M12 32 H52 M16 48 L26 36 L32 42 L40 30 L48 48" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </div>
+      <div style="padding: 14px 16px 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">IN</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 17px">Fri 11 Dec</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">OUT</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 17px">Mon 14 Dec</span></div>
+        <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">GUESTS</span><span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 17px">2</span></div>
+      </div>
+      <div style="padding: 0 16px 16px; display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-weight: 600; font-size: 15px">Volcano View Double</span>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px">RWF 240,000</span>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div style="margin: 14px 16px 0; padding: 16px; border-radius: 20px; border: 1.5px dashed {{ t.ink }}; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: {{ t.muted }}">PAYMENT · MTN MOMO</span>
+        <span style="font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: {{ payBadgeBg }}; color: {{ payBadgeFg }}">{{ payBadge }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-size: 14px">{{ payLine }}</span>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 22px">{{ payAmount }}</span>
+      </div>
+      <sc-if value="{{ payDue }}" hint-placeholder-val="{{ true }}">
+        <div style="padding: 12px 14px; border-radius: 14px; background: {{ t.card }}; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; color: {{ t.muted }}">MoMo Pay code</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px">012345</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; color: {{ t.muted }}">Name shown</span><span style="font-size: 14px; font-weight: 600">Kinigi Hills Lodge</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; color: {{ t.muted }}">Dial</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px">*182*8*1*012345#</span></div>
+        </div>
+        <span style="font-size: 12px; color: {{ t.muted }}">Pay by Fri 4 Dec to hold your room. Balance at check-in.</span>
+        <button type="button" onClick="{{ claimPaid }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; font-family: Inter, system-ui, sans-serif; font-weight: 600; font-size: 15px">I've paid the deposit</button>
+      </sc-if>
+      <sc-if value="{{ payClaimed }}" hint-placeholder-val="{{ false }}">
+        <span class="fj-fade" style="font-size: 14px; line-height: 1.5">Thanks! Claudine will check and confirm your payment. You'll get a message by email.</span>
+        <button type="button" onClick="{{ lodgeConfirms }}" style="cursor: pointer; align-self: flex-start; height: 36px; padding: 0 12px; border-radius: 999px; border: 1px dashed {{ t.muted }}; background: transparent; color: {{ t.muted }}; font-family: 'IBM Plex Mono', monospace; font-size: 11px">DEMO: LODGE CONFIRMS →</button>
+      </sc-if>
+      <sc-if value="{{ payPaid }}" hint-placeholder-val="{{ false }}">
+        <span class="fj-fade" style="font-size: 14px; line-height: 1.5">Deposit received ✓ · Balance RWF 160,000 at check-in (cash, MoMo or Airtel).</span>
+        <span class="fj-fade" style="font-size: 12px; color: {{ t.muted }}">Receipt sent to anna.b@email.com</span>
+      </sc-if>
+    </div>
+
+    <!-- Quick actions -->
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 14px 16px 0">
+      <sc-for list="{{ quick }}" as="q" hint-placeholder-count="3">
+        <span onClick="{{ q.tap }}" style="cursor: pointer; height: 74px; border-radius: 16px; border: 1.5px solid {{ q.border }}; background: {{ q.bg }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ q.icon }}" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-size: 12px; font-weight: 600">{{ q.label }}</span>
+        </span>
+      </sc-for>
+    </div>
+    <sc-if value="{{ qrOpen }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="margin: 12px 16px 0; padding: 16px; border-radius: 18px; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; gap: 8px">
+        <svg viewBox="0 0 25 25" width="150" height="150" aria-hidden="true" shape-rendering="crispEdges"><path d="{{ qr }}" fill="#2B2620"></path></svg>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #2B2620; letter-spacing: 0.1em">KH-7Q4M · SHOW AT RECEPTION</span>
+      </div>
+    </sc-if>
+
+    <!-- Make the most of your stay -->
+    <div style="padding: 30px 0 0; display: flex; flex-direction: column; gap: 12px">
+      <div style="padding: 0 16px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-family: Caveat, cursive; font-size: 26px; color: {{ t.accent }}; line-height: 1">while you're here</span>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px; letter-spacing: -0.01em">We can help with</span>
+      </div>
+      <div style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 4px; scrollbar-width: none">
+        <sc-for list="{{ extras }}" as="x" hint-placeholder-count="6">
+          <button type="button" onClick="{{ x.tap }}" style="cursor: pointer; flex: 0 0 132px; height: 160px; border: 0; border-radius: 18px; background: {{ x.bg }}; color: #FBF7F0; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <svg viewBox="0 0 48 32" width="56" height="38" aria-hidden="true"><path d="{{ x.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 16px; line-height: 1.1">{{ x.name }}</span>
+            <span style="font-size: 12px; font-weight: 600; background: {{ x.pillBg }}; color: {{ x.pillFg }}; padding: 5px 10px; border-radius: 999px">{{ x.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- Thread -->
+    <div style="padding: 30px 16px 0; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font-family: Caveat, cursive; font-size: 26px; color: {{ t.accent }}; line-height: 1">messages</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">REPLIES ALSO BY EMAIL</span>
+      </div>
+      <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; align-items: {{ m.align }}; gap: 3px">
+          <div style="max-width: 260px; padding: 10px 13px; border-radius: {{ m.radius }}; background: {{ m.bg }}; color: {{ m.fg }}; font-size: 14px; line-height: 1.45">{{ m.text }}</div>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">{{ m.meta }}</span>
+        </div>
+      </sc-for>
+      <div style="display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; scrollbar-width: none">
+        <sc-for list="{{ chips }}" as="c" hint-placeholder-count="3">
+          <span onClick="{{ c.tap }}" style="cursor: pointer; flex: 0 0 auto; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px dashed {{ t.ink }}; display: flex; align-items: center; font-size: 13px; white-space: nowrap">{{ c.text }}</span>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center">
+        <div style="flex: 1 1 auto; height: 48px; border-radius: 14px; border: 1.5px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 14px; color: {{ t.muted }}">Write to Claudine…</div>
+        <span style="width: 48px; height: 48px; border-radius: 14px; background: {{ t.accent }}; display: flex; align-items: center; justify-content: center">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 12 L20 4 L14 20 L11 13 Z" fill="none" stroke="{{ t.onAccent }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+        </span>
+      </div>
+    </div>
+
+    <div style="padding: 28px 16px 0; display: flex; justify-content: center; gap: 22px; font-size: 13px">
+      <a href="#" style="text-decoration: underline">Ask to change</a>
+      <a href="#" style="text-decoration: underline; color: {{ t.muted }}">Cancel booking</a>
+    </div>
+    <div style="padding: 14px 16px 0; text-align: center">
+      <span onClick="{{ back }}" style="cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}">← BACK TO LOOKUP (DEMO)</span>
+    </div>
+  </sc-if>
+
+  <div style="margin-top: 36px; padding: 22px 16px 28px; background: #2B2620; color: #F4EEE3; display: flex; justify-content: space-between; font-size: 12px">
+    <span>© Kinigi Hills Lodge</span><a href="#" style="text-decoration: underline">Privacy</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":2300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'lookup', qr: false, sent: [], asked: [], pay: 'due' };
+  }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', line: '#433C33', accent: '#8FAF7E', onAccent: '#1E1B17', lodgeBg: '#2A2621', guestBg: '#8FAF7E', guestFg: '#1E1B17' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', line: '#D8CCB8', accent: '#3F5B3A', onAccent: '#FFFFFF', lodgeBg: '#FBF7F0', guestBg: '#3F5B3A', guestFg: '#FFFFFF' };
+    const s = this.state;
+    const lodge = (text, meta) => ({ text, meta, align: 'flex-start', radius: '16px 16px 16px 4px', bg: t.lodgeBg, fg: t.ink });
+    const guest = (text, meta) => ({ text, meta, align: 'flex-end', radius: '16px 16px 4px 16px', bg: t.guestBg, fg: t.guestFg });
+    const msgs = [
+      lodge('Hi Anna, your room is confirmed! We look forward to welcoming you to Kinigi. Anything we can arrange, just ask here.', 'CLAUDINE · TUE 09:12')
+    ].concat(s.sent.map(x => guest(x, 'YOU · JUST NOW')));
+    const E = [
+      { name: 'Airport transfer', bg: '#2B3A4A', icon: 'M4 20 L44 8 M14 17 L10 26 M26 13 L30 4 M36 11 l6 -1' },
+      { name: 'Gorilla permits', bg: '#3F5B3A', icon: 'M2 28 L16 8 L24 18 L30 10 L46 28' },
+      { name: 'Golden monkeys', bg: '#B5643C', icon: 'M8 28 Q8 12 24 12 Q40 12 40 28 M18 12 Q18 4 24 4 Q30 4 30 12' },
+      { name: 'Twin Lakes canoe', bg: '#5B4636', icon: 'M2 18 Q8 14 14 18 T26 18 T38 18 T50 18 M2 26 Q8 22 14 26 T26 26 T38 26' },
+      { name: 'Cultural village', bg: '#8A6A2E', icon: 'M8 28 L8 16 L24 4 L40 16 L40 28 M20 28 L20 20 L28 20 L28 28' },
+      { name: 'Dinner by the fire', bg: '#9C4A2E', icon: 'M24 28 C14 28 14 18 20 13 C20 18 24 18 24 15 C24 10 28 8 28 4 C34 10 35 16 32 22 C31 26 28 28 24 28 Z' }
+    ];
+    const extras = E.map(x => {
+      const asked = s.asked.indexOf(x.name) >= 0;
+      return { ...x, label: asked ? 'Asked ✓' : 'Ask', pillBg: asked ? 'transparent' : '#FBF7F0', pillFg: asked ? '#FBF7F0' : '#2B2620',
+        tap: () => { if (asked) return; this.setState({ asked: s.asked.concat([x.name]), sent: s.sent.concat(["I'd like help with: " + x.name + '. What are the options?']) }); } };
+    });
+    const howto = [
+      { n: '1', text: 'Find your code in the email or WhatsApp from the lodge.' },
+      { n: '2', text: 'Type it as shown, like KH-7Q4M. Small letters work too.' },
+      { n: '3', text: 'Add the last 4 digits of the phone you booked with.' }
+    ];
+    const chipText = ['Thank you!', 'We may arrive late', 'Can we pay by MoMo?'];
+    const chips = chipText.filter(x => s.sent.indexOf(x) < 0).map(x => ({ text: x, tap: () => this.setState({ sent: s.sent.concat([x]) }) }));
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const finder = (x, y) => 'M' + x + ' ' + y + 'h7v7h-7z M' + (x + 1) + ' ' + (y + 1) + 'v5h5v-5z M' + (x + 2) + ' ' + (y + 2) + 'h3v3h-3z ';
+    let qr = finder(0, 0) + finder(18, 0) + finder(0, 18);
+    const inF = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+    for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) if (!inF(x, y) && rnd() > 0.52) qr += 'M' + x + ' ' + y + 'h1v1h-1z';
+    const quick = [
+      { label: 'Check-in QR', icon: 'M4 4 h6 v6 h-6 Z M14 4 h6 v6 h-6 Z M4 14 h6 v6 h-6 Z M14 14 h2 M18 14 h2 v2 M14 18 h2 v2 M18 20 h2', tap: () => this.setState({ qr: !s.qr }), active: s.qr },
+      { label: 'Directions', icon: 'M12 21 s-7 -6.5 -7 -11.5 a7 7 0 0 1 14 0 c0 5 -7 11.5 -7 11.5 Z M12 12.5 a2.5 2.5 0 1 0 0 -5 a2.5 2.5 0 1 0 0 5', tap: () => {}, active: false },
+      { label: 'Calendar', icon: 'M4 6 h16 v14 h-16 Z M4 10 h16 M8 3 v5 M16 3 v5', tap: () => {}, active: false }
+    ].map(q => ({ ...q, border: q.active ? t.accent : t.ink, bg: q.active ? t.card : 'transparent' }));
+    return {
+      t, msgs, chips, qr, quick, extras, howto,
+      payDue: s.pay === 'due', payClaimed: s.pay === 'claimed', payPaid: s.pay === 'paid',
+      payBadge: s.pay === 'due' ? 'Deposit due' : s.pay === 'claimed' ? 'Checking' : 'Paid ✓',
+      payBadgeBg: s.pay === 'paid' ? t.accent : '#E9C9A0', payBadgeFg: s.pay === 'paid' ? t.onAccent : '#2B2620',
+      payLine: s.pay === 'paid' ? 'Deposit paid' : 'Deposit (1 night)', payAmount: 'RWF 80,000',
+      claimPaid: () => this.setState({ pay: 'claimed', sent: s.sent.concat(["I've paid the deposit by MoMo."]) }),
+      lodgeConfirms: () => this.setState({ pay: 'paid' }),
+      lookup: s.view === 'lookup', found: s.view === 'found', qrOpen: s.qr,
+      find: () => this.setState({ view: 'found' }),
+      back: () => this.setState({ view: 'lookup', qr: false, sent: [], asked: [], pay: 'due' })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T3 Cinematic – Home (phone) · Muhabura Rise Hotel demo</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&amp;family=Manrope:wght@400;500;700&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.ci-zoom{animation:cizoom 14s ease-in-out infinite alternate}
+@keyframes cizoom{to{transform:scale(1.12)}}
+.ci-in{animation:ciin .8s ease-out both}
+@keyframes ciin{from{opacity:0;letter-spacing:.3em}to{opacity:1}}
+.ci-up{animation:ciup .6s .25s ease-out both}
+@keyframes ciup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ci-zoom,.ci-in,.ci-up{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; height: 720px; position: relative; overflow: hidden; background: #0E0E0F; color: #F5F2EC; font-family: Manrope, system-ui, sans-serif">
+
+  <!-- Scene photo -->
+  <div class="ci-zoom" style="position: absolute; inset: 0; background: {{ sc.bg }}">
+    <svg viewBox="0 0 360 720" width="360" height="720" aria-hidden="true" style="display: block; opacity: 0.5"><path d="{{ sc.art }}" fill="none" stroke="#F5F2EC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+  </div>
+  <div style="position: absolute; inset: 0; background: linear-gradient(rgba(14,14,15,0.55) 0%, rgba(14,14,15,0) 22%, rgba(14,14,15,0) 48%, rgba(14,14,15,0.9) 100%)"></div>
+  <span style="position: absolute; right: 12px; top: 64px; font-size: 11px; background: rgba(0,0,0,0.45); padding: 3px 8px">{{ sc.photo }}</span>
+
+  <!-- Progress bars + top bar -->
+  <div style="position: absolute; left: 12px; right: 12px; top: 10px; display: flex; gap: 4px; z-index: 3">
+    <sc-for list="{{ bars }}" as="b" hint-placeholder-count="6">
+      <span style="flex: 1 1 0; height: 3px; border-radius: 999px; background: {{ b.c }}"></span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 14px; right: 12px; top: 20px; height: 40px; display: flex; justify-content: space-between; align-items: center; z-index: 3">
+    <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 20px; letter-spacing: 0.08em">MUHABURA RISE</span>
+    <div style="display: flex; gap: 6px; font-size: 12px; font-weight: 700">
+      <span style="height: 30px; padding: 0 9px; display: flex; align-items: center; border: 1px solid rgba(245,242,236,0.6); border-radius: 999px">EN</span>
+      <button type="button" onClick="{{ toggleCur }}" style="cursor: pointer; height: 30px; padding: 0 10px; border: 1px solid rgba(245,242,236,0.6); border-radius: 999px; background: transparent; color: #F5F2EC; font: 700 12px Manrope, sans-serif">{{ cur }}</button>
+    </div>
+  </div>
+
+  <!-- Tap zones -->
+  <button type="button" onClick="{{ prev }}" aria-label="Previous scene" style="position: absolute; left: 0; top: 70px; bottom: 260px; width: 35%; border: 0; background: transparent; cursor: pointer; z-index: 2"></button>
+  <button type="button" onClick="{{ next }}" aria-label="Next scene" style="position: absolute; right: 0; top: 70px; bottom: 260px; width: 65%; border: 0; background: transparent; cursor: pointer; z-index: 2"></button>
+
+  <!-- Scene text -->
+  <div style="position: absolute; left: 0; right: 0; bottom: 92px; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; z-index: 3">
+    <span class="ci-up" style="font-size: 12px; font-weight: 700; letter-spacing: 0.24em; color: #D8B98A">{{ sc.kicker }}</span>
+    <h1 class="ci-in" style="margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 44px; line-height: 1.02">{{ sc.title }}</h1>
+    <span class="ci-up" style="font-size: 15px; line-height: 1.5; color: rgba(245,242,236,0.88)">{{ sc.line }}</span>
+    <sc-if value="{{ sc.hasIcons }}" hint-placeholder-val="{{ false }}">
+      <div class="ci-up" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 4px">
+        <sc-for list="{{ sc.icons }}" as="ic" hint-placeholder-count="6">
+          <span style="display: flex; align-items: center; gap: 8px; font-size: 13px"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="{{ ic.d }}" fill="none" stroke="#D8B98A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{ ic.n }}</span>
+        </sc-for>
+      </div>
+    </sc-if>
+    <a href="#" class="ci-up" style="align-self: flex-start; height: 44px; padding: 0 18px; border: 1px solid #F5F2EC; border-radius: 999px; display: flex; align-items: center; font-size: 14px; font-weight: 700; text-decoration: none">{{ sc.cta }}</a>
+  </div>
+
+  <!-- Fixed bottom bar -->
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px 16px; display: flex; gap: 10px; align-items: center; z-index: 3">
+    <a href="#" style="flex: 1 1 auto; height: 52px; border-radius: 999px; background: #F5F2EC; color: #0E0E0F; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; text-decoration: none">Check availability</a>
+    <button type="button" onClick="{{ toggleList }}" style="cursor: pointer; height: 52px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(245,242,236,0.6); background: transparent; color: #F5F2EC; font: 700 13px Manrope, sans-serif">{{ listLabel }}</button>
+  </div>
+
+  <!-- List view (everything at once) -->
+  <sc-if value="{{ listOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: #0E0E0F; z-index: 4; padding: 22px 20px 90px; overflow: auto; display: flex; flex-direction: column; gap: 4px">
+      <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; margin-bottom: 8px">Everything at a glance</span>
+      <sc-for list="{{ allScenes }}" as="a" hint-placeholder-count="6">
+        <button type="button" onClick="{{ a.go }}" style="cursor: pointer; border: 0; border-bottom: 1px solid rgba(245,242,236,0.15); background: transparent; color: #F5F2EC; padding: 14px 0; display: flex; gap: 12px; align-items: center; text-align: left; font-family: Manrope, sans-serif">
+          <span style="width: 56px; height: 56px; border-radius: 10px; background: {{ a.bg }}; flex: 0 0 56px"></span>
+          <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11px; letter-spacing: 0.2em; color: #D8B98A; font-weight: 700">{{ a.kicker }}</span><span style="font-size: 16px; font-weight: 500">{{ a.title }}</span></span>
+        </button>
+      </sc-for>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 14px 16px; display: flex; gap: 10px; background: #0E0E0F">
+        <a href="#" style="flex: 1 1 auto; height: 52px; border-radius: 999px; background: #F5F2EC; color: #0E0E0F; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; text-decoration: none">Check availability</a>
+        <button type="button" onClick="{{ toggleList }}" style="cursor: pointer; height: 52px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(245,242,236,0.6); background: transparent; color: #F5F2EC; font: 700 13px Manrope, sans-serif">Scenes</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":720}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { i: 0, usd: false, list: false }; }
+  renderVals() {
+    const s = this.state, usd = s.usd;
+    const I = {
+      pool: 'M3 17 q3 -2 6 0 t6 0 t6 0 M3 21 q3 -2 6 0 t6 0 t6 0 M7 14 V5 a2 2 0 0 1 4 0 M15 14 V5 a2 2 0 0 1 4 0 M7 8 h8 M7 11 h8',
+      wifi: 'M3 9 a13 13 0 0 1 18 0 M6 12.5 a8.5 8.5 0 0 1 12 0 M9 16 a4 4 0 0 1 6 0 M12 19.5 v0.1',
+      park: 'M5 3 h14 v18 h-14 Z M9 17 V7 h4 a3 3 0 0 1 0 6 h-4',
+      power: 'M13 2 L4 14 h7 l-1 8 l9 -12 h-7 Z',
+      car: 'M3 15 l2 -6 h14 l2 6 v4 h-18 Z M7 19 v2 M17 19 v2 M6 15 h.1 M18 15 h.1',
+      food: 'M7 3 v8 a2 2 0 0 0 4 0 V3 M9 11 V21 M16 3 c-2 2 -2 7 0 9 V21'
+    };
+    const S = [
+      { kicker: 'HOTEL · MUSANZE TOWN', title: 'Muhabura Rise', line: 'A calm base between the volcanoes and the lakes. Pool, terrace, 32 rooms.', cta: 'See rooms', photo: 'Photo: pool at sunset', bg: '#5A4632', art: 'M0 420 L90 330 L150 380 L230 290 L300 360 L360 330 M0 520 H360 M40 520 V470 H320 V520 M60 560 q20 -8 40 0 t40 0 t40 0 t40 0 t40 0' },
+      { kicker: 'ROOMS', title: usd ? 'From USD 48 a night' : 'From RWF 65,000 a night', line: 'Double, twin and family rooms. Breakfast included.', cta: 'See rooms', photo: 'Photo: deluxe double', bg: '#4A3F3A', art: 'M40 470 V380 M40 440 H320 V470 M320 440 V410 a20 20 0 0 0 -20 -20 H140 V440 M60 410 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 M220 200 H320 V320 H220 Z M220 260 H320' },
+      { kicker: 'RESTAURANT', title: 'Dinner on the terrace', line: 'Rwandan and international dishes, open to everyone. 7:00 – 22:00.', cta: 'See the menu', photo: 'Photo: terrace at dusk', bg: '#3E3426', art: 'M60 460 h240 M90 460 v60 M270 460 v60 M120 430 a20 8 0 1 0 40 0 a20 8 0 1 0 -40 0 M200 400 h24 l-8 20 v20 M80 200 V300 M180 180 V300 M280 200 V300' },
+      { kicker: 'MEETINGS & EVENTS', title: 'A hall for 120', line: 'Workshops, NGO trainings, weddings. Projector, sound and catering.', cta: 'Ask for a quote', photo: 'Photo: conference hall', bg: '#2F3438', art: 'M40 260 H320 V360 H40 Z M60 440 h40 M120 440 h40 M180 440 h40 M240 440 h40 M60 480 h40 M120 480 h40 M180 480 h40 M240 480 h40' },
+      { kicker: 'AT THE HOTEL', title: 'Everything you need', line: '', cta: 'All facilities', photo: 'Photo: garden and pool', bg: '#33402F', art: 'M0 470 q60 -40 120 -10 t120 -10 t120 10 M60 470 V400 M70 400 l-10 -30 l-10 30 M300 470 V390', hasIcons: true },
+      { kicker: 'FIND US', title: '5 minutes from the bus park', line: 'Main road to Cyanika, Musanze. Free parking, airport transfers on request.', cta: 'Directions', photo: 'Photo: the entrance', bg: '#3A3A30', art: 'M0 460 H140 V380 H360 M220 300 V720 M180 360 l14 14 l-14 14 l-14 -14 Z' }
+    ];
+    const icons = [{ n: 'Pool', d: I.pool }, { n: 'Wi-Fi', d: I.wifi }, { n: 'Parking', d: I.park }, { n: 'Generator', d: I.power }, { n: 'Transfers', d: I.car }, { n: 'Restaurant', d: I.food }];
+    const i = s.i;
+    const sc = { ...S[i], hasIcons: !!S[i].hasIcons, icons };
+    const bars = S.map((x, k) => ({ c: k < i ? '#F5F2EC' : k === i ? '#D8B98A' : 'rgba(245,242,236,0.3)' }));
+    return {
+      sc, bars,
+      next: () => this.setState({ i: Math.min(S.length - 1, i + 1) }),
+      prev: () => this.setState({ i: Math.max(0, i - 1) }),
+      cur: usd ? 'USD' : 'RWF', toggleCur: () => this.setState({ usd: !usd }),
+      listOpen: s.list, listLabel: 'All info', toggleList: () => this.setState({ list: !s.list }),
+      allScenes: S.map((x, k) => ({ kicker: x.kicker, title: x.title, bg: x.bg, go: () => this.setState({ i: k, list: false }) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

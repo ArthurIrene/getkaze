@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Owner app – Edit site (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.ow-fade{animation:owfade .25s ease-out both}
+@keyframes owfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ow-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; min-height: 900px; background: {{ t.bg }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; position: relative">
+
+  <!-- Top bar -->
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 16px; border-bottom: 1px solid {{ t.line }}; background: {{ t.card }}">
+    <div style="display: flex; flex-direction: column; line-height: 1.1">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}; letter-spacing: 0.08em">KAZE</span>
+      <span style="font-weight: 700; font-size: 16px">Kinigi Hills Lodge ▾</span>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <div style="display: flex; height: 32px; border: 1px solid {{ t.line }}; border-radius: 8px; overflow: hidden">
+        <button type="button" onClick="{{ setEn }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ enBg }}; color: {{ enFg }}">EN</button>
+        <button type="button" onClick="{{ setRw }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ rwBg }}; color: {{ rwFg }}">RW</button>
+      </div>
+      <a href="T1-Home.dc.html" style="height: 32px; padding: 0 10px; border-radius: 8px; background: {{ t.ink }}; color: {{ t.bg }}; display: flex; align-items: center; font-size: 12px; font-weight: 600; text-decoration: none">{{ L.preview }}</a>
+    </div>
+  </div>
+
+  <!-- HUB -->
+  <sc-if value="{{ vHub }}" hint-placeholder-val="{{ true }}">
+    <div class="ow-fade" style="padding: 18px 16px 0; display: flex; flex-direction: column; gap: 14px">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">{{ L.editSite }}</h1>
+      <div style="padding: 14px; border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 600; font-size: 14px">{{ L.complete }}</span><span style="font-weight: 700; font-size: 20px">85%</span></div>
+        <div style="height: 8px; border-radius: 999px; background: {{ t.line }}; overflow: hidden"><div style="width: 85%; height: 8px; background: {{ t.accent }}"></div></div>
+        <span style="font-size: 13px; color: {{ t.muted }}">{{ L.nextTip }}</span>
+      </div>
+      <button type="button" onClick="{{ toToday }}" style="cursor: pointer; height: 64px; border-radius: 14px; border: 0; background: {{ t.ink }}; color: {{ t.bg }}; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-family: Inter, system-ui, sans-serif">
+        <span style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-weight: 700; font-size: 16px">{{ L.today }}</span><span style="font-size: 12px; opacity: 0.8">{{ todaySub }}</span></span>
+        <span style="font-size: 22px">›</span>
+      </button>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{ tiles }}" as="tl" hint-placeholder-count="8">
+          <button type="button" onClick="{{ tl.open }}" style="cursor: pointer; height: 112px; border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; color: {{ t.ink }}; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="display: flex; justify-content: space-between; width: 100%">
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="{{ tl.icon }}" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span style="width: 10px; height: 10px; border-radius: 999px; background: {{ tl.dot }}"></span>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-weight: 600; font-size: 15px">{{ tl.name }}</span>
+              <span style="font-size: 12px; color: {{ t.muted }}">{{ tl.sub }}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}">{{ L.liveNote }}</span>
+      <sc-if value="{{ isRw }}" hint-placeholder-val="{{ false }}">
+        <button type="button" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.accent }}; padding: 2px 0; font: 600 13px Inter, sans-serif; text-decoration: underline">{{ L.suggest }}</button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- MENU GROUPS -->
+  <sc-if value="{{ vMenu }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.menu }}</h1>
+        <button type="button" onClick="{{ addGroup }}" style="cursor: pointer; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">+ {{ L.addGroup }}</button>
+      </div>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.groupHint }}</span>
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+        <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ g.border }}; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 6px; padding: 8px 8px 8px 12px">
+            <div style="display: flex; flex-direction: column">
+              <button type="button" onClick="{{ g.up }}" aria-label="Move up" style="cursor: pointer; width: 28px; height: 22px; border: 0; background: transparent; color: {{ g.upColor }}; font-size: 12px">▲</button>
+              <button type="button" onClick="{{ g.down }}" aria-label="Move down" style="cursor: pointer; width: 28px; height: 22px; border: 0; background: transparent; color: {{ g.downColor }}; font-size: 12px">▼</button>
+            </div>
+            <button type="button" onClick="{{ g.toggle }}" style="cursor: pointer; flex: 1 1 auto; border: 0; background: transparent; color: {{ t.ink }}; text-align: left; padding: 6px 0; display: flex; flex-direction: column; gap: 2px; font-family: Inter, system-ui, sans-serif">
+              <span style="font-weight: 600; font-size: 16px; opacity: {{ g.op }}">{{ g.name }}</span>
+              <span style="font-size: 12px; color: {{ t.muted }}">{{ g.count }}</span>
+            </button>
+            <button type="button" onClick="{{ g.hide }}" aria-label="Show or hide group" style="cursor: pointer; height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid {{ t.line }}; background: {{ g.visBg }}; color: {{ g.visFg }}; font: 600 11px Inter, sans-serif">{{ g.visLabel }}</button>
+          </div>
+          <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+            <div class="ow-fade" style="border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column">
+              <sc-for list="{{ g.dishes }}" as="d" hint-placeholder-count="3">
+                <button type="button" onClick="{{ d.open }}" style="cursor: pointer; border: 0; border-bottom: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; padding: 10px 12px; display: flex; align-items: center; gap: 10px; text-align: left; font-family: Inter, system-ui, sans-serif">
+                  <span style="width: 36px; height: 36px; border-radius: 8px; background: {{ d.bg }}; flex: 0 0 36px"></span>
+                  <span style="flex: 1 1 auto; display: flex; flex-direction: column"><span style="font-weight: 500; font-size: 14px">{{ d.name }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ d.meta }}</span></span>
+                  <span style="font-size: 18px; color: {{ t.muted }}">›</span>
+                </button>
+              </sc-for>
+              <button type="button" onClick="{{ g.addDish }}" style="cursor: pointer; border: 0; background: transparent; color: {{ t.accent }}; padding: 12px; text-align: left; font: 600 14px Inter, sans-serif">+ {{ L.addDish }}</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- ROOMS LIST -->
+  <sc-if value="{{ vRooms }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.rooms }}</h1>
+        <button type="button" onClick="{{ openRoom }}" style="cursor: pointer; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">+ {{ L.addRoom }}</button>
+      </div>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.roomsHint }}</span>
+      <sc-for list="{{ roomList }}" as="r" hint-placeholder-count="4">
+        <button type="button" onClick="{{ r.open }}" style="cursor: pointer; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 10px; display: flex; gap: 12px; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+          <span style="width: 64px; height: 64px; border-radius: 10px; background: {{ r.bg }}; flex: 0 0 64px"></span>
+          <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 3px">
+            <span style="font-weight: 600; font-size: 15px">{{ r.name }}</span>
+            <span style="font-size: 12px; color: {{ t.muted }}">{{ r.meta }}</span>
+            <span style="font-size: 13px; font-weight: 600">{{ r.price }}</span>
+          </span>
+          <span style="font-size: 18px; color: {{ t.muted }}">›</span>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- ROOM FORM -->
+  <sc-if value="{{ vRoom }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+      <button type="button" onClick="{{ toRooms }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.rooms }}</button>
+      <div style="display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none">
+        <span style="flex: 0 0 120px; height: 96px; border-radius: 10px; background: #9C6E4E"></span>
+        <span style="flex: 0 0 120px; height: 96px; border-radius: 10px; background: #B79A7E"></span>
+        <span style="flex: 0 0 120px; height: 96px; border-radius: 10px; background: #2B3A4A"></span>
+        <button type="button" style="cursor: pointer; flex: 0 0 96px; height: 96px; border-radius: 10px; border: 1.5px dashed {{ t.accent }}; background: transparent; color: {{ t.accent }}; font: 600 13px Inter, sans-serif">+ {{ L.photo }}</button>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}; margin-top: -8px">{{ L.photosTip }}</span>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.name }}</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">ENGLISH · REQUIRED</span>
+        <input value="Volcano View Double" aria-label="Room name in English" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">KINYARWANDA</span>
+        <input value="Icyumba cy’abantu babiri kireba ibirunga" aria-label="Room name in Kinyarwanda" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">RWF / {{ L.night }}</span><input value="80,000" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif; font-weight: 600"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">USD / {{ L.night }}</span><input value="60" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif; font-weight: 600"></label>
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; flex-direction: column">
+        <sc-for list="{{ roomSteppers }}" as="st" hint-placeholder-count="2">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid {{ t.line }}">
+            <span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{ st.name }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ st.sub }}</span></span>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <button type="button" onClick="{{ st.minus }}" aria-label="Less" style="cursor: pointer; width: 34px; height: 34px; border-radius: 8px; border: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; font-size: 16px">−</button>
+              <span style="font-weight: 700; font-size: 16px; min-width: 18px; text-align: center">{{ st.val }}</span>
+              <button type="button" onClick="{{ st.plus }}" aria-label="More" style="cursor: pointer; width: 34px; height: 34px; border-radius: 8px; border: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; font-size: 16px">+</button>
+            </div>
+          </div>
+        </sc-for>
+        <button type="button" onClick="{{ toggleBreakfast }}" style="cursor: pointer; border: 0; background: transparent; color: {{ t.ink }}; padding: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+          <span style="font-size: 14px; font-weight: 600">{{ L.breakfast }}</span>
+          <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ bfTrack }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ bfKnob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+        </button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.amenities }}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{ amen }}" as="a" hint-placeholder-count="10">
+            <button type="button" onClick="{{ a.tap }}" style="cursor: pointer; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ a.border }}; background: {{ a.bg }}; color: {{ a.fg }}; font: 500 13px Inter, sans-serif">{{ a.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}">{{ L.lastChange }}</span>
+    </div>
+    <div style="position: sticky; bottom: 64px; padding: 10px 16px; background: {{ t.bg }}; border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 6px">
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <span class="ow-fade" style="font-size: 13px; color: {{ t.ok }}; text-align: center; font-weight: 600">✓ {{ L.savedLive }}</span>
+      </sc-if>
+      <button type="button" onClick="{{ save }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+    </div>
+  </sc-if>
+
+  <!-- BUSINESS INFO -->
+  <sc-if value="{{ vInfo }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.info }}</h1>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{ L.bizName }}</span><input value="Kinigi Hills Lodge" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+        <span style="font-size: 13px; font-weight: 600; margin-top: 4px">{{ L.headline }}</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">ENGLISH · REQUIRED</span>
+        <input value="Wake up facing the volcanoes" aria-label="Headline in English" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">KINYARWANDA</span>
+        <input value="Kanguka ureba ibirunga" aria-label="Headline in Kinyarwanda" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.contacts }}</span>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: {{ t.muted }}">{{ L.phone }}</span><input value="+250 788 000 000" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: {{ t.muted }}">WhatsApp</span><input value="+250 788 000 000" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: {{ t.muted }}">Email</span><input value="hello@kinigihills.rw" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; overflow: hidden">
+        <div style="height: 120px; background: {{ t.bg }}; position: relative">
+          <svg viewBox="0 0 328 120" width="328" height="120" aria-hidden="true" style="display: block"><path d="M0 96 Q90 70 160 82 T328 60" fill="none" stroke="{{ t.line }}" stroke-width="10" stroke-linecap="round"></path><circle cx="196" cy="48" r="9" fill="{{ t.accent }}"></circle><circle cx="196" cy="48" r="3.5" fill="{{ t.card }}"></circle></svg>
+        </div>
+        <div style="padding: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px">
+          <span style="font-size: 13px">Kinigi Sector, Musanze District</span>
+          <button type="button" style="cursor: pointer; height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 12px Inter, sans-serif; white-space: nowrap">{{ L.movePin }}</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.hours }}</span>
+        <div style="display: flex; gap: 6px">
+          <sc-for list="{{ hourTabs }}" as="ht" hint-placeholder-count="2">
+            <button type="button" onClick="{{ ht.pick }}" style="cursor: pointer; height: 34px; padding: 0 14px; border-radius: 999px; border: 1px solid {{ ht.border }}; background: {{ ht.bg }}; color: {{ ht.fg }}; font: 600 13px Inter, sans-serif">{{ ht.name }}</button>
+          </sc-for>
+        </div>
+        <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; flex-direction: column">
+          <button type="button" onClick="{{ toggleSame }}" style="cursor: pointer; border: 0; border-bottom: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; padding: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="font-size: 14px; font-weight: 600">{{ L.sameDays }}</span>
+            <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ sameTrack }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ sameKnob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+          </button>
+          <sc-for list="{{ hourRows }}" as="h" hint-placeholder-count="7">
+            <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid {{ t.line }}">
+              <span style="flex: 0 0 56px; font-size: 13px; font-weight: 600">{{ h.day }}</span>
+              <span style="flex: 1 1 auto; height: 36px; border-radius: 8px; border: 1px solid {{ t.line }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{ h.color }}">{{ h.time }}</span>
+              <button type="button" onClick="{{ h.toggle }}" style="cursor: pointer; height: 32px; padding: 0 10px; border-radius: 999px; border: 1px solid {{ t.line }}; background: {{ h.btnBg }}; color: {{ h.btnFg }}; font: 600 11px Inter, sans-serif">{{ h.btn }}</button>
+            </div>
+          </sc-for>
+          <button type="button" style="cursor: pointer; border: 0; background: transparent; color: {{ t.accent }}; padding: 12px; text-align: left; font: 600 14px Inter, sans-serif">+ {{ L.closure }}</button>
+        </div>
+        <span style="font-size: 12px; color: {{ t.muted }}">{{ L.hoursNote }}</span>
+      </div>
+    </div>
+    <div style="position: sticky; bottom: 64px; padding: 10px 16px; background: {{ t.bg }}; border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 6px">
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <span class="ow-fade" style="font-size: 13px; color: {{ t.ok }}; text-align: center; font-weight: 600">✓ {{ L.savedLive }}</span>
+      </sc-if>
+      <button type="button" onClick="{{ save }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+    </div>
+  </sc-if>
+
+  <!-- PHOTOS -->
+  <sc-if value="{{ vPhotos }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <div style="display: flex; justify-content: space-between; align-items: center"><h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.photos }}</h1><button type="button" onClick="{{ addPhoto }}" style="cursor: pointer; height: 40px; padding: 0 14px; border-radius: 10px; border: 0; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 13px Inter, sans-serif">+ {{ L.addPhotos }}</button></div>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.photosHint }}</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{ photos }}" as="ph" hint-placeholder-count="15">
+          <button type="button" onClick="{{ ph.open }}" style="cursor: pointer; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; gap: 4px; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="width: 100%; aspect-ratio: 1; border-radius: 10px; background: {{ ph.bg }}; border: {{ ph.border }}; box-sizing: border-box; display: flex; align-items: center; justify-content: center; color: {{ t.warn }}; font-size: 20px">{{ ph.mark }}</span>
+            <span style="font-size: 11px; color: {{ ph.color }}; line-height: 1.2">{{ ph.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- AROUND US -->
+  <sc-if value="{{ vAround }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <div style="display: flex; justify-content: space-between; align-items: center"><h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.around }}</h1><button type="button" onClick="{{ newActivity }}" style="cursor: pointer; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">+ {{ L.add }}</button></div>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.aroundHint }}</span>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; overflow: hidden">
+        <sc-for list="{{ aroundList }}" as="X" hint-placeholder-count="6">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 0; border-bottom: 1px solid {{ t.line }}">
+          <button type="button" onClick="{{ X.open }}" style="cursor: pointer; flex: 1 1 auto; border: 0; background: transparent; color: {{ t.ink }}; padding: 4px 0 4px 12px; display: flex; align-items: center; gap: 10px; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="width: 36px; height: 36px; border-radius: 8px; background: {{ X.bg }}; flex: 0 0 36px; opacity: {{ X.op }}"></span>
+            <span style="flex: 1 1 auto; display: flex; flex-direction: column"><span style="font-weight: 500; font-size: 14px">{{ X.name }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ X.meta }}</span></span>
+            <span style="font-size: 18px; color: {{ t.muted }}">›</span>
+          </button>
+          <button type="button" onClick="{{ X.tap }}" aria-label="Show or hide" style="cursor: pointer; border: 0; background: transparent; padding: 6px 0">
+            <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ X.track }}; position: relative; flex: 0 0 44px; display: block"><span style="position: absolute; top: 3px; left: {{ X.knob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span></button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- SECTIONS -->
+  <sc-if value="{{ vSections }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.sections }}</h1>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.sectionsHint }}</span>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; overflow: hidden">
+        <sc-for list="{{ sectionList }}" as="X" hint-placeholder-count="10">
+          <div style="display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 6px; border-bottom: 1px solid {{ t.line }}">
+            <div style="display: flex; flex-direction: column">
+              <button type="button" onClick="{{ X.up }}" aria-label="Move up" style="cursor: pointer; width: 28px; height: 20px; border: 0; background: transparent; color: {{ X.upC }}; font-size: 11px">▲</button>
+              <button type="button" onClick="{{ X.down }}" aria-label="Move down" style="cursor: pointer; width: 28px; height: 20px; border: 0; background: transparent; color: {{ X.downC }}; font-size: 11px">▼</button>
+            </div>
+            <span style="flex: 1 1 auto; display: flex; flex-direction: column"><span style="font-weight: 500; font-size: 14px; opacity: {{ X.op }}">{{ X.name }}</span><span style="font-size: 11px; color: {{ t.muted }}">{{ X.meta }}</span></span>
+            <button type="button" onClick="{{ X.tap }}" aria-label="Show or hide section" style="cursor: pointer; border: 0; background: transparent; padding: 6px 0"><span style="width: 44px; height: 26px; border-radius: 999px; background: {{ X.track }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ X.knob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span></button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- LOOK & COLORS -->
+  <sc-if value="{{ vLook }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.look }}</h1>
+      <span style="font-size: 13px; font-weight: 600">{{ L.template }}</span>
+      <sc-for list="{{ templates }}" as="tp" hint-placeholder-count="3">
+        <button type="button" onClick="{{ tp.pick }}" style="cursor: {{ tp.cursor }}; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; border: 2px solid {{ tp.border }}; color: {{ t.ink }}; padding: 10px; display: flex; gap: 12px; align-items: center; text-align: left; opacity: {{ tp.op }}; font-family: Inter, system-ui, sans-serif">
+          <span style="width: 72px; height: 72px; border-radius: 10px; background: {{ tp.bg }}; flex: 0 0 72px; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box; gap: 4px">
+            <span style="width: 14px; height: 14px; border-radius: 999px; background: {{ tp.c1 }}"></span><span style="width: 14px; height: 14px; border-radius: 999px; background: {{ tp.c2 }}"></span>
+          </span>
+          <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 15px">{{ tp.name }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ tp.sub }}</span></span>
+          <span style="font-size: 12px; font-weight: 700; color: {{ tp.tagC }}">{{ tp.tag }}</span>
+        </button>
+      </sc-for>
+      <span style="font-size: 13px; font-weight: 600">{{ L.colorSet }}</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+        <sc-for list="{{ modesC }}" as="m" hint-placeholder-count="3">
+          <button type="button" onClick="{{ m.pick }}" style="cursor: pointer; height: 44px; border-radius: 10px; border: 1px solid {{ m.border }}; background: {{ m.bg }}; color: {{ m.fg }}; font: 600 13px Inter, sans-serif">{{ m.name }}</button>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; font-weight: 600">{{ L.accent }}</span>
+      <div style="display: flex; gap: 12px">
+        <sc-for list="{{ accents }}" as="ac" hint-placeholder-count="4">
+          <button type="button" onClick="{{ ac.pick }}" aria-label="{{ ac.name }}" style="cursor: pointer; width: 48px; height: 48px; border-radius: 999px; border: 3px solid {{ ac.ring }}; background: {{ ac.c }}"></button>
+        </sc-for>
+      </div>
+      <a href="T1-Home.dc.html" style="height: 48px; border-radius: 12px; border: 1px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; text-decoration: none">{{ L.previewSite }}</a>
+    </div>
+  </sc-if>
+
+  <!-- LANGUAGES -->
+  <sc-if value="{{ vLangs }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.languages }}</h1>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.langsHint }}</span>
+      <sc-for list="{{ langList }}" as="lg" hint-placeholder-count="3">
+        <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-weight: 600; font-size: 16px">{{ lg.name }}</span><span style="font-size: 12px; font-weight: 700; color: {{ lg.tagC }}">{{ lg.tag }}</span></div>
+          <div style="height: 8px; border-radius: 999px; background: {{ t.line }}; overflow: hidden"><div style="width: {{ lg.pct }}; height: 8px; background: {{ lg.barC }}"></div></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; color: {{ t.muted }}">{{ lg.meta }}</span>
+            <sc-if value="{{ lg.hasAction }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ lg.act }}" style="cursor: pointer; height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 12px Inter, sans-serif">{{ lg.action }}</button></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <!-- PHOTO DETAIL -->
+  <sc-if value="{{ vPhoto }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toPhotos }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.photos }}</button>
+      <div style="height: 240px; border-radius: 14px; background: {{ ph.bg }}; display: flex; align-items: flex-end; justify-content: space-between; padding: 10px; box-sizing: border-box">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; background: rgba(0,0,0,0.55); color: #FFFFFF; padding: 4px 8px; border-radius: 6px">{{ ph.size }}</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <button type="button" onClick="{{ addPhoto }}" style="cursor: pointer; height: 44px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">{{ L.replace }}</button>
+        <button type="button" onClick="{{ rotate }}" style="cursor: pointer; height: 44px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">{{ L.rotate }}</button>
+        <button type="button" onClick="{{ toPhotos }}" style="cursor: pointer; height: 44px; border-radius: 10px; border: 1px solid {{ t.danger }}; background: transparent; color: {{ t.danger }}; font: 600 13px Inter, sans-serif">{{ L.remove }}</button>
+      </div>
+      <span style="font-size: 13px; font-weight: 600">{{ L.showsOn }}</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px">
+        <sc-for list="{{ places }}" as="pl" hint-placeholder-count="8">
+          <button type="button" onClick="{{ pl.tap }}" style="cursor: pointer; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ pl.border }}; background: {{ pl.bg }}; color: {{ pl.fg }}; font: 500 13px Inter, sans-serif">{{ pl.name }}</button>
+        </sc-for>
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.caption }}</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">ENGLISH</span>
+        <input value="{{ ph.capEn }}" aria-label="Caption in English" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">KINYARWANDA</span>
+        <input value="{{ ph.capRw }}" aria-label="Caption in Kinyarwanda" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+      </div>
+    </div>
+    <div style="position: sticky; bottom: 64px; padding: 10px 16px; background: {{ t.bg }}; border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 6px">
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <span class="ow-fade" style="font-size: 13px; color: {{ t.ok }}; text-align: center; font-weight: 600">✓ {{ L.savedLive }}</span>
+      </sc-if>
+      <button type="button" onClick="{{ save }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+    </div>
+  </sc-if>
+
+  <!-- ADD PHOTO -->
+  <sc-if value="{{ vAddPhoto }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toPhotos }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.photos }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.addTitle }}</h1>
+      <sc-if value="{{ upPick }}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <button type="button" onClick="{{ startUpload }}" style="cursor: pointer; height: 120px; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font: 600 14px Inter, sans-serif">
+            <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M3 7 h4 l2 -2 h6 l2 2 h4 v12 h-18 Z M12 16.5 a3.5 3.5 0 1 0 0 -7 a3.5 3.5 0 1 0 0 7" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>{{ L.camera }}
+          </button>
+          <button type="button" onClick="{{ startUpload }}" style="cursor: pointer; height: 120px; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font: 600 14px Inter, sans-serif">
+            <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M4 4 h16 v16 h-16 Z M4 16 l5 -5 l4 4 l3 -3 l4 4 M15.5 8.5 v0.1" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>{{ L.gallery }}
+          </button>
+        </div>
+        <span style="font-size: 12px; color: {{ t.muted }}">{{ L.addTip }}</span>
+      </sc-if>
+      <sc-if value="{{ upDone }}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; gap: 10px; align-items: center; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 10px">
+          <span style="width: 64px; height: 64px; border-radius: 10px; background: #B79A7E; flex: 0 0 64px"></span>
+          <span style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 auto">
+            <span style="font-size: 14px; font-weight: 600">IMG_2041.jpg</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.ok }}">4.2 MB → 118 KB ✓</span>
+            <span style="font-size: 12px; color: {{ t.muted }}">{{ L.shrunk }}</span>
+          </span>
+        </div>
+        <span style="font-size: 13px; font-weight: 600">{{ L.whereShow }}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{ places }}" as="pl" hint-placeholder-count="8">
+            <button type="button" onClick="{{ pl.tap }}" style="cursor: pointer; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ pl.border }}; background: {{ pl.bg }}; color: {{ pl.fg }}; font: 500 13px Inter, sans-serif">{{ pl.name }}</button>
+          </sc-for>
+        </div>
+        <button type="button" onClick="{{ finishUpload }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ACTIVITY FORM -->
+  <sc-if value="{{ vActivity }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 120px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toAround }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.around }}</button>
+      <div style="height: 130px; border-radius: 14px; background: {{ actv.bg }}; display: flex; align-items: flex-end; justify-content: flex-end; padding: 10px; box-sizing: border-box">
+        <button type="button" onClick="{{ addPhoto }}" style="cursor: pointer; height: 36px; padding: 0 12px; border-radius: 8px; border: 0; background: #FFFFFF; color: #15181C; font: 600 12px Inter, sans-serif">{{ L.addPhoto }}</button>
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.name }}</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">ENGLISH · REQUIRED</span>
+        <input value="{{ actv.name }}" aria-label="Activity name in English" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}">KINYARWANDA</span>
+        <input value="{{ actv.rw }}" aria-label="Activity name in Kinyarwanda" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+        <span style="font-size: 13px; font-weight: 600; margin-top: 6px">{{ L.line }}</span>
+        <input value="{{ actv.line }}" aria-label="Short description in English" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{ L.distance }}</span><input value="{{ actv.dist }}" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{ L.priceOpt }}</span><input value="" placeholder="RWF" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+      </div>
+      <button type="button" onClick="{{ toggleArrange }}" style="cursor: pointer; border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+        <span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{ L.arrange }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ L.arrangeSub }}</span></span>
+        <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ arrTrack }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ arrKnob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+      </button>
+    </div>
+    <div style="position: sticky; bottom: 64px; padding: 10px 16px; background: {{ t.bg }}; border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 6px">
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <span class="ow-fade" style="font-size: 13px; color: {{ t.ok }}; text-align: center; font-weight: 600">✓ {{ L.savedLive }}</span>
+      </sc-if>
+      <button type="button" onClick="{{ save }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+    </div>
+  </sc-if>
+
+  <!-- TODAY'S MENU -->
+  <sc-if value="{{ vToday }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toHub }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.editSite }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.today }}</h1>
+      <span style="font-size: 13px; color: {{ t.muted }}">{{ L.todayHint }}</span>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; overflow: hidden">
+        <sc-for list="{{ todayList }}" as="d" hint-placeholder-count="8">
+          <sc-if value="{{ d.isHead }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 10px 12px 6px; background: {{ t.bg }}; border-bottom: 1px solid {{ t.line }}; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 0.08em; color: {{ t.muted }}">{{ d.head }}</div>
+          </sc-if>
+          <button type="button" onClick="{{ d.tap }}" style="cursor: pointer; width: 100%; border: 0; border-bottom: 1px solid {{ t.line }}; background: {{ d.rowBg }}; color: {{ t.ink }}; padding: 10px 12px; display: flex; align-items: center; gap: 10px; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="width: 32px; height: 32px; border-radius: 8px; background: {{ d.bg }}; flex: 0 0 32px; opacity: {{ d.op }}"></span>
+            <span style="flex: 1 1 auto; display: flex; flex-direction: column"><span style="font-weight: 500; font-size: 14px; text-decoration: {{ d.td }}">{{ d.name }}</span><span style="font-size: 11px; color: {{ d.stateColor }}; font-weight: 600">{{ d.state }}</span></span>
+            <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ d.track }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ d.knob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+          </button>
+        </sc-for>
+      </div>
+      <button type="button" onClick="{{ addSpecial }}" style="cursor: pointer; height: 50px; border-radius: 12px; border: 1.5px dashed {{ t.accent }}; background: transparent; color: {{ t.accent }}; font: 600 14px Inter, sans-serif">+ {{ L.addSpecial }}</button>
+      <span style="font-size: 12px; color: {{ t.muted }}; margin-top: -6px">{{ L.specialHint }}</span>
+      <div style="padding: 12px 14px; border-radius: 14px; border: 1px dashed {{ t.line }}; display: flex; gap: 10px; align-items: flex-start">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex: 0 0 20px"><path d="M12 21 a9 9 0 1 0 0 -18 a9 9 0 1 0 0 18 M12 11 v6 M12 7.5 v0.1" fill="none" stroke="{{ t.muted }}" stroke-width="1.6" stroke-linecap="round"></path></svg>
+        <span style="font-size: 13px; line-height: 1.45; color: {{ t.muted }}">{{ L.safety }}</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- DISH FORM -->
+  <sc-if value="{{ vDish }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 120px; display: flex; flex-direction: column; gap: 16px">
+      <button type="button" onClick="{{ toMenu }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.menu }}</button>
+      <div style="height: 150px; border-radius: 14px; background: #B5643C; display: flex; align-items: center; justify-content: center; position: relative">
+        <svg viewBox="0 0 48 48" width="70" height="70" aria-hidden="true"><path d="M6 42 L42 6 M14 34 l6 -6 M20 28 l6 -6 M26 22 l6 -6 M12 28 l8 8 M18 22 l8 8 M24 16 l8 8" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round"></path></svg>
+        <button type="button" style="position: absolute; right: 10px; bottom: 10px; height: 36px; padding: 0 12px; border-radius: 8px; border: 0; background: #FFFFFF; color: #15181C; font: 600 12px Inter, sans-serif">{{ L.addPhoto }}</button>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}; margin-top: -8px">{{ L.photoNote }}</span>
+
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{ fields }}" as="f" hint-placeholder-count="2">
+          <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+            <span style="font-size: 13px; font-weight: 600">{{ f.label }}</span>
+            <sc-for list="{{ f.rows }}" as="r" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; justify-content: space-between; align-items: center">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: {{ t.muted }}; letter-spacing: 0.06em">{{ r.lang }}</span>
+                  <sc-if value="{{ r.isDraft }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ r.approve }}" style="cursor: pointer; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid {{ t.warn }}; background: transparent; color: {{ t.warn }}; font: 600 11px Inter, sans-serif">{{ L.draftCheck }}</button>
+                  </sc-if>
+                  <sc-if value="{{ r.isOk }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size: 11px; font-weight: 600; color: {{ t.ok }}">✓ {{ L.checked }}</span>
+                  </sc-if>
+                </div>
+                <input value="{{ r.value }}" aria-label="{{ r.aria }}" style="height: 44px; border-radius: 10px; border: 1px solid {{ r.border }}; background: {{ t.bg }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif">
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <sc-if value="{{ frClosed }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ openFr }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.accent }}; padding: 4px 0; font: 600 14px Inter, sans-serif">+ {{ L.addFr }}</button>
+        </sc-if>
+        <span style="font-size: 12px; color: {{ t.muted }}">{{ L.langRule }}</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">RWF</span><input value="7,000" style="height: 46px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 600 15px Inter, sans-serif"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">USD</span><input value="5.00" style="height: 46px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 600 15px Inter, sans-serif"></label>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; height: 46px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; padding: 0 12px">
+        <span style="font-size: 13px; font-weight: 600">{{ L.group }}</span><span style="font-size: 15px">{{ L.mains }} ▾</span>
+      </div>
+
+      <div style="border-radius: 14px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; flex-direction: column">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px">
+          <span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{ L.prep }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ L.prepHint }}</span></span>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <button type="button" onClick="{{ prepMinus }}" aria-label="Less time" style="cursor: pointer; width: 34px; height: 34px; border-radius: 8px; border: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; font-size: 16px">−</button>
+            <span style="font-weight: 700; font-size: 15px; min-width: 50px; text-align: center">{{ prep }} min</span>
+            <button type="button" onClick="{{ prepPlus }}" aria-label="More time" style="cursor: pointer; width: 34px; height: 34px; border-radius: 8px; border: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; font-size: 16px">+</button>
+          </div>
+        </div>
+        <sc-for list="{{ switches }}" as="sw" hint-placeholder-count="3">
+          <button type="button" onClick="{{ sw.tap }}" style="cursor: pointer; border: 0; border-top: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; padding: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{ sw.name }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ sw.sub }}</span></span>
+            <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ sw.track }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ sw.knob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <span style="font-size: 12px; color: {{ t.muted }}">{{ L.lastChange }}</span>
+        <button type="button" style="cursor: pointer; border: 0; background: transparent; color: {{ t.danger }}; font: 600 13px Inter, sans-serif">{{ L.delete }}</button>
+      </div>
+    </div>
+    <div style="position: sticky; bottom: 64px; padding: 10px 16px; background: {{ t.bg }}; border-top: 1px solid {{ t.line }}; display: flex; flex-direction: column; gap: 6px">
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <span class="ow-fade" style="font-size: 13px; color: {{ t.ok }}; text-align: center; font-weight: 600">✓ {{ L.savedLive }}</span>
+      </sc-if>
+      <button type="button" onClick="{{ save }}" style="cursor: pointer; height: 50px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 15px Inter, sans-serif">{{ L.save }}</button>
+    </div>
+  </sc-if>
+
+  <div style="flex: 1 1 auto"></div>
+
+  <!-- Bottom nav -->
+  <div style="position: sticky; bottom: 0; height: 64px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: {{ t.card }}; border-top: 1px solid {{ t.line }}">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+      <a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; text-decoration: none; color: {{ n.color }}">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ n.icon }}" fill="none" stroke="{{ n.color }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-size: 10.5px; font-weight: 600">{{ n.name }}</span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ui: 'en', view: 'hub', open: 1, rwOk: false, fr: false, sold: { 'Tilapia & chips': true }, guests: 2, units: 2, bf: true, am: { 'Queen bed': true, 'Shower': true, 'Balcony': true, 'Volcano view': true, 'Wi-Fi': true }, htab: 1, same: [true, false], closed: { 1: [] }, act: [true, true, true, true, true, false], secOrder: [0,1,2,3,4,5,6,7,8,9,10], secOff: { 9: true, 10: true }, tpl: 0, cmode: 2, acc: 0, fr: false, phIdx: 3, phPlaces: { 'Room 3': true, 'Gallery': true }, upStage: 'pick', actIdx: 0, arrange: true, prep: 25, sw: [false, false, false], saved: false,
+      groups: [
+        { en: 'Breakfast', rw: 'Ifunguro rya mu gitondo', n: 4, vis: true },
+        { en: 'Mains', rw: 'Amafunguro makuru', n: 4, vis: true },
+        { en: 'Rwandan', rw: 'Ibiryo nyarwanda', n: 4, vis: true },
+        { en: 'Drinks', rw: 'Ibinyobwa', n: 4, vis: true }
+      ] };
+  }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { bg: '#0F1215', card: '#181C20', ink: '#ECEFF2', muted: '#9AA3AC', line: '#2A3036', accent: '#6FA8D6', onAccent: '#0F1215', ok: '#7CC39B', warn: '#E0A84A', danger: '#F08A7E' }
+      : { bg: '#F6F7F8', card: '#FFFFFF', ink: '#15181C', muted: '#5B636B', line: '#E2E5E8', accent: '#1F5F8B', onAccent: '#FFFFFF', ok: '#2F6B4F', warn: '#B26A00', danger: '#B3261E' };
+    const s = this.state, rw = s.ui === 'rw';
+    const L = rw ? {
+      preview: 'Reba urubuga', editSite: 'Hindura urubuga', complete: 'Urubuga rwawe rwuzuye', nextTip: 'Ongeraho amafoto 3 y\u2019ibyumba kugira ngo bigere ku 100%.',
+      liveNote: 'Ibyo uhinduye bigaragara ako kanya ku rubuga.', menu: 'Menu', addGroup: 'Itsinda', groupHint: 'Kanda ku itsinda urebe ibiryo. Koresha ▲▼ guhindura uko bikurikirana.',
+      addDish: 'Ongeraho ifunguro', addPhoto: 'Shyiraho ifoto', photoNote: 'Tugabanya ingano y\u2019ifoto kugira ngo ifunguke vuba no kuri interineti itihuta.',
+      name: 'Izina', line: 'Igisobanuro gito', group: 'Itsinda', mains: 'Amafunguro makuru', prep: 'Igihe cyo gutegura', prepHint: 'Abakiriya ntibashobora gutumiza mbere y\u2019iki gihe',
+      lastChange: 'Byahinduwe na Claudine, uyu munsi 09:12', delete: 'Siba', save: 'Bika', savedLive: 'Byabitswe · biri ku rubuga',
+      draftCheck: 'Igerageza · emeza', today: 'Menu y\u2019uyu munsi', replace: 'Indi foto', rotate: 'Hindukiza', remove: 'Siba', showsOn: 'Igaragara he', caption: 'Igisobanuro cy\u2019ifoto',
+      addTitle: 'Ongeraho ifoto', camera: 'Fata ifoto', gallery: 'Hitamo muri telefoni', addTip: 'Amafoto meza: urumuri rw\u2019umunsi, telefoni itambitse, nta bantu badashaka kugaragara.',
+      shrunk: 'Twagabanyije ingano, ifunguka vuba.', whereShow: 'Igaragare he?', distance: 'Intera', priceOpt: 'Igiciro (si ngombwa)', arrange: 'Buto \u201cDufashe kubitegura\u201d', arrangeSub: 'Abashyitsi babisaba kuri WhatsApp cyangwa muri booking', photos: 'Amafoto', addPhotos: 'Ongeraho', photosHint: 'Kanda ku ifoto uhitemo aho igaragara. Ahabura ifoto hagaragara igishushanyo.',
+      around: 'Ibyo gukora hafi', add: 'Ongeraho', aroundHint: 'Ibikorwa abashyitsi babona. Buri kimwe gifite buto \u201cDufashe kubitegura\u201d.',
+      sections: 'Ibice by\u2019urubuga', sectionsHint: 'Hitamo ibigaragara ku rupapuro rw\u2019itangiriro n\u2019uko bikurikirana.',
+      look: 'Isura n\u2019amabara', template: 'Imiterere', colorSet: 'Amabara', accent: 'Ibara nyamukuru', previewSite: 'Reba urubuga',
+      languages: 'Indimi', langsHint: 'Icyongereza kirakenewe. Izindi ndimi zigaragara aho zuzuye, ahandi hagaragara Icyongereza.', rooms: 'Ibyumba', addRoom: 'Icyumba', roomsHint: 'Buri bwoko bw\u2019icyumba n\u2019umubare w\u2019ibyumba ufite. Bikoreshwa mu kureba ibyumba biboneka.',
+      photo: 'Ifoto', photosTip: 'Shyiraho nibura amafoto 3: igitanda, ibyo ureba, ubwiherero.', night: 'ijoro', breakfast: 'Ifunguro rya mu gitondo ririmo', amenities: 'Ibirimo',
+      info: 'Amakuru y\u2019ubucuruzi', bizName: 'Izina ry\u2019ubucuruzi', headline: 'Interuro nkuru', contacts: 'Aho baguhamagara', phone: 'Telefoni', movePin: 'Himura ikimenyetso',
+      hours: 'Amasaha y\u2019akazi', sameDays: 'Kimwe buri munsi', closure: 'Ongeraho umunsi mufunze', hoursNote: 'Amasaha ya resitora agena igihe abakiriya bashobora gutumiza.', addSpecial: 'Ongeraho ifunguro ry\u2019uyu munsi', specialHint: 'Rigaragara uyu munsi gusa, rikavaho ejo. Ibiryo bihoraho byongerwa muri Menu.', todayHint: 'Kanda ku ifunguro ryashize. Rihita rivanwa ku rubuga, rikagaruka ejo mu gitondo.', safety: 'Wibagiwe? Buri cyatumijwe gitegereza ko ukemeza. Ushobora gusubiza ko ryashize ugatanga irindi.', avail: 'Rirahari', soldOut: 'Ryashize · rigaruka ejo', checked: 'Byemejwe', addFr: 'Ongeraho Igifaransa', langRule: 'Icyongereza kirakenewe. Ahatari ubusobanuro, abashyitsi babona Icyongereza.', suggest: 'Ijambo ritanditse neza? Tubwire'
+    } : {
+      preview: 'Preview', editSite: 'Edit site', complete: 'Your site is complete', nextTip: 'Add 3 room photos to reach 100%.',
+      liveNote: 'Changes show on your site as soon as you save.', menu: 'Menu', addGroup: 'Group', groupHint: 'Tap a group to see its dishes. Use ▲▼ to change the order guests see.',
+      addDish: 'Add a dish', addPhoto: 'Add photo', photoNote: 'We shrink photos so they load fast, even on slow networks.',
+      name: 'Name', line: 'Short description', group: 'Group', mains: 'Mains', prep: 'Prep time', prepHint: 'Guests can\u2019t order for earlier than this',
+      lastChange: 'Changed by Claudine, today 09:12', delete: 'Delete dish', save: 'Save', savedLive: 'Saved · live on your site',
+      draftCheck: 'Draft · tap when checked', today: 'Today\u2019s menu', replace: 'Replace', rotate: 'Rotate', remove: 'Remove', showsOn: 'Shows on', caption: 'Caption',
+      addTitle: 'Add a photo', camera: 'Take a photo', gallery: 'Choose from phone', addTip: 'Tips: daylight, phone held sideways, no guests who didn\u2019t agree to be in it.',
+      shrunk: 'We made it smaller so it loads fast.', whereShow: 'Where should it show?', distance: 'Distance', priceOpt: 'Price (optional)', arrange: '\u201cAsk us to arrange\u201d button', arrangeSub: 'Guests request it by WhatsApp or from My booking', photos: 'Photos', addPhotos: 'Add', photosHint: 'Tap a photo to choose where it shows. Empty spots show a drawing until you add one.',
+      around: 'Around us', add: 'Add', aroundHint: 'Activities guests see. Each one gets an \u201cAsk us to arrange\u201d button.',
+      sections: 'Sections', sectionsHint: 'Choose what shows on your home page, and in what order.',
+      look: 'Look & colors', template: 'Template', colorSet: 'Color set', accent: 'Main color', previewSite: 'Preview my site',
+      languages: 'Languages', langsHint: 'English is required. Other languages show where they are filled in; everything else falls back to English.', rooms: 'Rooms', addRoom: 'Room', roomsHint: 'Each room type, and how many rooms of it you have. This is what the availability calendar counts.',
+      photo: 'Photo', photosTip: 'Add at least 3 photos: the bed, the view, the bathroom.', night: 'night', breakfast: 'Breakfast included', amenities: 'What\u2019s in the room',
+      info: 'Business info', bizName: 'Business name', headline: 'Main headline', contacts: 'Contacts', phone: 'Phone', movePin: 'Move pin',
+      hours: 'Opening hours', sameDays: 'Same every day', closure: 'Add a closed day', hoursNote: 'Restaurant hours decide when guests can order and reserve.', addSpecial: 'Add today\u2019s special', specialHint: 'Shows today only and disappears tomorrow. Permanent dishes are added in Menu.', todayHint: 'Tap a dish that has run out. It leaves your site at once and comes back tomorrow at opening time.', safety: 'Forgot? Every order waits for your OK, so you can reply that a dish is finished and offer another.', avail: 'Available', soldOut: 'Sold out · back tomorrow', checked: 'Checked', addFr: 'Add French', langRule: 'English is required. Where a translation is missing, guests see English.', suggest: 'Wrong word? Suggest a better one'
+    };
+    const ic = {
+      info: 'M12 21 a9 9 0 1 0 0 -18 a9 9 0 1 0 0 18 M12 11 v6 M12 7.5 v0.1',
+      photo: 'M3 7 h4 l2 -2 h6 l2 2 h4 v12 h-18 Z M12 16.5 a3.5 3.5 0 1 0 0 -7 a3.5 3.5 0 1 0 0 7',
+      bed: 'M3 18 V8 M3 14 H21 V18 M21 14 V12 a3 3 0 0 0 -3 -3 H11 V14 M5 11 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0',
+      menu: 'M7 3 v8 a2 2 0 0 0 4 0 V3 M9 11 V21 M16 3 c-2 2 -2 7 0 9 V21',
+      map: 'M3 6 l6 -2 l6 2 l6 -2 v14 l-6 2 l-6 -2 l-6 2 Z M9 4 v14 M15 6 v14',
+      layers: 'M12 3 l9 5 l-9 5 l-9 -5 Z M3 13 l9 5 l9 -5',
+      palette: 'M12 21 a9 9 0 1 1 9 -9 c0 2 -2 3 -4 3 h-2 a2 2 0 0 0 -1 3.7 c0.6 1 -0.2 2.3 -2 2.3 Z M7.5 11 v0.1 M10 7 v0.1 M15 7 v0.1',
+      lang: 'M4 5 h10 M9 3 v2 M6 5 c1 4 4 7 7 8 M12 5 c-1 4 -4 7 -7 8 M13 21 l4 -9 l4 9 M14.5 18 h5'
+    };
+    const ok = t.ok, warn = t.warn;
+    const T = rw ? [
+      ['Amakuru y\u2019ubucuruzi', 'Izina, telefoni, amasaha', 'info', ok, 'info'],
+      ['Amafoto', '12 · ongeraho 3', 'photo', warn, 'photos'],
+      ['Ibyumba', '4 ubwoko · 7 ibyumba', 'bed', ok, 'rooms'],
+      ['Menu', '4 amatsinda · 16 ibiryo', 'menu', ok, 'menu'],
+      ['Ibyo gukora hafi', '5 ibikorwa', 'map', ok, 'around'],
+      ['Ibice by\u2019urubuga', '8 bigaragara', 'layers', ok, 'sections'],
+      ['Isura n\u2019amabara', 'Field Journal · nijoro', 'palette', ok, 'look'],
+      ['Indimi', 'EN ✓ · RW 60% · FR —', 'lang', warn, 'langs']
+    ] : [
+      ['Business info', 'Name, contacts, hours', 'info', ok, 'info'],
+      ['Photos', '12 · add 3 more', 'photo', warn, 'photos'],
+      ['Rooms', '4 types · 7 rooms', 'bed', ok, 'rooms'],
+      ['Menu', '4 groups · 16 dishes', 'menu', ok, 'menu'],
+      ['Around us', '5 activities', 'map', ok, 'around'],
+      ['Sections', '8 shown', 'layers', ok, 'sections'],
+      ['Look & colors', 'Field Journal · night', 'palette', ok, 'look'],
+      ['Languages', 'EN ✓ · RW 60% · FR —', 'lang', warn, 'langs']
+    ];
+    const tiles = T.map(x => ({ name: x[0], sub: x[1], icon: ic[x[2]], dot: x[3], open: () => { if (x[4]) this.setState({ view: x[4] }); } }));
+    const G = s.groups;
+    const move = (i, d) => { const j = i + d; if (j < 0 || j >= G.length) return; const g = G.slice(); const tmp = g[i]; g[i] = g[j]; g[j] = tmp; this.setState({ groups: g, open: s.open === i ? j : s.open === j ? i : s.open }); };
+    const dishesFor = { Breakfast: [['Trekker\u2019s breakfast', '#B5643C'], ['Banana pancakes', '#8A6A2E'], ['Fresh fruit plate', '#3F5B3A']], Mains: [['Goat brochettes', '#B5643C'], ['Tilapia & chips', '#2B3A4A'], ['Beef stew & matoke', '#5B4636']], Rwandan: [['Isombe & rice', '#3F5B3A'], ['Ibihaza', '#8A6A2E']], Drinks: [['Rwandan coffee', '#5B4636'], ['African tea', '#8A6A2E']] };
+    const groups = G.map((g, i) => ({
+      name: rw ? g.rw : g.en,
+      count: g.n + (rw ? ' ibiryo' : ' dishes') + (g.vis ? '' : rw ? ' · ntibigaragara' : ' · hidden from guests'),
+      op: g.vis ? '1' : '0.5',
+      border: s.open === i ? t.accent : t.line,
+      upColor: i === 0 ? t.line : t.ink, downColor: i === G.length - 1 ? t.line : t.ink,
+      up: () => move(i, -1), down: () => move(i, 1),
+      toggle: () => this.setState({ open: s.open === i ? -1 : i }),
+      hide: () => { const gg = G.slice(); gg[i] = { ...g, vis: !g.vis }; this.setState({ groups: gg }); },
+      visLabel: g.vis ? (rw ? 'Biragaragara' : 'Shown') : (rw ? 'Byahishwe' : 'Hidden'),
+      visBg: g.vis ? 'transparent' : t.line, visFg: g.vis ? t.ink : t.muted,
+      open: s.open === i,
+      dishes: (dishesFor[g.en] || []).map(d => ({ name: d[0], bg: d[1], meta: 'RWF 7,000 · 25 min', open: () => this.setState({ view: 'dish', saved: false }) })),
+      addDish: () => this.setState({ view: 'dish', saved: false })
+    }));
+    const draft = !s.rwOk;
+    const mkRow = (lang, value, isRw, aria) => ({ lang, value, aria, isDraft: isRw && draft, isOk: isRw && !draft, approve: () => this.setState({ rwOk: true, saved: false }), border: isRw && draft ? t.warn : t.line });
+    const fields = [
+      { label: L.name, rows: [mkRow('ENGLISH · REQUIRED', 'Goat brochettes', false, 'Name in English'), mkRow('KINYARWANDA', 'Brochette z\u2019ihene', true, 'Name in Kinyarwanda')] },
+      { label: L.line, rows: [mkRow('ENGLISH · REQUIRED', 'Two skewers, grilled over charcoal, with chips.', false, 'Description in English'), mkRow('KINYARWANDA', 'Brochette ebyiri zokejwe ku makara, n\u2019ifiriti.', true, 'Description in Kinyarwanda')] }
+    ];
+    if (s.fr) { fields[0].rows.push(mkRow('FRANÇAIS', '', false, 'Name in French')); fields[1].rows.push(mkRow('FRANÇAIS', '', false, 'Description in French')); }
+    const SW = rw ? [['Ibiryo bidafite inyama', 'Bigaragaza ikimenyetso VEG'], ['Bisaba kubimenyeshwa mbere', 'Urugero: amasaha 24 ku mugati w\u2019isabukuru'], ['Byashize uyu munsi', 'Bihishwa kugeza ejo']]
+      : [['Vegetarian', 'Shows the VEG tag'], ['Needs notice', 'For example 24 h for a birthday cake'], ['Sold out today', 'Hidden from guests until tomorrow']];
+    const swState = s.sw;
+    const switches = SW.map((x, i) => ({ name: x[0], sub: x[1], track: swState[i] ? t.accent : t.line, knob: swState[i] ? '21px' : '3px', tap: () => { const a = swState.slice(); a[i] = !a[i]; this.setState({ sw: a, saved: false }); } }));
+    const GROUPS = [
+      ['BREAKFAST', [['Trekker\u2019s breakfast', '#B5643C'], ['Banana pancakes', '#8A6A2E'], ['Fresh fruit plate', '#3F5B3A'], ['Spanish omelette', '#5B4636']]],
+      ['MAINS', [['Tilapia & chips', '#2B3A4A'], ['Goat brochettes', '#B5643C'], ['Beef stew & matoke', '#5B4636'], ['Vegetable curry', '#3F5B3A']]],
+      ['RWANDAN', [['Isombe & rice', '#3F5B3A'], ['Ibihaza', '#8A6A2E'], ['Agatogo', '#B5643C'], ['Sunday buffet', '#5B4636']]],
+      ['DRINKS', [['Rwandan coffee', '#5B4636'], ['African tea', '#8A6A2E'], ['Passion fruit juice', '#B5643C'], ['Local beer', '#2B3A4A']]]
+    ];
+    const sold = s.sold || {};
+    const specials = s.specials || [];
+    const rowFor = (d, head, special) => { const out = !!sold[d[0]]; return { name: d[0], bg: d[1], op: out ? '0.35' : '1', td: out ? 'line-through' : 'none',
+      isHead: !!head, head: head || '',
+      state: special ? (rw ? 'Iry\u2019uyu munsi gusa' : 'Today only · gone tomorrow') : (out ? L.soldOut : L.avail),
+      stateColor: special ? t.accent : (out ? t.danger : t.ok), track: out ? t.line : t.ok, knob: out ? '3px' : '21px', rowBg: out ? t.bg : 'transparent',
+      tap: () => { const n = { ...sold }; if (n[d[0]]) delete n[d[0]]; else n[d[0]] = true; this.setState({ sold: n }); } }; };
+    const todayList = [];
+    if (specials.length) specials.forEach((d, i) => todayList.push(rowFor(d, i === 0 ? (rw ? 'IBIDASANZWE BY\u2019UYU MUNSI' : 'TODAY\u2019S SPECIALS') : null, true)));
+    GROUPS.forEach(g => g[1].forEach((d, i) => todayList.push(rowFor(d, i === 0 ? g[0] : null, false))));
+    const nOut = Object.keys(sold).length;
+    const todaySub = rw ? (nOut ? nOut + ' byashize · hindura' : 'Byose birahari · reba') : (nOut ? nOut + ' sold out · update' : 'All available · check');
+    const RL = [['Garden Single', '#5E7048', 1, 1, 'RWF 45,000 · USD 35'], ['Garden Double', '#3F5B3A', 2, 2, 'RWF 60,000 · USD 45'], ['Volcano View Double', '#9C6E4E', 2, 2, 'RWF 80,000 · USD 60'], ['Family Cottage', '#5B4636', 4, 2, 'RWF 100,000 · USD 75']];
+    const roomList = RL.map(r => ({ name: r[0], bg: r[1], price: r[4], meta: (rw ? 'Abantu ' + r[2] + ' · ibyumba ' + r[3] : 'Up to ' + r[2] + (r[2] === 1 ? ' guest · ' : ' guests · ') + r[3] + (r[3] === 1 ? ' room' : ' rooms')), open: () => this.setState({ view: 'room', saved: false }) }));
+    const roomSteppers = [
+      { name: rw ? 'Abashyitsi' : 'Guests', sub: rw ? 'Umubare ntarengwa' : 'Most people in this room', val: s.guests, minus: () => this.setState({ guests: Math.max(1, s.guests - 1), saved: false }), plus: () => this.setState({ guests: Math.min(10, s.guests + 1), saved: false }) },
+      { name: rw ? 'Ibyumba by\u2019ubu bwoko' : 'Rooms of this type', sub: rw ? 'Bikoreshwa mu kureba ibiboneka' : 'Used for availability', val: s.units, minus: () => this.setState({ units: Math.max(1, s.units - 1), saved: false }), plus: () => this.setState({ units: Math.min(50, s.units + 1), saved: false }) }
+    ];
+    const AM = ['Queen bed', 'Twin beds', 'Shower', 'Bathtub', 'Balcony', 'Volcano view', 'Garden view', 'Wi-Fi', 'Fireplace', 'Desk'];
+    const amen = AM.map(a => { const on = !!s.am[a]; return { name: a, border: on ? t.accent : t.line, bg: on ? t.accent : 'transparent', fg: on ? t.onAccent : t.ink, tap: () => { const n = { ...s.am }; if (n[a]) delete n[a]; else n[a] = true; this.setState({ am: n, saved: false }); } }; });
+    const HT = rw ? ['Kwakira abashyitsi', 'Resitora'] : ['Reception', 'Restaurant'];
+    const hourTabs = HT.map((h, i) => ({ name: h, border: s.htab === i ? t.ink : t.line, bg: s.htab === i ? t.ink : 'transparent', fg: s.htab === i ? t.bg : t.ink, pick: () => this.setState({ htab: i }) }));
+    const DAYS = rw ? ['Kuwa 1', 'Kuwa 2', 'Kuwa 3', 'Kuwa 4', 'Kuwa 5', 'Kuwa 6', 'Ku cyumweru'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const TIMES = [['6:00 – 22:00'], ['7:00 – 21:00', '7:00 – 21:00', '7:00 – 21:00', '7:00 – 21:00', '7:00 – 22:00', '7:00 – 22:00', '12:00 – 21:00']];
+    const same = s.same[s.htab];
+    const closedDays = (s.closed[s.htab] || []);
+    const hourRows = same
+      ? [{ day: rw ? 'Buri munsi' : 'Every day', time: TIMES[s.htab][0], color: t.ink, btn: rw ? 'Hindura' : 'Edit', btnBg: 'transparent', btnFg: t.ink, toggle: () => {} }]
+      : DAYS.map((d, i) => { const off = closedDays.indexOf(i) >= 0; return { day: d, time: off ? (rw ? 'Harafunze' : 'Closed') : (TIMES[s.htab][i] || TIMES[s.htab][0]), color: off ? t.muted : t.ink,
+          btn: off ? (rw ? 'Fungura' : 'Open') : (rw ? 'Funga' : 'Close'), btnBg: off ? t.line : 'transparent', btnFg: t.ink,
+          toggle: () => { const c = { ...s.closed }; const arr = (c[s.htab] || []).slice(); const k = arr.indexOf(i); if (k >= 0) arr.splice(k, 1); else arr.push(i); c[s.htab] = arr; this.setState({ closed: c, saved: false }); } }; });
+    const PH = [['Hero', '#E9C9A0'], ['Terrace', '#B79A7E'], ['Room 3 · bed', '#9C6E4E'], ['Room 3 · view', '#B79A7E'], ['Room 3 · bath', '#2B3A4A'], ['Room 4 · fire', '#5B4636'], ['Room 4 · beds', '#9C6E4E'], ['Room 2 · bed', '#3F5B3A'], ['Garden', '#7C8B5A'], ['Dining room', '#5B4636'], ['Breakfast', '#B5643C'], ['Host', '#B5643C']];
+    const photos = PH.map((p, i) => ({ label: p[0], bg: p[1], border: 'none', mark: '', color: t.muted, open: () => this.setState({ view: 'photo', phIdx: i, saved: false }) }))
+      .concat(['Room 1 · bed', 'Room 1 · view', 'Room 1 · bath'].map(l => ({ label: l, bg: 'transparent', border: '1.5px dashed ' + t.warn, mark: '+', color: t.warn, open: () => this.setState({ view: 'addphoto', upStage: 'pick', phPlaces: { 'Room 1': true } }) })));
+    const PLACES = ['Hero', 'Room 1', 'Room 2', 'Room 3', 'Room 4', 'Dining room', 'Host', 'Gallery'];
+    const places = PLACES.map(n => { const on = !!s.phPlaces[n]; return { name: n, border: on ? t.accent : t.line, bg: on ? t.accent : 'transparent', fg: on ? t.onAccent : t.ink, tap: () => { const m = { ...s.phPlaces }; if (m[n]) delete m[n]; else m[n] = true; this.setState({ phPlaces: m, saved: false }); } }; });
+    const curPh = PH[s.phIdx] || PH[0];
+    const ph = { bg: curPh[1], size: '1280 × 960 · 124 KB', capEn: 'Sunrise over Sabyinyo from the balcony', capRw: 'Izuba rirasira hejuru ya Sabyinyo' };
+    const AR = [['Gorilla trekking', '#3F5B3A', '15 min'], ['Golden monkeys', '#B5643C', '15 min'], ['Musanze Caves', '#5B4636', '25 min'], ['Twin Lakes', '#2B3A4A', '40 min'], ['Cultural village', '#8A6A2E', '10 min'], ['Dian Fossey hike', '#3F5B3A', '20 min']];
+    const aroundList = AR.map((a, i) => { const on = s.act[i]; return { open: () => this.setState({ view: 'activity', actIdx: i, saved: false }), name: a[0], bg: a[1], op: on ? '1' : '0.35', meta: a[2] + (on ? '' : (rw ? ' · byahishwe' : ' · hidden')), track: on ? t.ok : t.line, knob: on ? '21px' : '3px', tap: () => { const n = s.act.slice(); n[i] = !n[i]; this.setState({ act: n }); } }; });
+    const SEC = rw
+      ? [['Ahabanza (ifoto nkuru)', 'Buri gihe kigaragara'], ['Ibyihuse kumenya', '3 udusanduku'], ['Ubuzima hano', 'Amafoto anyerera'], ['Ibyumba', '4 ubwoko'], ['Ku meza yacu', 'Menu · 3 ibiryo'], ['Ibyo gukora hafi', '5 ibikorwa'], ['Nyiri urugo', 'Claudine'], ['Ibitekerezo by\u2019abashyitsi', '4.6 · 8.9'], ['Aho turi', 'Ikarita · amasaha'], ['Ibikoresho', 'Ku mahoteli yo mu mujyi'], ['Inama n\u2019ibirori', 'Ku mahoteli yo mu mujyi']]
+      : [['Hero', 'Always shown'], ['Quick facts', '3 stamps'], ['Life at the lodge', 'Sliding photos'], ['Rooms', '4 types'], ['At our table', 'Menu · 3 dishes'], ['Around us', '5 activities'], ['Your host', 'Claudine'], ['Reviews', '4.6 · 8.9'], ['Find us', 'Map · hours'], ['Facilities', 'For town hotels'], ['Meetings & events', 'For town hotels']];
+    const order = s.secOrder;
+    const mv = (pos, d) => { const j = pos + d; if (j < 1 || j >= order.length || pos === 0) return; const o = order.slice(); const x = o[pos]; o[pos] = o[j]; o[j] = x; this.setState({ secOrder: o }); };
+    const sectionList = order.map((id, pos) => { const off = !!s.secOff[id], fixed = id === 0; return { name: SEC[id][0], meta: SEC[id][1], op: off ? '0.45' : '1',
+      track: off ? t.line : t.ok, knob: off ? '3px' : '21px', upC: pos <= 1 || fixed ? t.line : t.ink, downC: pos === order.length - 1 || fixed ? t.line : t.ink,
+      up: () => mv(pos, -1), down: () => mv(pos, 1), tap: () => { if (fixed) return; const n = { ...s.secOff }; if (n[id]) delete n[id]; else n[id] = true; this.setState({ secOff: n }); } }; });
+    const TP = [['Field Journal', rw ? 'Ibishushanyo, impapuro, inyandiko z\u2019intoki' : 'Sketches, paper, handwriting', '#F4EEE3', '#2B2620', '#3F5B3A', false], ['Imigongo', rw ? 'Amabara akomeye, imiterere y\u2019imigongo' : 'Bold color, Imigongo patterns', '#1E1B17', '#C8913A', '#F4EEE3', false], ['Cinematic', rw ? 'Amafoto manini, birakwiye ufite amafoto meza' : 'Big photos, best with a photo shoot', '#2B3A4A', '#E9C9A0', '#FFFFFF', true]];
+    const templates = TP.map((x, i) => { const taken = x[5], on = s.tpl === i; return { name: x[0], sub: taken ? (rw ? 'Ikoreshwa n\u2019umuturanyi' : 'Used by a lodge nearby') : x[1], bg: x[2], c1: x[3], c2: x[4],
+      border: on ? t.accent : 'transparent', op: taken ? '0.5' : '1', cursor: taken ? 'not-allowed' : 'pointer',
+      tag: on ? (rw ? '✓ Uriho' : '✓ In use') : taken ? (rw ? 'Ntibishoboka' : 'Taken') : '', tagC: on ? t.ok : t.muted, pick: () => { if (!taken) this.setState({ tpl: i }); } }; });
+    const CM = rw ? ['Amanywa', 'Nijoro', 'Byikora'] : ['Day', 'Night', 'Auto'];
+    const modesC = CM.map((m, i) => ({ name: m, border: s.cmode === i ? t.ink : t.line, bg: s.cmode === i ? t.ink : 'transparent', fg: s.cmode === i ? t.bg : t.ink, pick: () => this.setState({ cmode: i }) }));
+    const AC = [['Forest green', '#3F5B3A'], ['Sorghum red', '#A4442B'], ['Lake blue', '#1F5F8B'], ['Basalt', '#2B2620']];
+    const accents = AC.map((a, i) => ({ name: a[0], c: a[1], ring: s.acc === i ? t.ink : 'transparent', pick: () => this.setState({ acc: i }) }));
+    const langList = [
+      { name: 'English', tag: rw ? 'Birakenewe' : 'Required', tagC: t.muted, pct: '100%', barC: t.ok, meta: rw ? 'Byose byuzuye' : 'All texts filled', hasAction: false, action: '', act: () => {} },
+      { name: 'Kinyarwanda', tag: '60%', tagC: t.warn, pct: '60%', barC: t.warn, meta: rw ? 'Inyandiko 12 zibura' : '12 texts missing', hasAction: true, action: rw ? 'Uzuza ubu' : 'Fill now', act: () => {} },
+      { name: 'Français', tag: s.fr ? '0%' : (rw ? 'Ntikoreshwa' : 'Off'), tagC: t.muted, pct: '0%', barC: t.accent, meta: s.fr ? (rw ? 'Inyandiko 30 zo kuzuza' : '30 texts to fill') : (rw ? 'Abashyitsi babona Icyongereza' : 'Guests see English'), hasAction: true, action: s.fr ? (rw ? 'Tangira' : 'Start') : (rw ? 'Fungura' : 'Turn on'), act: () => this.setState({ fr: true }) }
+    ];
+    const ARW = ['Gusura ingagi', 'Inkima za zahabu', 'Ubuvumo bwa Musanze', 'Ibiyaga by\u2019impanga', 'Umudugudu ndangamuco', 'Urugendo rwa Dian Fossey', ''];
+    const ALINE = ['Permits from the park. We book your driver and packed lunch.', 'A shorter, playful trek in the bamboo forest.', 'A 2 km walk through old lava tunnels.', 'Canoe on Burera and Ruhondo, lunch by the water.', 'Dance, drums and banana beer with local families.', 'A steep hike to the researcher\u2019s grave and old camp.', ''];
+    const ai = s.actIdx;
+    const actv = ai >= AR.length ? { name: '', rw: '', line: '', dist: '', bg: t.line } : { name: AR[ai][0], rw: ARW[ai], line: ALINE[ai], dist: AR[ai][2], bg: AR[ai][1] };
+    const NAV = rw ? ['Ahabanza', 'Urubuga', 'Ubusabe', 'Ibitumizwa', 'Ibindi'] : ['Home', 'Edit site', 'Bookings', 'Orders', 'More'];
+    const NI = ['M3 11 L12 4 L21 11 V20 H3 Z', 'M4 20 h4 L19 9 l-4 -4 L4 16 Z', 'M4 6 h16 v14 h-16 Z M4 10 h16 M8 3 v5 M16 3 v5', 'M6 8 h12 l-1 12 H7 Z M9 8 V6 a3 3 0 0 1 6 0 V8', 'M5 12 v0.1 M12 12 v0.1 M19 12 v0.1'];
+    const nav = NAV.map((n, i) => ({ name: n, icon: NI[i], color: i === 1 ? t.accent : t.muted }));
+    return {
+      t, L, tiles, groups, fields, switches, nav, frClosed: !s.fr, openFr: () => this.setState({ fr: true }),
+      vPhoto: s.view === 'photo', vAddPhoto: s.view === 'addphoto', vActivity: s.view === 'activity', ph, places, actv,
+      toPhotos: () => this.setState({ view: 'photos' }), toAround: () => this.setState({ view: 'around' }),
+      addPhoto: () => this.setState({ view: 'addphoto', upStage: 'pick', phPlaces: {} }), rotate: () => this.setState({ saved: false }),
+      upPick: s.upStage === 'pick', upDone: s.upStage === 'done', startUpload: () => this.setState({ upStage: 'done', phPlaces: s.phPlaces }),
+      finishUpload: () => this.setState({ view: 'photos', upStage: 'pick' }),
+      newActivity: () => this.setState({ view: 'activity', actIdx: 99, saved: false }),
+      arrTrack: s.arrange ? t.ok : t.line, arrKnob: s.arrange ? '21px' : '3px', toggleArrange: () => this.setState({ arrange: !s.arrange, saved: false }),
+      vPhotos: s.view === 'photos', vAround: s.view === 'around', vSections: s.view === 'sections', vLook: s.view === 'look', vLangs: s.view === 'langs',
+      photos, aroundList, sectionList, templates, modesC, accents, langList,
+      isRw: rw, vHub: s.view === 'hub', vToday: s.view === 'today', vRooms: s.view === 'rooms', vRoom: s.view === 'room', vInfo: s.view === 'info',
+      roomList, roomSteppers, amen, hourTabs, hourRows,
+      toRooms: () => this.setState({ view: 'rooms' }), openRoom: () => this.setState({ view: 'room', saved: false }),
+      bfTrack: s.bf ? t.ok : t.line, bfKnob: s.bf ? '21px' : '3px', toggleBreakfast: () => this.setState({ bf: !s.bf, saved: false }),
+      sameTrack: same ? t.ok : t.line, sameKnob: same ? '21px' : '3px', toggleSame: () => { const a = s.same.slice(); a[s.htab] = !a[s.htab]; this.setState({ same: a, saved: false }); },
+      toToday: () => this.setState({ view: 'today' }),
+      addSpecial: () => this.setState({ specials: (s.specials || []).concat([['Fish stew from Lake Burera', '#2B3A4A']]) }),
+      todayList, todaySub, vMenu: s.view === 'menu', vDish: s.view === 'dish',
+      toHub: () => this.setState({ view: 'hub' }), toMenu: () => this.setState({ view: 'menu' }),
+      addGroup: () => this.setState({ groups: G.concat([{ en: 'New group', rw: 'Itsinda rishya', n: 0, vis: true }]), open: G.length }),
+      prep: s.prep, prepMinus: () => this.setState({ prep: Math.max(0, s.prep - 5), saved: false }), prepPlus: () => this.setState({ prep: Math.min(240, s.prep + 5), saved: false }),
+      saved: s.saved, save: () => this.setState({ saved: true }),
+      enBg: rw ? 'transparent' : t.ink, enFg: rw ? t.ink : t.bg, rwBg: rw ? t.ink : 'transparent', rwFg: rw ? t.bg : t.ink,
+      setEn: () => this.setState({ ui: 'en' }), setRw: () => this.setState({ ui: 'rw' })
+    };
+  }
+}
+</script>
+</body>
+</html>

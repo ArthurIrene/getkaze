@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – Request sent with booking code (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.fj-pop{animation:fjpop .7s cubic-bezier(.2,1.4,.4,1) .2s both}
+@keyframes fjpop{from{transform:rotate(-8deg) scale(.6);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:1}}
+.fj-draw{stroke-dasharray:80;stroke-dashoffset:80;animation:fjdraw .6s ease-out .7s forwards}
+@keyframes fjdraw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.fj-pop{animation:none;transform:rotate(-8deg)}.fj-draw{animation:none;stroke-dashoffset:0}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+    <a href="T1-Home.dc.html" style="display: flex; flex-direction: column; line-height: 1; text-decoration: none">
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 19px">Kinigi Hills</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: {{ t.muted }}; letter-spacing: 0.14em; margin-top: 4px">LODGE · MUSANZE</span>
+    </a>
+    <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN ▾</span>
+  </div>
+
+  <!-- Stamp + thanks -->
+  <div style="padding: 24px 16px 0; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+    <div class="fj-pop" style="width: 132px; height: 132px; border-radius: 999px; border: 2.5px solid {{ t.accent }}; color: {{ t.accent }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transform: rotate(-8deg)">
+      <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true"><path class="fj-draw" d="M8 21 L17 30 L33 11" fill="none" stroke="{{ t.accent }}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em">REQUEST SENT</span>
+    </div>
+    <h1 style="margin: 6px 0 0; font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 34px; line-height: 1.05; letter-spacing: -0.02em">Thank you, Anna!</h1>
+    <p style="margin: 0; font-size: 15px; line-height: 1.55; color: {{ t.soft }}; max-width: 300px">Claudine will confirm your room, usually the same day. Nothing to pay now.</p>
+  </div>
+
+  <!-- Booking code card -->
+  <div style="margin: 24px 16px 0; padding: 18px; border-radius: 20px; background: {{ t.card }}; border: 1.5px dashed {{ t.dash }}; display: flex; flex-direction: column; align-items: center; gap: 12px">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: {{ t.muted }}">YOUR BOOKING CODE</span>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 38px; letter-spacing: 0.08em">KH-7Q4M</span>
+    <span onClick="{{ copy }}" style="height: 36px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; font-size: 13px; font-weight: 600; cursor: pointer">{{ copyLabel }}</span>
+    <div style="background: #FFFFFF; padding: 10px; border-radius: 12px; margin-top: 4px">
+      <svg viewBox="0 0 25 25" width="132" height="132" aria-hidden="true" shape-rendering="crispEdges"><path d="{{ qr }}" fill="#2B2620"></path></svg>
+    </div>
+    <span style="font-size: 13px; color: {{ t.muted }}; text-align: center">Show this code or QR at check-in. Keep it to check or change your booking.</span>
+  </div>
+
+  <!-- Where we sent it -->
+  <div style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 13px; line-height: 1.5; color: {{ t.soft }}; text-align: center">We emailed your code and a private link to <b style="color: {{ t.ink }}">anna.b@email.com</b></span>
+    <a href="T1-MyBooking.dc.html" style="height: 52px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; text-decoration: none">Open my booking</a>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <a href="#" style="height: 48px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; text-decoration: none">Save to WhatsApp</a>
+      <a href="#" style="height: 48px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; text-decoration: none">Add to calendar</a>
+    </div>
+  </div>
+
+  <!-- What happens next -->
+  <div style="padding: 30px 16px 0; display: flex; flex-direction: column; gap: 0">
+    <span style="font-family: Caveat, cursive; font-size: 26px; color: {{ t.accent }}; line-height: 1; padding-bottom: 12px">what happens next</span>
+    <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+      <div style="display: flex; gap: 14px">
+        <div style="display: flex; flex-direction: column; align-items: center; width: 24px; flex: 0 0 24px">
+          <span style="width: 24px; height: 24px; border-radius: 999px; border: 2px solid {{ st.ring }}; background: {{ st.fill }}; color: {{ st.mark }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; box-sizing: border-box">{{ st.icon }}</span>
+          <span style="flex: 1 1 auto; width: 2px; min-height: 22px; background: {{ st.lineColor }}"></span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 16px">
+          <span style="font-weight: 600; font-size: 15px">{{ st.title }}</span>
+          <span style="font-size: 13px; color: {{ t.muted }}">{{ st.sub }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- Summary -->
+  <div style="margin: 14px 16px 0; padding: 18px; border-radius: 18px; background: {{ t.sumBg }}; color: {{ t.sumFg }}; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; opacity: 0.8">STATUS</span><span style="font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: #E9C9A0; color: #2B2620">Waiting for the lodge</span></div>
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 20px">Volcano View Double</span>
+    <span style="font-size: 14px">Fri 11 → Mon 14 Dec 2026 · 3 nights</span>
+    <span style="font-size: 14px">2 adults</span>
+    <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid {{ t.sumLine }}; padding-top: 12px; margin-top: 4px">
+      <span style="font-size: 13px">Paying by MTN MoMo</span>
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">RWF 240,000</span>
+    </div>
+  </div>
+
+  <div style="padding: 20px 16px 0; text-align: center; font-size: 13px; color: {{ t.muted }}">Questions before then? <a href="#" style="text-decoration: underline; color: {{ t.ink }}">Chat with Claudine on WhatsApp</a></div>
+
+  <div style="margin-top: 32px; padding: 22px 16px 28px; background: #2B2620; color: #F4EEE3; display: flex; justify-content: space-between; font-size: 12px">
+    <span>© Kinigi Hills Lodge</span><a href="#" style="text-decoration: underline">Privacy notice</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":2100}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { copied: false }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', soft: '#D3C8B6', line: '#433C33', dash: '#6B6255', accent: '#8FAF7E', onAccent: '#1E1B17', sumBg: '#F1EADD', sumFg: '#1E1B17', sumLine: 'rgba(30,27,23,0.2)' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', soft: '#4A4238', line: '#D8CCB8', dash: '#8C8170', accent: '#3F5B3A', onAccent: '#FFFFFF', sumBg: '#2B2620', sumFg: '#F4EEE3', sumLine: 'rgba(244,238,227,0.25)' };
+    let seed = 7;
+    const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+    const finder = (x, y) => 'M' + x + ' ' + y + 'h7v7h-7z M' + (x + 1) + ' ' + (y + 1) + 'v5h5v-5z M' + (x + 2) + ' ' + (y + 2) + 'h3v3h-3z ';
+    let qr = finder(0, 0) + finder(18, 0) + finder(0, 18);
+    const inFinder = (x, y) => (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+    for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) if (!inFinder(x, y) && rnd() > 0.52) qr += 'M' + x + ' ' + y + 'h1v1h-1z';
+    const done = { ring: t.accent, fill: t.accent, mark: t.onAccent, icon: '✓' };
+    const todo = { ring: t.dash, fill: 'transparent', mark: t.muted, icon: '' };
+    const steps = [
+      { ...done, title: 'Request sent', sub: 'Just now · code KH-7Q4M', lineColor: t.accent },
+      { ...todo, title: 'Lodge confirms', sub: 'Same day, with payment details by email', lineColor: t.line },
+      { ...todo, title: 'Travel to Kinigi', sub: 'Need a driver or permits? Ask in My booking', lineColor: t.line },
+      { ...todo, title: 'Pay the way you chose', sub: 'MTN MoMo · track it in My booking', lineColor: t.line },
+      { ...todo, title: 'Check in', sub: 'Show your code or QR', lineColor: 'transparent' }
+    ];
+    return {
+      t, qr, steps,
+      copyLabel: this.state.copied ? 'Copied ✓' : 'Copy code',
+      copy: () => this.setState({ copied: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Owner app – Dashboard, bookings, calendar (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.ow-fade{animation:owfade .25s ease-out both}
+@keyframes owfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ow-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; min-height: 900px; background: {{ t.bg }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; position: relative">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 16px; border-bottom: 1px solid {{ t.line }}; background: {{ t.card }}">
+    <div style="display: flex; flex-direction: column; line-height: 1.1">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}; letter-spacing: 0.08em">KAZE</span>
+      <span style="font-weight: 700; font-size: 16px">Kinigi Hills Lodge ▾</span>
+    </div>
+    <div style="display: flex; height: 32px; border: 1px solid {{ t.line }}; border-radius: 8px; overflow: hidden">
+      <button type="button" onClick="{{ setEn }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ enBg }}; color: {{ enFg }}">EN</button>
+      <button type="button" onClick="{{ setRw }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ rwBg }}; color: {{ rwFg }}">RW</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <sc-if value="{{ vHome }}" hint-placeholder-val="{{ true }}">
+    <div class="ow-fade" style="padding: 18px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 13px; color: {{ t.muted }}">{{ L.date }}</span>
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em">{{ L.hello }}</h1>
+      </div>
+      <div style="border-radius: 14px; background: {{ t.ink }}; color: {{ t.bg }}; display: flex; flex-direction: column; overflow: hidden">
+        <sc-for list="{{ todayRows }}" as="r" hint-placeholder-count="3">
+          <button type="button" onClick="{{ r.go }}" style="cursor: pointer; border: 0; border-bottom: 1px solid {{ t.invLine }}; background: transparent; color: {{ t.bg }}; padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="min-width: 30px; height: 30px; padding: 0 6px; border-radius: 999px; background: {{ r.badgeBg }}; color: {{ r.badgeFg }}; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-sizing: border-box">{{ r.n }}</span>
+            <span style="flex: 1 1 auto; font-size: 15px; font-weight: 600">{{ r.text }}</span>
+            <span style="font-size: 18px; opacity: 0.7">›</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 600; font-size: 15px">{{ L.thisMonth }}</span><span style="font-size: 12px; font-weight: 600; color: {{ t.ok }}">{{ L.vsLast }}</span></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+            <div style="border-radius: 10px; background: {{ t.bg }}; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em">{{ st.n }}</span>
+              <span style="font-size: 12px; color: {{ t.muted }}">{{ st.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 12px; color: {{ t.muted }}">{{ L.weeks }}</span>
+          <div style="display: flex; align-items: flex-end; gap: 10px; height: 80px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="4">
+              <div style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 4px">
+                <span style="font-size: 11px; font-weight: 600">{{ b.n }}</span>
+                <div style="width: 100%; height: {{ b.h }}; border-radius: 6px 6px 0 0; background: {{ b.c }}"></div>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">{{ b.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <span style="font-weight: 600; font-size: 15px; margin-top: 4px">{{ L.more }}</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <sc-for list="{{ locked }}" as="lk" hint-placeholder-count="4">
+          <button type="button" onClick="{{ lk.tap }}" style="cursor: pointer; border-radius: 14px; border: 1px dashed {{ t.line }}; background: {{ lk.bg }}; color: {{ t.ink }}; padding: 12px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="display: flex; justify-content: space-between; width: 100%">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ lk.icon }}" fill="none" stroke="{{ t.muted }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 11 h12 v10 h-12 Z M8.5 11 V8 a3.5 3.5 0 0 1 7 0 V11" fill="none" stroke="{{ t.muted }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+            </span>
+            <span style="font-weight: 600; font-size: 14px">{{ lk.name }}</span>
+            <span style="font-size: 12px; color: {{ t.muted }}; line-height: 1.35">{{ lk.sub }}</span>
+            <sc-if value="{{ lk.open }}" hint-placeholder-val="{{ false }}">
+              <span class="ow-fade" style="font-size: 12px; line-height: 1.4">{{ lk.more }}</span>
+              <span style="font-size: 12px; font-weight: 600; color: {{ t.accent }}">{{ L.askOn }}</span>
+            </sc-if>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- BOOKINGS -->
+  <sc-if value="{{ vBookings }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 18px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.bookings }}</h1>
+        <button type="button" onClick="{{ toCal }}" style="cursor: pointer; height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">{{ L.calendar }}</button>
+      </div>
+      <div style="display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+          <button type="button" onClick="{{ f.pick }}" style="cursor: pointer; flex: 0 0 auto; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }}; font: 600 13px Inter, sans-serif">{{ f.name }}</button>
+        </sc-for>
+      </div>
+      <sc-for list="{{ blist }}" as="b" hint-placeholder-count="3">
+        <button type="button" onClick="{{ b.open }}" style="cursor: pointer; border-radius: 14px; border: 1px solid {{ b.border }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; text-align: left; font-family: Inter, system-ui, sans-serif">
+          <span style="display: flex; justify-content: space-between; width: 100%; align-items: center">
+            <span style="font-weight: 600; font-size: 15px">{{ b.name }}</span>
+            <span style="font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: {{ b.tagBg }}; color: {{ b.tagFg }}">{{ b.tag }}</span>
+          </span>
+          <span style="font-size: 13px">{{ b.room }} · {{ b.dates }}</span>
+          <span style="display: flex; justify-content: space-between; width: 100%; font-size: 12px; color: {{ t.muted }}"><span>{{ b.meta }}</span><span style="font-weight: 600; color: {{ t.ink }}">{{ b.total }}</span></span>
+        </button>
+      </sc-for>
+      <sc-if value="{{ emptyList }}" hint-placeholder-val="{{ false }}">
+        <div style="border-radius: 14px; border: 1px dashed {{ t.line }}; padding: 24px; text-align: center; font-size: 14px; color: {{ t.muted }}">{{ L.empty }}</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- BOOKING DETAIL -->
+  <sc-if value="{{ vDetail }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toBookings }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.bookings }}</button>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 24px; font-weight: 700">Anna Becker</h1><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{ t.muted }}">KH-7Q4M</span></div>
+        <span style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: {{ stTagBg }}; color: {{ stTagFg }}">{{ stTag }}</span>
+      </div>
+      <div style="display: flex; gap: 4px">
+        <sc-for list="{{ steps }}" as="sp" hint-placeholder-count="4">
+          <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px"><div style="height: 5px; border-radius: 999px; background: {{ sp.c }}"></div><span style="font-size: 10.5px; color: {{ sp.tc }}; font-weight: 600">{{ sp.name }}</span></div>
+        </sc-for>
+      </div>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; display: flex; flex-direction: column">
+        <sc-for list="{{ facts }}" as="fx" hint-placeholder-count="6">
+          <div style="display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid {{ t.line }}; font-size: 14px"><span style="color: {{ t.muted }}">{{ fx.k }}</span><span style="font-weight: 600; text-align: right">{{ fx.v }}</span></div>
+        </sc-for>
+        <div style="padding: 10px 14px; font-size: 13px; font-weight: 600; color: {{ t.ok }}">✓ {{ L.roomFree }}</div>
+      </div>
+
+      <sc-if value="{{ isNew }}" hint-placeholder-val="{{ true }}">
+        <button type="button" onClick="{{ accept }}" style="cursor: pointer; height: 52px; border: 0; border-radius: 12px; background: {{ t.ok }}; color: #FFFFFF; font: 600 16px Inter, sans-serif">{{ L.accept }}</button>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <button type="button" style="cursor: pointer; height: 46px; border-radius: 12px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 14px Inter, sans-serif">{{ L.otherDates }}</button>
+          <button type="button" style="cursor: pointer; height: 46px; border-radius: 12px; border: 1px solid {{ t.danger }}; background: transparent; color: {{ t.danger }}; font: 600 14px Inter, sans-serif">{{ L.decline }}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ isConfirmed }}" hint-placeholder-val="{{ false }}">
+        <div class="ow-fade" style="border-radius: 12px; background: {{ t.okBg }}; padding: 12px 14px; font-size: 14px; display: flex; flex-direction: column; gap: 8px">
+          <span style="font-weight: 600; color: {{ t.ok }}">✓ {{ L.confirmedSent }}</span>
+          <button type="button" style="cursor: pointer; align-self: flex-start; height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">{{ L.alsoWa }}</button>
+        </div>
+        <button type="button" onClick="{{ markPaid }}" style="cursor: pointer; height: 52px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: {{ t.onAccent }}; font: 600 16px Inter, sans-serif">{{ L.markPaid }}</button>
+        <span style="font-size: 12px; color: {{ t.muted }}; margin-top: -6px">{{ L.markPaidHint }}</span>
+      </sc-if>
+      <sc-if value="{{ isPaid }}" hint-placeholder-val="{{ false }}">
+        <div class="ow-fade" style="border-radius: 12px; background: {{ t.okBg }}; padding: 12px 14px; font-size: 14px; display: flex; flex-direction: column; gap: 8px">
+          <span style="font-weight: 600; color: {{ t.ok }}">✓ {{ L.receiptSent }}</span>
+          <button type="button" style="cursor: pointer; align-self: flex-start; height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">{{ L.receiptWa }}</button>
+        </div>
+        <button type="button" onClick="{{ reset }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; font: 500 12px 'IBM Plex Mono', monospace">↺ DEMO: RESET</button>
+      </sc-if>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px">
+        <span style="font-weight: 600; font-size: 15px">{{ L.messages }}</span>
+        <div style="align-self: flex-end; max-width: 260px; padding: 10px 12px; border-radius: 14px 14px 4px 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; font-size: 14px">{{ L.guestMsg }}</div>
+        <div style="align-self: flex-end; padding: 6px 10px; border-radius: 999px; border: 1px dashed {{ t.accent }}; font-size: 12px; font-weight: 600; color: {{ t.accent }}">{{ L.helpReq }}</div>
+        <div style="display: flex; gap: 8px">
+          <div style="flex: 1 1 auto; height: 46px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: {{ t.muted }}">{{ L.reply }}</div>
+          <button type="button" aria-label="Send" style="cursor: pointer; width: 46px; height: 46px; border: 0; border-radius: 12px; background: {{ t.accent }}"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 12 L20 4 L14 20 L11 13 Z" fill="none" stroke="{{ t.onAccent }}" stroke-width="1.7" stroke-linejoin="round"></path></svg></button>
+        </div>
+        <span style="font-size: 12px; color: {{ t.muted }}">{{ L.replyNote }}</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CALENDAR -->
+  <sc-if value="{{ vCal }}" hint-placeholder-val="{{ false }}">
+    <div class="ow-fade" style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toBookings }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← {{ L.bookings }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.availability }}</h1>
+      <div style="display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none">
+        <sc-for list="{{ roomTabs }}" as="rt" hint-placeholder-count="4">
+          <button type="button" onClick="{{ rt.pick }}" style="cursor: pointer; flex: 0 0 auto; height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ rt.border }}; background: {{ rt.bg }}; color: {{ rt.fg }}; font: 600 12px Inter, sans-serif">{{ rt.name }}</button>
+        </sc-for>
+      </div>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; padding: 12px 10px">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 10px"><span style="font-size: 18px">‹</span><span style="font-weight: 700; font-size: 16px">{{ L.month }}</span><span style="font-size: 18px">›</span></div>
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}; padding-bottom: 6px">
+          <sc-for list="{{ wd }}" as="w" hint-placeholder-count="7"><span>{{ w }}</span></sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px">
+          <sc-for list="{{ cal }}" as="d" hint-placeholder-count="35">
+            <button type="button" onClick="{{ d.tap }}" style="cursor: {{ d.cursor }}; height: 44px; border: 0; border-radius: 8px; background: {{ d.bg }}; color: {{ d.fg }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-family: Inter, system-ui, sans-serif; padding: 0">
+              <span style="font-size: 13px; font-weight: 600">{{ d.n }}</span>
+              <span style="font-size: 9px; font-weight: 600">{{ d.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px">
+        <sc-for list="{{ legend }}" as="lg" hint-placeholder-count="4">
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 4px; background: {{ lg.c }}; border: 1px solid {{ t.line }}"></span>{{ lg.name }}</span>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; color: {{ t.muted }}; line-height: 1.45">{{ L.calHint }}</span>
+    </div>
+  </sc-if>
+
+  <div style="flex: 1 1 auto"></div>
+  <div style="position: sticky; bottom: 0; height: 64px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); background: {{ t.card }}; border-top: 1px solid {{ t.line }}">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+      <button type="button" onClick="{{ n.go }}" style="cursor: pointer; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: {{ n.color }}; font-family: Inter, system-ui, sans-serif; position: relative">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ n.icon }}" fill="none" stroke="{{ n.color }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-size: 10.5px; font-weight: 600">{{ n.name }}</span>
+        <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 8px; left: 50%; margin-left: 6px; min-width: 16px; height: 16px; border-radius: 999px; background: {{ t.danger }}; color: #FFFFFF; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ n.badgeN }}</span></sc-if>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":1250}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ui: 'en', view: 'home', filter: 0, status: 'new', lockOpen: -1, room: 2, blocked: { 2: [24, 25] } };
+  }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { bg: '#0F1215', card: '#181C20', ink: '#ECEFF2', muted: '#9AA3AC', line: '#2A3036', accent: '#6FA8D6', onAccent: '#0F1215', ok: '#7CC39B', okBg: '#16241C', warn: '#E0A84A', danger: '#F08A7E', invLine: 'rgba(15,18,21,0.15)', newBg: '#2B2416' }
+      : { bg: '#F6F7F8', card: '#FFFFFF', ink: '#15181C', muted: '#5B636B', line: '#E2E5E8', accent: '#1F5F8B', onAccent: '#FFFFFF', ok: '#2F6B4F', okBg: '#E8F2EC', warn: '#B26A00', danger: '#B3261E', invLine: 'rgba(255,255,255,0.14)', newBg: '#FFF4E0' };
+    const s = this.state, rw = s.ui === 'rw';
+    const L = rw ? {
+      date: 'Kuwa kabiri, 10 Ugushyingo', hello: 'Muraho, Claudine', thisMonth: 'Uku kwezi', vsLast: '+18% ugereranyije n\u2019ukwezi gushize', weeks: 'Abakanze kuri buri cyumweru',
+      more: 'Byinshi ushobora gukoresha', askOn: 'Saba kubifungura kuri WhatsApp →', bookings: 'Ubusabe', calendar: 'Kalendari', empty: 'Nta busabe hano.',
+      roomFree: 'Icyumba kirahari (1 kuri 2 gisigaye)', accept: 'Emera', otherDates: 'Tanga indi minsi', decline: 'Anga',
+      confirmedSent: 'Byemejwe · email yoherejwe kuri Anna', alsoWa: 'Ohereza no kuri WhatsApp', markPaid: 'Emeza ko ingwate yishyuwe', markPaidHint: 'Kanda iyo ubonye amafaranga kuri MoMo yawe.',
+      receiptSent: 'Ingwate yishyuwe · inyemezabwishyu yoherejwe kuri email', receiptWa: 'Ohereza inyemezabwishyu kuri WhatsApp',
+      messages: 'Ubutumwa', guestMsg: 'Murakoze! Tuzagera nka saa 16:00.', helpReq: 'Yasabye: Ibiyaga by\u2019impanga', reply: 'Subiza Anna…', replyNote: 'Anna yakira igisubizo kuri email, akakibona no muri \u201cMy booking\u201d.',
+      availability: 'Ibyumba biboneka', month: 'Ukuboza 2026', calHint: 'Wabonye umukiriya ku yindi nzira (Booking.com, telefoni)? Kanda ku munsi uwufunge, kugira ngo abandi batawusaba.'
+    } : {
+      date: 'Tuesday, 10 November', hello: 'Good morning, Claudine', thisMonth: 'This month', vsLast: '+18% vs last month', weeks: 'Clicks per week',
+      more: 'More you can switch on', askOn: 'Ask to switch on via WhatsApp →', bookings: 'Bookings', calendar: 'Calendar', empty: 'Nothing here.',
+      roomFree: 'Room free (1 of 2 left)', accept: 'Accept', otherDates: 'Suggest other dates', decline: 'Decline',
+      confirmedSent: 'Confirmed · email sent to Anna', alsoWa: 'Also send on WhatsApp', markPaid: 'Mark deposit as paid', markPaidHint: 'Tap when you see the money in your MoMo account.',
+      receiptSent: 'Deposit paid · receipt emailed to Anna', receiptWa: 'Send receipt on WhatsApp',
+      messages: 'Messages', guestMsg: 'Thank you! We\u2019ll arrive around 4 pm.', helpReq: 'Asked for help with: Twin Lakes canoe', reply: 'Reply to Anna…', replyNote: 'Anna gets your reply by email and sees it in My booking.',
+      availability: 'Availability', month: 'December 2026', calHint: 'Got a booking somewhere else (Booking.com, phone)? Tap a day to block it, so nobody else can request it.'
+    };
+    const go = v => () => this.setState({ view: v });
+    const todayRows = [
+      { n: '2', text: rw ? 'Ubusabe bushya' : 'New booking requests', badgeBg: t.warn, badgeFg: '#15181C', go: () => this.setState({ view: 'bookings', filter: 0 }) },
+      { n: '1', text: rw ? 'Uzagera uyu munsi' : 'Arriving today', badgeBg: t.bg, badgeFg: t.ink, go: () => this.setState({ view: 'bookings', filter: 1 }) },
+      { n: '1', text: rw ? 'Ibiryo byashize uyu munsi' : 'Dish sold out today', badgeBg: t.bg, badgeFg: t.ink, go: () => {} }
+    ];
+    const stats = [
+      { n: '812', label: rw ? 'Abasuye urubuga' : 'Site visits' },
+      { n: '61', label: rw ? 'Bakanze WhatsApp' : 'WhatsApp taps' },
+      { n: '34', label: rw ? 'Bahamagaye' : 'Calls' },
+      { n: '22', label: rw ? 'Basabye inzira' : 'Directions' }
+    ];
+    const W = [['W1', 21], ['W2', 28], ['W3', 26], ['W4', 42]];
+    const bars = W.map((w, i) => ({ label: w[0], n: String(w[1]), h: Math.round(w[1] / 42 * 52) + 'px', c: i === 3 ? t.accent : t.line }));
+    const LK = [
+      ['M6 8 h12 l-1 12 H7 Z M9 8 V6 a3 3 0 0 1 6 0 V8', rw ? 'Ibitumizwa' : 'Orders page', rw ? 'Ibitumizwa byose ahantu hamwe' : 'All food orders in one live list', rw ? 'Abakozi babona ibitumizwa bishya ako kanya, bakemeza cyangwa bakavuga ko ibiryo byashize.' : 'Staff see new orders instantly, accept them, or mark a dish unavailable. From RWF 15,000 / month.'],
+      ['M9 11 a3 3 0 1 0 0 -6 a3 3 0 1 0 0 6 M3 20 a6 6 0 0 1 12 0 M16 11 a2.5 2.5 0 1 0 0 -5 M15 14 a5 5 0 0 1 6 6', rw ? 'Abakozi' : 'Staff', rw ? 'Konti za buri mukozi' : 'Logins for each staff member', rw ? 'Buri mukozi afite PIN ye, ukamuhagarika ako kanya.' : 'Each person gets a PIN; switch anyone off instantly. From RWF 15,000 / month.'],
+      ['M4 7 h16 v13 h-16 Z M4 7 l2 -3 h12 l2 3 M9 12 h6', rw ? 'Ububiko' : 'Stock', rw ? 'Menya ibisigaye' : 'Know what\u2019s left', rw ? 'Ibiryo bihita bivaho iyo ibikoresho bishize.' : 'Dishes switch off by themselves when an ingredient runs out. From RWF 20,000 / month.'],
+      ['M4 20 V10 M10 20 V4 M16 20 V13 M22 20 H2', rw ? 'Raporo' : 'Reports', rw ? 'Amafaranga n\u2019ibyagurishijwe' : 'Sales and money', rw ? 'Ibyagurishijwe buri munsi, uburyo bwo kwishyura, ibikunzwe.' : 'Daily sales, how people paid, best sellers. From RWF 10,000 / month.']
+    ];
+    const locked = LK.map((l, i) => ({ icon: l[0], name: l[1], sub: l[2], more: l[3], open: s.lockOpen === i, bg: s.lockOpen === i ? t.card : 'transparent', tap: () => this.setState({ lockOpen: s.lockOpen === i ? -1 : i }) }));
+    const F = rw ? ['Bishya', 'Byemejwe', 'Byishyuwe', 'Byarangiye'] : ['New', 'Confirmed', 'Paid', 'Past'];
+    const B = [
+      { key: 'anna', name: 'Anna Becker', room: 'Volcano View Double', dates: '11–14 Dec', meta: (rw ? 'Amasaha 2 ashize · Email' : '2 h ago · Email'), total: 'RWF 240,000' },
+      { key: 'jp', name: 'Jean-Paul M.', room: 'Family Cottage', dates: '20–22 Dec', meta: (rw ? 'Iminota 40 ishize · WhatsApp' : '40 min ago · WhatsApp'), total: 'RWF 200,000', fixed: 'new' },
+      { key: 'li', name: 'Li Wei', room: 'Garden Double', dates: '10–12 Nov', meta: (rw ? 'Azagera uyu munsi' : 'Arrives today'), total: 'RWF 120,000', fixed: 'confirmed' },
+      { key: 'tom', name: 'Tom & Eva', room: 'Garden Single', dates: '1–3 Nov', meta: (rw ? 'Yarangiye' : 'Checked out'), total: 'RWF 90,000', fixed: 'past' }
+    ];
+    const statusOf = b => b.fixed || s.status;
+    const fKeys = ['new', 'confirmed', 'paid', 'past'];
+    const counts = fKeys.map(k => B.filter(b => statusOf(b) === k).length);
+    const filters = F.map((f, i) => ({ name: f + (counts[i] ? ' · ' + counts[i] : ''), border: s.filter === i ? t.ink : t.line, bg: s.filter === i ? t.ink : 'transparent', fg: s.filter === i ? t.bg : t.ink, pick: () => this.setState({ filter: i }) }));
+    const TAG = { new: [rw ? 'BUSHYA' : 'NEW', t.warn, '#15181C'], confirmed: [rw ? 'BYEMEJWE' : 'CONFIRMED', t.accent, t.onAccent], paid: [rw ? 'BYISHYUWE' : 'PAID', t.ok, '#FFFFFF'], past: [rw ? 'BYARANGIYE' : 'PAST', t.line, t.ink] };
+    const blist = B.filter(b => statusOf(b) === fKeys[s.filter]).map(b => { const st = statusOf(b); return { ...b, tag: TAG[st][0], tagBg: TAG[st][1], tagFg: TAG[st][2], border: st === 'new' ? t.warn : t.line, open: () => { if (b.key === 'anna') this.setState({ view: 'detail' }); } }; });
+    const SN = rw ? ['Yasabye', 'Byemejwe', 'Ingwate', 'Yageze'] : ['Requested', 'Confirmed', 'Deposit', 'Arrived'];
+    const lvl = { new: 0, confirmed: 1, paid: 2 }[s.status] || 0;
+    const steps = SN.map((n, i) => ({ name: n, c: i <= lvl ? t.ok : t.line, tc: i <= lvl ? t.ink : t.muted }));
+    const facts = rw ? [
+      { k: 'Icyumba', v: 'Volcano View Double' }, { k: 'Iminsi', v: 'Kuwa 5, 11 → Kuwa 1, 14 Ukuboza · amajoro 3' }, { k: 'Abashyitsi', v: 'Abantu bakuru 2' },
+      { k: 'Igiteranyo', v: 'RWF 240,000' }, { k: 'Kwishyura', v: 'MTN MoMo · ingwate RWF 80,000' }, { k: 'Amakuru ajya kuri', v: 'Email · +49 … 7342' }
+    ] : [
+      { k: 'Room', v: 'Volcano View Double' }, { k: 'Dates', v: 'Fri 11 → Mon 14 Dec · 3 nights' }, { k: 'Guests', v: '2 adults' },
+      { k: 'Total', v: 'RWF 240,000' }, { k: 'Pays by', v: 'MTN MoMo · deposit RWF 80,000' }, { k: 'Updates by', v: 'Email · +49 … 7342' }
+    ];
+    const RT = ['Garden Single', 'Garden Double', 'Volcano View', 'Family Cottage'];
+    const UNITS = [1, 2, 2, 2];
+    const BOOKED = [{ 3: 1, 4: 1, 12: 1, 13: 1, 22: 1, 23: 1 }, { 8: 1, 9: 2, 10: 1, 19: 2, 20: 2, 27: 1 }, { 5: 2, 6: 2, 7: 1, 11: 1, 12: 1, 13: 1, 18: 2, 19: 2, 20: 1 }, { 1: 1, 2: 1, 15: 2, 16: 2, 17: 1, 30: 2, 31: 2 }];
+    const roomTabs = RT.map((r, i) => ({ name: r, border: s.room === i ? t.ink : t.line, bg: s.room === i ? t.ink : 'transparent', fg: s.room === i ? t.bg : t.ink, pick: () => this.setState({ room: i }) }));
+    const wd = rw ? ['K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'C'] : ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+    const units = UNITS[s.room], bk = BOOKED[s.room], bl = s.blocked[s.room] || [];
+    const cal = [{ n: '', sub: '', bg: 'transparent', fg: t.ink, cursor: 'default', tap: () => {} }];
+    for (let d = 1; d <= 31; d++) {
+      const used = bk[d] || 0, isBl = bl.indexOf(d) >= 0, free = units - used - (isBl ? 1 : 0) < 0 ? 0 : units - used - (isBl ? 1 : 0);
+      const full = free <= 0;
+      cal.push({ n: String(d), sub: full ? (rw ? 'BYUZUYE' : 'FULL') : free + '/' + units, cursor: 'pointer',
+        bg: isBl ? t.ink : full ? t.danger : used ? t.warn : t.okBg, fg: isBl ? t.bg : full ? '#FFFFFF' : used ? '#15181C' : t.ok,
+        tap: () => { const b = { ...s.blocked }; const arr = (b[s.room] || []).slice(); const k = arr.indexOf(d); if (k >= 0) arr.splice(k, 1); else if (!full) arr.push(d); b[s.room] = arr; this.setState({ blocked: b }); } });
+    }
+    const legend = [{ c: t.okBg, name: rw ? 'Birahari' : 'Free' }, { c: t.warn, name: rw ? 'Bimwe byafashwe' : 'Partly booked' }, { c: t.danger, name: rw ? 'Byuzuye' : 'Full' }, { c: t.ink, name: rw ? 'Wafunze icyumba 1' : 'You blocked 1 room' }];
+    const NAV = rw ? ['Ahabanza', 'Urubuga', 'Ubusabe', 'Ibitumizwa', 'Ibindi'] : ['Home', 'Edit site', 'Bookings', 'Orders', 'More'];
+    const NI = ['M3 11 L12 4 L21 11 V20 H3 Z', 'M4 20 h4 L19 9 l-4 -4 L4 16 Z', 'M4 6 h16 v14 h-16 Z M4 10 h16 M8 3 v5 M16 3 v5', 'M6 11 h12 v10 h-12 Z M8.5 11 V8 a3.5 3.5 0 0 1 7 0 V11', 'M5 12 v0.1 M12 12 v0.1 M19 12 v0.1'];
+    const act = s.view === 'home' ? 0 : (s.view === 'bookings' || s.view === 'detail' || s.view === 'cal') ? 2 : -1;
+    const nav = NAV.map((n, i) => ({ name: n, icon: NI[i], color: i === act ? t.accent : t.muted, badge: i === 2 && counts[0] > 0, badgeN: String(counts[0]),
+      go: i === 0 ? go('home') : i === 2 ? () => this.setState({ view: 'bookings' }) : () => {} }));
+    const stTagInfo = TAG[s.status] || TAG.new;
+    return {
+      t, L, todayRows, stats, bars, locked, filters, blist, steps, facts, roomTabs, wd, cal, legend, nav,
+      vHome: s.view === 'home', vBookings: s.view === 'bookings', vDetail: s.view === 'detail', vCal: s.view === 'cal',
+      emptyList: blist.length === 0,
+      isNew: s.status === 'new', isConfirmed: s.status === 'confirmed', isPaid: s.status === 'paid',
+      stTag: stTagInfo[0], stTagBg: stTagInfo[1], stTagFg: stTagInfo[2],
+      accept: () => this.setState({ status: 'confirmed' }), markPaid: () => this.setState({ status: 'paid' }), reset: () => this.setState({ status: 'new' }),
+      toBookings: () => this.setState({ view: 'bookings' }), toCal: () => this.setState({ view: 'cal' }),
+      enBg: rw ? 'transparent' : t.ink, enFg: rw ? t.ink : t.bg, rwBg: rw ? t.ink : 'transparent', rwFg: rw ? t.bg : t.ink,
+      setEn: () => this.setState({ ui: 'en' }), setRw: () => this.setState({ ui: 'rw' })
+    };
+  }
+}
+</script>
+</body>
+</html>

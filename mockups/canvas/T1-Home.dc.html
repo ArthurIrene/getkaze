@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T1 Field Journal – Home (phone) v3 minimal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&amp;family=Caveat:wght@600&amp;family=Inter:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:inherit}
+.fj-draw{stroke-dasharray:1400;stroke-dashoffset:1400;animation:fjdraw 2.8s ease-out .3s forwards}
+@keyframes fjdraw{to{stroke-dashoffset:0}}
+.fj-spin{animation:fjspin 22s linear infinite;transform-origin:50% 50%}
+@keyframes fjspin{to{transform:rotate(360deg)}}
+.fj-row{scroll-snap-type:x mandatory;scrollbar-width:none}
+.fj-row::-webkit-scrollbar{display:none}
+.fj-row > *{scroll-snap-align:start}
+.fj-fade{animation:fjfade .35s ease-out both}
+@keyframes fjfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){
+  .fj-rise{animation:fjrise linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+  @keyframes fjrise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+  .fj-slide{animation:fjslide linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  @keyframes fjslide{from{transform:translateX(0)}to{transform:translateX(-230px)}}
+}
+@media (prefers-reduced-motion: reduce){.fj-draw{animation:none;stroke-dashoffset:0}.fj-rise,.fj-slide,.fj-spin,.fj-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; background: {{ t.paper }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; position: relative">
+
+  <!-- Header -->
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px 0 16px">
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; letter-spacing: -0.01em">Kinigi Hills</span>
+    <div style="display: flex; gap: 6px; align-items: center">
+      <span style="height: 32px; padding: 0 9px; display: flex; align-items: center; border: 1px solid {{ t.ink }}; border-radius: 999px; font-size: 12px; font-weight: 600">EN</span>
+      <div style="display: flex; height: 32px; border: 1px solid {{ t.ink }}; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 600">
+        <span onClick="{{ setRwf }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ rwfBg }}; color: {{ rwfFg }}">RWF</span>
+        <span onClick="{{ setUsd }}" style="padding: 0 9px; display: flex; align-items: center; cursor: pointer; background: {{ usdBg }}; color: {{ usdFg }}">USD</span>
+      </div>
+      <span style="width: 34px; height: 32px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px" aria-label="Menu">
+        <span style="width: 18px; height: 2px; background: {{ t.ink }}"></span><span style="width: 18px; height: 2px; background: {{ t.ink }}"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Hero: big scene -->
+  <div style="position: relative; height: 440px">
+    <svg viewBox="0 0 360 440" width="360" height="440" aria-hidden="true" style="display: block">
+      <rect width="360" height="440" fill="#E9C9A0"></rect>
+      <circle cx="262" cy="118" r="38" fill="#F3DDBA"></circle>
+      <polygon points="0,270 48,232 92,172 118,158 144,176 188,230 228,150 254,134 280,152 330,232 360,250 360,440 0,440" fill="#B79A7E"></polygon>
+      <rect x="0" y="250" width="360" height="18" fill="#EDE3D2" opacity="0.75"></rect>
+      <polygon points="0,318 60,290 130,310 200,276 270,298 360,274 360,440 0,440" fill="#7C8B5A"></polygon>
+      <polygon points="0,376 80,352 170,372 250,344 360,366 360,440 0,440" fill="#3F5B3A"></polygon>
+      <polygon points="24,362 31,340 38,362" fill="#2F4530"></polygon>
+      <polygon points="40,360 48,334 56,360" fill="#2F4530"></polygon>
+      <polygon points="312,370 319,348 326,370" fill="#2F4530"></polygon>
+      <path d="M210 354 L210 336 L227 323 L244 336 L244 354 Z" fill="#F4EEE3" stroke="#2B2620" stroke-width="1.4" stroke-linejoin="round"></path>
+      <rect x="222" y="341" width="9" height="8" fill="#C8913A"></rect>
+      <path class="fj-draw" d="M0 270 L48 232 L92 172 Q118 150 144 176 L188 230 L228 150 Q254 124 280 152 L330 232 L360 250" fill="none" stroke="#2B2620" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path class="fj-draw" d="M150 80 q8 -6 16 0 q8 -6 16 0 M196 62 q6 -5 12 0 q6 -5 12 0" fill="none" stroke="#2B2620" stroke-width="1.4" stroke-linecap="round"></path>
+    </svg>
+    <div style="position: absolute; left: 16px; top: 22px; display: flex; flex-direction: column; color: #2B2620">
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 38px; line-height: 1; letter-spacing: -0.02em">Wake up facing</span>
+      <span style="font-family: Caveat, cursive; font-size: 54px; line-height: 0.95; color: #3F5B3A">the volcanoes</span>
+    </div>
+    <a href="#" style="position: absolute; right: 14px; bottom: -48px; width: 112px; height: 112px; border-radius: 999px; background: {{ t.paper }}; border: 1.5px solid {{ t.ink }}; display: block; text-decoration: none" aria-label="Chat with us on WhatsApp">
+      <svg class="fj-spin" viewBox="0 0 112 112" width="112" height="112" aria-hidden="true" style="position: absolute; left: -1.5px; top: -1.5px">
+        <defs><path id="fjc" d="M56 56 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0"></path></defs>
+        <text font-family="IBM Plex Mono, monospace" font-size="10.5" letter-spacing="1.6" fill="{{ t.ink }}"><textPath href="#fjc">CHAT WITH US · MURAKAZA NEZA ·</textPath></text>
+      </svg>
+      <span style="position: absolute; left: 32px; top: 32px; width: 48px; height: 48px; border-radius: 999px; background: {{ t.accent }}; display: flex; align-items: center; justify-content: center">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z" fill="none" stroke="{{ t.onAccent }}" stroke-width="1.8" stroke-linejoin="round"></path></svg>
+      </span>
+    </a>
+  </div>
+
+  <!-- Facts: icon stamps, tap for detail -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 64px 16px 0">
+    <sc-for list="{{ facts }}" as="f" hint-placeholder-count="3">
+      <div onClick="{{ f.tap }}" style="cursor: pointer; border: 1.5px dashed {{ f.border }}; border-radius: 14px; padding: 12px 6px 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; transform: rotate({{ f.tilt }}); background: {{ f.bg }}">
+        <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="{{ f.icon }}" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 20px; line-height: 1">{{ f.value }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ factOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="fj-fade" style="margin: 10px 16px 0; padding: 10px 14px; border-radius: 12px; background: {{ t.card }}; font-size: 14px">{{ factText }}</div>
+  </sc-if>
+
+  <!-- Life strip -->
+  <div class="fj-row" style="padding: 44px 0 0; overflow-x: auto">
+    <div class="fj-slide" style="display: flex; gap: 16px; padding: 10px 16px 18px; width: max-content">
+      <sc-for list="{{ moments }}" as="m" hint-placeholder-count="4">
+        <div style="position: relative; width: 210px; flex: 0 0 210px; background: #FBF7F0; padding: 9px 9px 6px; box-shadow: 0 3px 10px rgba(0,0,0,0.18); transform: rotate({{ m.tilt }})">
+          <div style="position: absolute; top: -9px; left: 66px; width: 76px; height: 20px; background: rgba(200,145,58,0.5)"></div>
+          <div style="height: 210px; background: {{ m.bg }}; display: flex; align-items: center; justify-content: center">
+            <svg viewBox="0 0 64 64" width="84" height="84" aria-hidden="true"><path d="{{ m.icon }}" fill="none" stroke="#FBF7F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </div>
+          <div style="font-family: Caveat, cursive; font-size: 22px; padding-top: 4px; color: #2B2620">{{ m.caption }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- Rooms -->
+  <div class="fj-rise" style="padding: 36px 16px 14px; display: flex; justify-content: space-between; align-items: baseline">
+    <h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-size: 34px; font-weight: 900; letter-spacing: -0.02em">Rooms</h2>
+    <a href="T1-Rooms.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-decoration: none">ALL 4 →</a>
+  </div>
+  <div class="fj-row" style="display: flex; gap: 14px; overflow-x: auto; padding: 4px 16px 10px">
+    <sc-for list="{{ rooms }}" as="room" hint-placeholder-count="4">
+      <a href="T1-Rooms.dc.html" style="flex: 0 0 260px; text-decoration: none; display: flex; flex-direction: column; gap: 10px">
+        <div style="position: relative; height: 300px; border-radius: 20px; overflow: hidden">
+          <svg viewBox="0 0 260 300" width="260" height="300" aria-hidden="true" style="display: block">
+            <rect width="260" height="300" fill="{{ room.sky }}"></rect>
+            <polygon points="0,170 60,120 100,150 160,80 220,150 260,130 260,300 0,300" fill="{{ room.far }}"></polygon>
+            <polygon points="0,230 80,204 170,224 260,196 260,300 0,300" fill="{{ room.near }}"></polygon>
+            <rect x="80" y="178" width="100" height="60" fill="#FBF7F0" stroke="#2B2620" stroke-width="1.4"></rect>
+            <path d="M90 204 h80 M90 220 h80" stroke="#2B2620" stroke-width="1.2"></path>
+          </svg>
+          <span style="position: absolute; right: 12px; top: 12px; background: #2B2620; color: #F4EEE3; padding: 7px 11px; border-radius: 12px; font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 15px; transform: rotate(3deg)">{{ room.price }}</span>
+        </div>
+        <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 20px; padding-left: 2px">{{ room.name }}</span>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- At our table -->
+  <div class="fj-rise" style="padding: 40px 16px 14px; display: flex; justify-content: space-between; align-items: baseline">
+    <div style="display: flex; flex-direction: column"><span style="font-family: Caveat, cursive; font-size: 24px; color: {{ t.accent }}; line-height: 1">open to all</span><h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-size: 34px; font-weight: 900; letter-spacing: -0.02em">At our table</h2></div>
+    <a href="T1-Menu.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-decoration: none">MENU →</a>
+  </div>
+  <div style="margin: 0 16px 16px; position: relative; height: 170px; border-radius: 20px; overflow: hidden; background: #5B4636">
+    <svg viewBox="0 0 328 170" width="328" height="170" aria-hidden="true" style="display: block">
+      <rect width="328" height="170" fill="#5B4636"></rect>
+      <rect x="22" y="22" width="96" height="70" rx="4" fill="#2B3A4A" stroke="#F4EEE3" stroke-width="1.4"></rect>
+      <path d="M22 80 L48 52 L62 64 L80 44 L118 80" fill="none" stroke="#F4EEE3" stroke-width="1.2" stroke-linejoin="round"></path>
+      <path d="M70 22 V92 M22 57 H118" stroke="#F4EEE3" stroke-width="1"></path>
+      <path d="M232 92 V40 H300 V92 M244 92 V58 H288 V92" fill="none" stroke="#F4EEE3" stroke-width="1.4"></path>
+      <path d="M266 88 c-8 0 -8 -10 -3 -14 c0 5 3 5 3 2 c0 -5 3 -7 3 -10 c5 6 6 10 4 15 c-1 4 -3 7 -7 7 Z" fill="#E9A25A"></path>
+      <path d="M150 20 V54 M206 20 V54" stroke="#F4EEE3" stroke-width="1"></path>
+      <circle cx="150" cy="60" r="7" fill="#E9C9A0"></circle><circle cx="206" cy="60" r="7" fill="#E9C9A0"></circle>
+      <path d="M126 118 h48 M150 118 v24 M182 118 h48 M206 118 v24" stroke="#F4EEE3" stroke-width="2" stroke-linecap="round"></path>
+      <path d="M0 148 H328" stroke="#8A6A2E" stroke-width="1.4"></path>
+    </svg>
+    <span style="position: absolute; left: 16px; bottom: 12px; font-family: Caveat, cursive; font-size: 24px; color: #F4EEE3">the fireside room</span>
+    <a href="T1-Menu.dc.html" style="position: absolute; right: 12px; bottom: 12px; height: 40px; padding: 0 14px; border-radius: 999px; background: #F4EEE3; color: #2B2620; display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none">Reserve a table</a>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0 16px">
+    <sc-for list="{{ dishes }}" as="d" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="aspect-ratio: 1; border-radius: 999px; background: {{ d.bg }}; display: flex; align-items: center; justify-content: center">
+          <svg viewBox="0 0 48 48" width="52" height="52" aria-hidden="true"><path d="{{ d.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </div>
+        <span style="font-weight: 600; font-size: 13px; text-align: center; line-height: 1.2">{{ d.name }}</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-align: center; color: {{ t.muted }}">{{ d.price }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- Around: flip postcards -->
+  <div class="fj-rise" style="padding: 44px 16px 14px; display: flex; justify-content: space-between; align-items: baseline">
+    <h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-size: 34px; font-weight: 900; letter-spacing: -0.02em">Around us</h2>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: {{ t.muted }}">TAP A CARD</span>
+  </div>
+  <div class="fj-row" style="display: flex; gap: 12px; overflow-x: auto; padding: 4px 16px 10px">
+    <sc-for list="{{ activities }}" as="act" hint-placeholder-count="5">
+      <div onClick="{{ act.tap }}" style="cursor: pointer; flex: 0 0 200px; height: 260px; background: {{ act.bg }}; color: #FBF7F0; border-radius: 20px; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between">
+        <sc-if value="{{ act.front }}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; justify-content: flex-end"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; border: 1px solid #FBF7F0; border-radius: 999px; padding: 3px 8px">{{ act.dist }}</span></div>
+          <svg viewBox="0 0 48 32" width="120" height="80" aria-hidden="true" style="align-self: center"><path d="{{ act.icon }}" fill="none" stroke="#FBF7F0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 22px; line-height: 1.05">{{ act.name }}</span>
+        </sc-if>
+        <sc-if value="{{ act.back }}" hint-placeholder-val="{{ false }}">
+          <div class="fj-fade" style="display: flex; flex-direction: column; gap: 10px; height: 100%; justify-content: space-between">
+            <span style="font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 20px; line-height: 1.05">{{ act.name }}</span>
+            <span style="font-size: 14px; line-height: 1.45">{{ act.line }}</span>
+            <a href="#" style="align-self: flex-start; font-size: 13px; font-weight: 600; background: #FBF7F0; color: #2B2620; padding: 9px 13px; border-radius: 999px; text-decoration: none">Ask us to arrange</a>
+          </div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- Host -->
+  <div class="fj-rise" style="padding: 48px 16px 0; display: flex; gap: 18px; align-items: center">
+    <div style="position: relative; flex: 0 0 120px; background: #FBF7F0; padding: 7px 7px 4px; transform: rotate(-4deg); box-shadow: 0 3px 10px rgba(0,0,0,0.18)">
+      <div style="position: absolute; top: -8px; left: 32px; width: 56px; height: 16px; background: rgba(200,145,58,0.5)"></div>
+      <div style="height: 124px; background: #B5643C; display: flex; align-items: flex-end; justify-content: center; overflow: hidden">
+        <svg viewBox="0 0 100 100" width="104" height="104" aria-hidden="true"><circle cx="50" cy="40" r="18" fill="none" stroke="#FBF7F0" stroke-width="2"></circle><path d="M18 100 Q22 66 50 66 Q78 66 82 100" fill="none" stroke="#FBF7F0" stroke-width="2"></path></svg>
+      </div>
+      <div style="font-family: Caveat, cursive; font-size: 17px; text-align: center; color: #2B2620">Claudine</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px; line-height: 1.05">Muraho! I'm Claudine.</span>
+      <span onClick="{{ toggleHost }}" style="cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-decoration: underline; text-underline-offset: 3px">{{ hostLabel }}</span>
+    </div>
+  </div>
+  <sc-if value="{{ hostOpen }}" hint-placeholder-val="{{ false }}">
+    <p class="fj-fade" style="margin: 14px 16px 0; font-family: Caveat, cursive; font-size: 23px; line-height: 1.25">My family has welcomed trekkers for 9 years. I'll sort your permits, your driver and breakfast at 5 a.m.</p>
+  </sc-if>
+
+  <!-- Review -->
+  <div class="fj-rise" style="margin: 44px 16px 0; padding: 22px 20px; background: {{ t.inv }}; color: {{ t.invFg }}; border-radius: 20px; display: flex; flex-direction: column; gap: 16px">
+    <p style="margin: 0; font-family: Caveat, cursive; font-size: 30px; line-height: 1.1">“Coffee at five, volcanoes at the window.”</p>
+    <div style="display: flex; gap: 24px">
+      <div style="display: flex; flex-direction: column"><span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 30px; line-height: 1">4.6</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; opacity: 0.8">TRIPADVISOR</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 30px; line-height: 1">8.9</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; opacity: 0.8">BOOKING.COM</span></div>
+    </div>
+  </div>
+
+  <!-- Find us -->
+  <div class="fj-rise" style="padding: 48px 16px 0; display: flex; flex-direction: column; gap: 14px">
+    <h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-size: 34px; font-weight: 900; letter-spacing: -0.02em">Find us</h2>
+    <div style="position: relative; height: 200px; border-radius: 20px; background: {{ t.card }}; overflow: hidden">
+      <svg viewBox="0 0 328 200" width="328" height="200" aria-hidden="true" style="display: block">
+        <path d="M0 156 Q90 124 160 138 T328 106" fill="none" stroke="{{ t.line }}" stroke-width="12" stroke-linecap="round"></path>
+        <path d="M156 138 Q166 92 206 66" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-dasharray="5 5"></path>
+        <path d="M236 48 l18 -26 l18 26 M266 52 l13 -18 l13 18" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linejoin="round"></path>
+        <circle cx="206" cy="66" r="10" fill="{{ t.accent }}"></circle><circle cx="206" cy="66" r="4" fill="{{ t.paper }}"></circle>
+      </svg>
+      <span style="position: absolute; left: 188px; top: 86px; font-family: Caveat, cursive; font-size: 22px">we're here!</span>
+      <span style="position: absolute; left: 14px; bottom: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: {{ t.muted }}">← MUSANZE 25'</span>
+    </div>
+    <div style="display: flex; justify-content: center; gap: 22px">
+      <sc-for list="{{ actions }}" as="ac" hint-placeholder-count="3">
+        <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none">
+          <span style="width: 58px; height: 58px; border-radius: 999px; background: {{ ac.bg }}; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ ac.icon }}" fill="none" stroke="{{ ac.stroke }}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </span>
+          <span style="font-size: 12px; font-weight: 600">{{ ac.label }}</span>
+        </a>
+      </sc-for>
+    </div>
+    <div onClick="{{ toggleInfo }}" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-top: 1.5px dashed {{ t.line }}; border-bottom: 1.5px dashed {{ t.line }}">
+      <span style="font-weight: 600; font-size: 15px">Hours &amp; payment</span><span style="font-size: 20px">{{ infoSign }}</span>
+    </div>
+    <sc-if value="{{ infoOpen }}" hint-placeholder-val="{{ false }}">
+      <div class="fj-fade" style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; margin-top: -4px">
+        <span>Reception every day, 6:00 to 22:00</span>
+        <span>Cash (RWF, USD), MTN MoMo, Airtel Money</span>
+        <span style="color: {{ t.muted }}">Kinigi Sector, Musanze District</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- Footer -->
+  <div style="margin-top: 40px; padding: 24px 16px 96px; background: #2B2620; color: #F4EEE3; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Fraunces, Georgia, serif; font-weight: 900; font-size: 26px">Kinigi Hills</span>
+    <span style="font-family: Caveat, cursive; font-size: 22px; color: #E9C9A0">murakaza neza</span>
+    <div style="display: flex; justify-content: space-between; font-size: 12px; opacity: 0.8; margin-top: 8px"><span>© Kinigi Hills Lodge</span><a href="#" style="text-decoration: underline">Privacy</a></div>
+  </div>
+
+  <!-- Sticky bar -->
+  <div style="position: sticky; bottom: 0; margin-top: -76px; padding: 12px 16px 14px; background: {{ t.bar }}; border-top: 1px solid {{ t.line }}; display: flex; gap: 10px">
+    <a href="T1-Booking.dc.html" style="flex: 1 1 0; height: 50px; border-radius: 14px; background: {{ t.accent }}; color: {{ t.onAccent }}; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; text-decoration: none">Check availability</a>
+    <a href="#" style="flex: 0 0 56px; height: 50px; border-radius: 14px; border: 1.5px solid {{ t.ink }}; display: flex; align-items: center; justify-content: center; text-decoration: none" aria-label="Call">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2" fill="none" stroke="{{ t.ink }}" stroke-width="1.7" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":4300}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cur: 'RWF', fact: -1, card: -1, host: false, info: false }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { paper: '#1E1B17', card: '#2A2621', ink: '#F1EADD', muted: '#BBAF9C', line: '#433C33', accent: '#8FAF7E', onAccent: '#1E1B17', inv: '#F1EADD', invFg: '#1E1B17', bar: 'rgba(30,27,23,0.96)', stampOn: '#2A2621' }
+      : { paper: '#F4EEE3', card: '#FBF7F0', ink: '#2B2620', muted: '#5E554A', line: '#D8CCB8', accent: '#3F5B3A', onAccent: '#FFFFFF', inv: '#2B2620', invFg: '#F4EEE3', bar: 'rgba(244,238,227,0.96)', stampOn: '#FBF7F0' };
+    const s = this.state, usd = s.cur === 'USD';
+    const fmt = n => n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0 });
+    const money = (rw, us) => usd ? 'USD ' + fmt(us) : 'RWF ' + fmt(rw);
+    const F = [
+      { value: "15'", tilt: '-2deg', icon: 'M3 26 L12 10 L17 18 L21 12 L29 26 Z', text: '15 minutes by car to Volcanoes National Park HQ, where treks start.' },
+      { value: 'Incl.', tilt: '1.5deg', icon: 'M7 14 h16 v7 a6 6 0 0 1 -6 6 h-4 a6 6 0 0 1 -6 -6 Z M23 16 h2 a3 3 0 0 1 0 6 h-2 M12 10 q-2 -3 0 -6 M17 10 q-2 -3 0 -6', text: 'Breakfast is included, from 5 a.m. on trek days.' },
+      { value: 'Permits', tilt: '-1deg', icon: 'M5 9 h22 v5 a3 3 0 0 0 0 6 v5 h-22 v-5 a3 3 0 0 0 0 -6 Z M13 9 v16', text: 'We help you book gorilla and golden monkey permits.' }
+    ];
+    const facts = F.map((f, i) => ({ ...f, border: s.fact === i ? t.accent : t.ink, bg: s.fact === i ? t.card : 'transparent', tap: () => this.setState({ fact: s.fact === i ? -1 : i }) }));
+    const moments = [
+      { caption: '5 a.m. coffee', bg: '#5B4636', tilt: '-2deg', icon: 'M16 26 h28 v14 a12 12 0 0 1 -12 12 h-4 a12 12 0 0 1 -12 -12 Z M44 30 h4 a5 5 0 0 1 0 10 h-4 M26 20 q-3 -5 0 -10 M34 20 q-3 -5 0 -10' },
+      { caption: 'evening fire', bg: '#B5643C', tilt: '1.5deg', icon: 'M32 52 C18 52 18 36 26 28 C26 36 32 36 32 30 C32 22 38 18 38 12 C46 22 48 30 44 40 C42 48 38 52 32 52 Z M16 56 h32' },
+      { caption: 'the garden', bg: '#3F5B3A', tilt: '-1deg', icon: 'M32 56 V30 M32 30 C22 30 18 22 18 14 C28 14 32 22 32 30 C32 22 36 14 46 14 C46 22 42 30 32 30 Z M20 56 h24' },
+      { caption: 'Bisoke stars', bg: '#2B3A4A', tilt: '2deg', icon: 'M10 50 L24 30 L32 40 L40 26 L54 50 M20 14 l2 4 l4 1 l-4 1 l-2 4 l-2 -4 l-4 -1 l4 -1 Z M44 12 v4 M42 14 h4' }
+    ];
+    const rooms = [
+      { name: 'Garden Single', rwf: 45000, usd: 35, sky: '#E2D3B8', far: '#A9B08A', near: '#5E7048' },
+      { name: 'Garden Double', rwf: 60000, usd: 45, sky: '#DCCFB4', far: '#8E9C70', near: '#3F5B3A' },
+      { name: 'Volcano View Double', rwf: 80000, usd: 60, sky: '#E9C9A0', far: '#B79A7E', near: '#7C8B5A' },
+      { name: 'Family Cottage', rwf: 100000, usd: 75, sky: '#D9B98F', far: '#9C6E4E', near: '#5B4636' }
+    ].map(r => ({ ...r, price: money(r.rwf, r.usd) }));
+    const dishes = [
+      { name: 'Goat brochettes', rwf: 7000, usd: 5, bg: '#B5643C', icon: 'M6 42 L42 6 M14 34 l6 -6 M20 28 l6 -6 M26 22 l6 -6 M12 28 l8 8 M18 22 l8 8 M24 16 l8 8' },
+      { name: 'Isombe & rice', rwf: 6000, usd: 4.5, bg: '#3F5B3A', icon: 'M6 24 h36 a18 14 0 0 1 -36 0 Z M14 18 q4 -6 10 -2 q6 -6 10 2' },
+      { name: 'Rwandan coffee', rwf: 2000, usd: 1.5, bg: '#5B4636', icon: 'M10 18 h22 v12 a9 9 0 0 1 -9 9 h-4 a9 9 0 0 1 -9 -9 Z M32 21 h3 a4 4 0 0 1 0 8 h-3 M18 12 q-2 -4 0 -7 M24 12 q-2 -4 0 -7' }
+    ].map(d => ({ ...d, price: money(d.rwf, d.usd) }));
+    const A = [
+      { name: 'Gorilla trekking', dist: "15'", line: 'Permits from the park. We book your driver and packed lunch.', bg: '#3F5B3A', icon: 'M2 28 L16 8 L24 18 L30 10 L46 28' },
+      { name: 'Golden monkeys', dist: "15'", line: 'A shorter, playful trek in the bamboo forest.', bg: '#B5643C', icon: 'M8 28 Q8 12 24 12 Q40 12 40 28 M18 12 Q18 4 24 4 Q30 4 30 12' },
+      { name: 'Musanze Caves', dist: "25'", line: 'A 2 km walk through old lava tunnels.', bg: '#5B4636', icon: 'M4 28 Q24 -4 44 28 M16 28 Q24 14 32 28' },
+      { name: 'Twin Lakes', dist: "40'", line: 'Canoe on Burera and Ruhondo, lunch by the water.', bg: '#2B3A4A', icon: 'M2 18 Q8 14 14 18 T26 18 T38 18 T50 18 M2 26 Q8 22 14 26 T26 26 T38 26' },
+      { name: 'Cultural village', dist: "10'", line: 'Dance, drums and banana beer with local families.', bg: '#8A6A2E', icon: 'M8 28 L8 16 L24 4 L40 16 L40 28 M20 28 L20 20 L28 20 L28 28' }
+    ];
+    const activities = A.map((a, i) => ({ ...a, front: s.card !== i, back: s.card === i, tap: () => this.setState({ card: s.card === i ? -1 : i }) }));
+    const actions = [
+      { label: 'Directions', bg: 'transparent', stroke: t.ink, icon: 'M12 21 s-7 -6.5 -7 -11.5 a7 7 0 0 1 14 0 c0 5 -7 11.5 -7 11.5 Z M12 12.5 a2.5 2.5 0 1 0 0 -5 a2.5 2.5 0 1 0 0 5' },
+      { label: 'Call', bg: 'transparent', stroke: t.ink, icon: 'M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2' },
+      { label: 'WhatsApp', bg: t.accent, stroke: t.onAccent, icon: 'M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z' }
+    ];
+    return {
+      t, facts, moments, rooms, dishes, activities, actions,
+      factOpen: s.fact >= 0, factText: s.fact >= 0 ? F[s.fact].text : '',
+      hostOpen: s.host, hostLabel: s.host ? 'CLOSE NOTE −' : 'READ HER NOTE +',
+      toggleHost: () => this.setState({ host: !s.host }),
+      infoOpen: s.info, infoSign: s.info ? '−' : '+',
+      toggleInfo: () => this.setState({ info: !s.info }),
+      rwfBg: usd ? 'transparent' : t.ink, rwfFg: usd ? t.ink : t.paper,
+      usdBg: usd ? t.ink : 'transparent', usdFg: usd ? t.paper : t.ink,
+      setRwf: () => this.setState({ cur: 'RWF' }), setUsd: () => this.setState({ cur: 'USD' })
+    };
+  }
+}
+</script>
+</body>
+</html>

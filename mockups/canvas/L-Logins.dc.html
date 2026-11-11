@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Logins – owner, staff PIN, platform admin with 2FA (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}
+.lg-fade{animation:lgfade .25s ease-out both}
+@keyframes lgfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.lg-shake{animation:lgshake .35s ease-in-out}
+@keyframes lgshake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion: reduce){.lg-fade,.lg-shake{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; height: 760px; background: {{ t.bg }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: {{ headBg }}; color: {{ headFg }}">
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em">{{ headLabel }}</span>
+    <div style="display: flex; height: 30px; border: 1px solid {{ headLine }}; border-radius: 8px; overflow: hidden">
+      <button type="button" onClick="{{ setEn }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ enBg }}; color: {{ enFg }}">EN</button>
+      <button type="button" onClick="{{ setRw }}" style="border: 0; padding: 0 9px; font: 600 12px Inter, sans-serif; cursor: pointer; background: {{ rwBg }}; color: {{ rwFg }}">RW</button>
+    </div>
+  </div>
+
+  <!-- OWNER -->
+  <sc-if value="{{ vOwner }}" hint-placeholder-val="{{ true }}">
+    <div class="lg-fade" style="flex: 1 1 auto; padding: 36px 20px 20px; display: flex; flex-direction: column; gap: 14px">
+      <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.01em">{{ L.ownerTitle }}</h1>
+      <span style="font-size: 14px; color: {{ t.muted }}; margin-top: -6px">{{ L.ownerSub }}</span>
+      <label style="display: flex; flex-direction: column; gap: 4px; margin-top: 10px"><span style="font-size: 13px; font-weight: 600">Email</span><input value="claudine@kinigihills.rw" style="height: 50px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 14px; font: 400 16px Inter, sans-serif"></label>
+      <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{ L.password }}</span><input type="password" value="kinigi-demo" style="height: 50px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 14px; font: 400 16px Inter, sans-serif"></label>
+      <a href="#" style="align-self: flex-end; font-size: 13px; font-weight: 600; color: {{ t.accent }}; text-decoration: none">{{ L.forgot }}</a>
+      <a href="O-Dashboard.dc.html" style="height: 54px; border-radius: 12px; background: {{ t.accent }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; text-decoration: none">{{ L.signIn }}</a>
+      <div style="flex: 1 1 auto"></div>
+      <button type="button" onClick="{{ toStaff }}" style="cursor: pointer; height: 50px; border-radius: 12px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 14px Inter, sans-serif">{{ L.imStaff }}</button>
+      <span style="font-size: 12px; color: {{ t.muted }}; text-align: center">{{ L.newOwner }}</span>
+    </div>
+  </sc-if>
+
+  <!-- STAFF PIN -->
+  <sc-if value="{{ vStaff }}" hint-placeholder-val="{{ false }}">
+    <div class="lg-fade" style="flex: 1 1 auto; padding: 24px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+      <button type="button" onClick="{{ toOwner }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 4px 0; font: 500 13px Inter, sans-serif">← {{ L.back }}</button>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.staffTitle }}</h1>
+      <div style="height: 50px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 14px; font-size: 16px; gap: 8px"><span style="color: {{ t.muted }}">+250</span>788 123 456</div>
+      <span style="font-size: 13px; font-weight: 600">{{ L.yourPin }}</span>
+      <div class="{{ shakeClass }}" style="display: flex; justify-content: center; gap: 14px; padding: 6px 0">
+        <sc-for list="{{ dots }}" as="d" hint-placeholder-count="4">
+          <span style="width: 18px; height: 18px; border-radius: 999px; border: 2px solid {{ d.ring }}; background: {{ d.fill }}"></span>
+        </sc-for>
+      </div>
+      <span style="min-height: 18px; font-size: 13px; font-weight: 600; text-align: center; color: {{ msgColor }}">{{ msg }}</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+          <button type="button" onClick="{{ k.tap }}" style="cursor: {{ k.cursor }}; height: 56px; border-radius: 14px; border: 0; background: {{ k.bg }}; color: {{ t.ink }}; font: 600 22px Inter, sans-serif; opacity: {{ k.op }}">{{ k.label }}</button>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}; text-align: center">{{ L.pinHelp }}</span>
+    </div>
+  </sc-if>
+
+  <!-- ADMIN -->
+  <sc-if value="{{ vAdmin }}" hint-placeholder-val="{{ false }}">
+    <div class="lg-fade" style="flex: 1 1 auto; padding: 36px 20px 20px; display: flex; flex-direction: column; gap: 14px">
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700">{{ L.adminTitle }}</h1>
+      <sc-if value="{{ step1 }}" hint-placeholder-val="{{ true }}">
+        <label style="display: flex; flex-direction: column; gap: 4px; margin-top: 6px"><span style="font-size: 13px; font-weight: 600">Email</span><input value="admin@getkaze.rw" style="height: 50px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 14px; font: 400 16px Inter, sans-serif"></label>
+        <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">{{ L.password }}</span><input type="password" value="admin-demo-pass" style="height: 50px; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 14px; font: 400 16px Inter, sans-serif"></label>
+        <button type="button" onClick="{{ toCode }}" style="cursor: pointer; height: 54px; border: 0; border-radius: 12px; background: {{ t.admin }}; color: #FFFFFF; font: 600 16px Inter, sans-serif">{{ L.next }}</button>
+      </sc-if>
+      <sc-if value="{{ step2 }}" hint-placeholder-val="{{ false }}">
+        <div class="lg-fade" style="display: flex; flex-direction: column; gap: 14px">
+          <div style="display: flex; gap: 12px; align-items: center; border-radius: 12px; background: {{ t.card }}; border: 1px solid {{ t.line }}; padding: 12px">
+            <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" style="flex: 0 0 28px"><path d="M12 3 l8 3 v6 c0 5 -3.5 8 -8 9 c-4.5 -1 -8 -4 -8 -9 V6 Z M9 12 l2 2 l4 -4" fill="none" stroke="{{ t.admin }}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+            <span style="font-size: 14px; line-height: 1.4">{{ L.codeHelp }}</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px">
+            <sc-for list="{{ codeBoxes }}" as="c" hint-placeholder-count="6">
+              <span style="height: 54px; border-radius: 10px; border: 1.5px solid {{ c.border }}; background: {{ t.card }}; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 22px">{{ c.v }}</span>
+            </sc-for>
+          </div>
+          <a href="A-Admin.dc.html" style="height: 54px; border-radius: 12px; background: {{ t.admin }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; text-decoration: none">{{ L.verify }}</a>
+          <span style="font-size: 12px; color: {{ t.muted }}">{{ L.adminNote }}</span>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"screen":{"editor":"enum","options":["Owner","Staff","Platform admin"],"default":"Owner"},"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":760}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { ui: 'en', view: null, pin: '', tries: 0, shake: false, adminStep: 1 }; }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { bg: '#0F1215', card: '#181C20', ink: '#ECEFF2', muted: '#9AA3AC', line: '#2A3036', accent: '#6FA8D6', admin: '#9B7BD6', ok: '#7CC39B', danger: '#F08A7E', key: '#20252A', head: '#181C20' }
+      : { bg: '#F6F7F8', card: '#FFFFFF', ink: '#15181C', muted: '#5B636B', line: '#E2E5E8', accent: '#1F5F8B', admin: '#5B3FA0', ok: '#2F6B4F', danger: '#B3261E', key: '#ECEEF0', head: '#FFFFFF' };
+    const s = this.state, rw = s.ui === 'rw';
+    const map = { 'Owner': 'owner', 'Staff': 'staff', 'Platform admin': 'admin' };
+    const view = s.view || map[this.props.screen || 'Owner'] || 'owner';
+    const L = rw ? {
+      ownerTitle: 'Injira', ownerSub: 'Gucunga Kinigi Hills Lodge', password: 'Ijambobanga', forgot: 'Wibagiwe ijambobanga?', signIn: 'Injira',
+      imStaff: 'Ndi umukozi · injira na PIN', newOwner: 'Nta konti? Tuyigufungurira iyo twasuye ubucuruzi bwawe.', back: 'Subira inyuma',
+      staffTitle: 'Injira nk\u2019umukozi', yourPin: 'PIN yawe', pinHelp: 'Wibagiwe PIN? Baza nyiri ubucuruzi ayihindure.',
+      adminTitle: 'Admin w\u2019urubuga', next: 'Komeza', codeHelp: 'Andika kode y\u2019imibare 6 iri muri porogaramu yawe ya authenticator.', verify: 'Emeza', adminNote: 'Iyo winjiye nka support kuri konti y\u2019umukiriya, birandikwa kandi nyirayo arabibona.'
+    } : {
+      ownerTitle: 'Sign in', ownerSub: 'Manage Kinigi Hills Lodge', password: 'Password', forgot: 'Forgot password?', signIn: 'Sign in',
+      imStaff: 'I\u2019m staff · sign in with PIN', newOwner: 'No account yet? We set it up with you during the visit.', back: 'Back',
+      staffTitle: 'Staff sign in', yourPin: 'Your PIN', pinHelp: 'Forgot your PIN? Ask the owner to reset it.',
+      adminTitle: 'Platform admin', next: 'Next', codeHelp: 'Enter the 6-digit code from your authenticator app.', verify: 'Verify', adminNote: 'Support access to a client\u2019s account is logged and shown to the owner.'
+    };
+    const locked = s.tries >= 5;
+    const dots = [0, 1, 2, 3].map(i => ({ ring: s.shake ? t.danger : t.ink, fill: i < s.pin.length ? (s.shake ? t.danger : t.ink) : 'transparent' }));
+    const press = d => {
+      if (locked) return;
+      const p = s.pin + d;
+      if (p.length < 4) { this.setState({ pin: p, shake: false }); return; }
+      if (p === '2468') { this.setState({ pin: '', tries: 0, shake: false, ok: true }); return; }
+      this.setState({ pin: '', tries: s.tries + 1, shake: true });
+    };
+    const K = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '⌫'];
+    const keys = K.map(k => ({ label: k, bg: k ? t.key : 'transparent', op: locked ? '0.4' : '1', cursor: locked || !k ? 'default' : 'pointer',
+      tap: () => { if (!k) return; if (k === '⌫') this.setState({ pin: s.pin.slice(0, -1), shake: false }); else press(k); } }));
+    const left = 5 - s.tries;
+    let msg = '', msgColor = t.muted;
+    if (s.ok) { msg = rw ? '✓ Murakaza neza, Eric' : '✓ Welcome, Eric'; msgColor = t.ok; }
+    else if (locked) { msg = rw ? 'Byafunzwe iminota 15. Baza nyiri ubucuruzi.' : 'Locked for 15 minutes. Ask the owner.'; msgColor = t.danger; }
+    else if (s.tries > 0) { msg = rw ? 'PIN si yo · usigaje kugerageza ' + left : 'Wrong PIN · ' + left + ' tries left'; msgColor = t.danger; }
+    else { msg = rw ? 'Demo: PIN ni 2468' : 'Demo PIN: 2468'; }
+    const code = '482913';
+    const codeBoxes = code.split('').map(c => ({ v: c, border: t.admin }));
+    const isAdmin = view === 'admin';
+    return {
+      t, L, dots, keys, msg, msgColor, codeBoxes,
+      shakeClass: s.shake ? 'lg-shake' : '',
+      vOwner: view === 'owner', vStaff: view === 'staff', vAdmin: isAdmin,
+      step1: s.adminStep === 1, step2: s.adminStep === 2,
+      toStaff: () => this.setState({ view: 'staff', pin: '', ok: false }), toOwner: () => this.setState({ view: 'owner' }),
+      toCode: () => this.setState({ adminStep: 2 }),
+      headLabel: isAdmin ? 'KAZE · ADMIN' : 'KAZE',
+      headBg: isAdmin ? '#3B2763' : t.head, headFg: isAdmin ? '#FFFFFF' : t.ink, headLine: isAdmin ? 'rgba(255,255,255,0.5)' : t.line,
+      enBg: rw ? 'transparent' : (isAdmin ? '#FFFFFF' : t.ink), enFg: rw ? (isAdmin ? '#FFFFFF' : t.ink) : (isAdmin ? '#3B2763' : t.bg),
+      rwBg: rw ? (isAdmin ? '#FFFFFF' : t.ink) : 'transparent', rwFg: rw ? (isAdmin ? '#3B2763' : t.bg) : (isAdmin ? '#FFFFFF' : t.ink),
+      setEn: () => this.setState({ ui: 'en' }), setRw: () => this.setState({ ui: 'rw' })
+    };
+  }
+}
+</script>
+</body>
+</html>

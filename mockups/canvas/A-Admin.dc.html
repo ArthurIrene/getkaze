@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Platform admin – clients, create, modules, billing (phone)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}a{color:inherit}
+.ad-fade{animation:adfade .25s ease-out both}
+@keyframes adfade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ad-fade{animation:none}}
+</style>
+</helmet>
+<div style="width: 360px; min-height: 900px; background: {{ t.bg }}; color: {{ t.ink }}; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <div style="height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: {{ t.head }}; color: #FFFFFF">
+    <div style="display: flex; flex-direction: column; line-height: 1.1">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; opacity: 0.8">KAZE · ADMIN</span>
+      <span style="font-weight: 700; font-size: 16px">{{ title }}</span>
+    </div>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5)">2FA ✓</span>
+  </div>
+
+  <!-- CLIENTS -->
+  <sc-if value="{{ vClients }}" hint-placeholder-val="{{ true }}">
+    <div class="ad-fade" style="padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="3">
+          <div style="border-radius: 12px; background: {{ t.card }}; border: 1px solid {{ t.line }}; padding: 10px; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 18px; font-weight: 700; color: {{ k.c }}">{{ k.n }}</span><span style="font-size: 11px; color: {{ t.muted }}; line-height: 1.25">{{ k.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button type="button" onClick="{{ toGate }}" style="cursor: pointer; border-radius: 12px; border: 1px solid {{ gateBorder }}; background: {{ gateBg }}; color: {{ t.ink }}; padding: 12px 14px; display: flex; gap: 10px; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="flex: 0 0 22px"><path d="M12 3 l8 3 v6 c0 5 -3.5 8 -8 9 c-4.5 -1 -8 -4 -8 -9 V6 Z" fill="none" stroke="{{ t.ink }}" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+        <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 14px">{{ gateTitle }}</span><span style="font-size: 12px; color: {{ t.muted }}">{{ gateSub }}</span></span>
+        <span style="font-size: 18px; color: {{ t.muted }}">›</span>
+      </button>
+      <div style="display: flex; gap: 8px">
+        <div style="flex: 1 1 auto; height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: {{ t.muted }}">Search businesses…</div>
+        <button type="button" onClick="{{ toCreate }}" style="cursor: pointer; height: 44px; padding: 0 14px; border-radius: 10px; border: 0; background: {{ t.accent }}; color: #FFFFFF; font: 600 14px Inter, sans-serif">+ New</button>
+      </div>
+      <div style="display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none">
+        <sc-for list="{{ cfilters }}" as="f" hint-placeholder-count="5">
+          <button type="button" onClick="{{ f.pick }}" style="cursor: pointer; flex: 0 0 auto; height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.fg }}; font: 600 12px Inter, sans-serif">{{ f.name }}</button>
+        </sc-for>
+      </div>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; overflow: hidden">
+        <sc-for list="{{ clients }}" as="c" hint-placeholder-count="7">
+          <button type="button" onClick="{{ c.open }}" style="cursor: pointer; width: 100%; border: 0; border-bottom: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; padding: 12px 14px; display: flex; align-items: center; gap: 10px; text-align: left; font-family: Inter, system-ui, sans-serif">
+            <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-weight: 600; font-size: 14px">{{ c.name }}</span>
+              <span style="font-size: 12px; color: {{ t.muted }}">{{ c.meta }}</span>
+            </span>
+            <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+              <span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: {{ c.tagBg }}; color: {{ c.tagFg }}">{{ c.tag }}</span>
+              <span style="font-size: 12px; font-weight: 600">{{ c.mrr }}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CREATE -->
+  <sc-if value="{{ vCreate }}" hint-placeholder-val="{{ false }}">
+    <div class="ad-fade" style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toClients }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← Clients</button>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700">New business</h1>
+      <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Business name</span><input value="Kalisimbi Garden Hotel" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+      <span style="font-size: 13px; font-weight: 600">Preset</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{ presets }}" as="p" hint-placeholder-count="2">
+          <button type="button" onClick="{{ p.pick }}" style="cursor: pointer; height: 52px; border-radius: 12px; border: 2px solid {{ p.border }}; background: {{ t.card }}; color: {{ t.ink }}; font: 600 14px Inter, sans-serif">{{ p.name }}</button>
+        </sc-for>
+      </div>
+      <span style="font-size: 13px; font-weight: 600">{{ styleLabel }}</span>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap">
+        <sc-for list="{{ styles }}" as="st" hint-placeholder-count="3">
+          <button type="button" onClick="{{ st.pick }}" style="cursor: pointer; height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid {{ st.border }}; background: {{ st.bg }}; color: {{ st.fg }}; font: 600 13px Inter, sans-serif">{{ st.name }}</button>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; color: {{ t.muted }}; margin-top: -6px">{{ styleNote }}</span>
+      <span style="font-size: 13px; font-weight: 600">Template</span>
+      <sc-for list="{{ tpls }}" as="tp" hint-placeholder-count="3">
+        <button type="button" onClick="{{ tp.pick }}" style="cursor: pointer; border-radius: 12px; border: 2px solid {{ tp.border }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+          <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 14px">{{ tp.name }}</span><span style="font-size: 12px; color: {{ tp.noteC }}">{{ tp.note }}</span></span>
+          <span style="font-size: 12px; font-weight: 700; color: {{ t.ok }}">{{ tp.tag }}</span>
+        </button>
+      </sc-for>
+      <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Address before their own domain</span><span style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; display: flex; align-items: center; padding: 0 12px; font-family: 'IBM Plex Mono', monospace; font-size: 13px">kalisimbi-garden.getkaze.rw</span></label>
+      <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; font-weight: 600">Owner phone (login + invite)</span><input value="+250 78• ••• •••" style="height: 44px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 15px Inter, sans-serif"></label>
+      <button type="button" onClick="{{ toggleDemo }}" style="cursor: pointer; border-radius: 12px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 12px; display: flex; justify-content: space-between; align-items: center; text-align: left; font-family: Inter, system-ui, sans-serif">
+        <span style="display: flex; flex-direction: column"><span style="font-weight: 600; font-size: 14px">Pitch demo</span><span style="font-size: 12px; color: {{ t.muted }}">Fake guest data, not listed on Google, no billing</span></span>
+        <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ demoTrack }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ demoKnob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+      </button>
+      <button type="button" onClick="{{ createIt }}" style="cursor: pointer; height: 52px; border: 0; border-radius: 12px; background: {{ t.accent }}; color: #FFFFFF; font: 600 15px Inter, sans-serif">Create &amp; send owner invite</button>
+      <span style="font-size: 12px; color: {{ t.muted }}">Starter switches on with the preset's default modules. Everything else stays locked until you switch it on.</span>
+    </div>
+  </sc-if>
+
+  <!-- CLIENT DETAIL -->
+  <sc-if value="{{ vClient }}" hint-placeholder-val="{{ false }}">
+    <div class="ad-fade" style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toClients }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← Clients</button>
+      <div style="display: flex; flex-direction: column; gap: 2px"><h1 style="margin: 0; font-size: 24px; font-weight: 700">Twin Lakes Bistro</h1><span style="font-size: 13px; color: {{ t.muted }}">Restaurant &amp; Bar · bar-first · Imigongo · twinlakesbistro.rw</span></div>
+      <span style="font-weight: 600; font-size: 15px">Modules</span>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; overflow: hidden">
+        <sc-for list="{{ mods }}" as="m" hint-placeholder-count="9">
+          <button type="button" onClick="{{ m.tap }}" style="cursor: {{ m.cursor }}; width: 100%; border: 0; border-bottom: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; font-family: Inter, system-ui, sans-serif; opacity: {{ m.op }}">
+            <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-weight: 600; font-size: 14px">{{ m.name }}</span><span style="font-size: 11.5px; color: {{ m.subC }}">{{ m.sub }}</span></span>
+            <span style="width: 44px; height: 26px; border-radius: 999px; background: {{ m.track }}; position: relative; flex: 0 0 44px"><span style="position: absolute; top: 3px; left: {{ m.knob }}; width: 20px; height: 20px; border-radius: 999px; background: #FFFFFF"></span></span>
+          </button>
+        </sc-for>
+      </div>
+      <span style="font-weight: 600; font-size: 15px">Billing</span>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: {{ t.muted }}">List price</span><span>{{ listSetup }} setup · {{ listMonthly }} / month</span></div>
+        <span style="font-size: 13px; font-weight: 600">Discount (floor: 70% of list)</span>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{ discounts }}" as="d" hint-placeholder-count="4">
+            <button type="button" onClick="{{ d.pick }}" style="cursor: pointer; height: 36px; border-radius: 999px; border: 1px solid {{ d.border }}; background: {{ d.bg }}; color: {{ d.fg }}; font: 600 13px Inter, sans-serif">{{ d.name }}</button>
+          </sc-for>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid {{ t.line }}; padding-top: 10px"><span style="font-size: 14px; font-weight: 600">They pay</span><span style="font-size: 16px; font-weight: 700">{{ paySetup }} setup · {{ payMonthly }} / mo</span></div>
+        <span style="font-size: 12px; color: {{ t.muted }}">Setup discounted first. Setup 50% at signing (paid ✓), 50% at go-live. Next monthly due 1 Dec · MoMo merchant code.</span>
+      </div>
+      <button type="button" style="cursor: pointer; height: 46px; border-radius: 12px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 14px Inter, sans-serif">Open as support (logged, owner sees it)</button>
+      <button type="button" style="cursor: pointer; height: 46px; border-radius: 12px; border: 1px solid {{ t.line }}; background: transparent; color: {{ t.ink }}; font: 600 14px Inter, sans-serif">Export all their data</button>
+    </div>
+  </sc-if>
+
+  <!-- BILLING / OVERDUE -->
+  <sc-if value="{{ vBilling }}" hint-placeholder-val="{{ false }}">
+    <div class="ad-fade" style="padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700">Overdue</h1>
+      <div style="display: flex; gap: 4px">
+        <sc-for list="{{ timeline }}" as="tl" hint-placeholder-count="5">
+          <div style="flex: 1 1 0; display: flex; flex-direction: column; gap: 4px"><div style="height: 5px; border-radius: 999px; background: {{ tl.c }}"></div><span style="font-size: 9.5px; line-height: 1.2; color: {{ t.muted }}">{{ tl.name }}</span></div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ overdue }}" as="o" hint-placeholder-count="3">
+        <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ o.border }}; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-weight: 600; font-size: 15px">{{ o.name }}</span><span style="font-weight: 700; font-size: 14px">{{ o.amount }}</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12px; color: {{ t.muted }}">{{ o.days }}</span><span style="font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: {{ o.tagBg }}; color: {{ o.tagFg }}">{{ o.tag }}</span></div>
+          <sc-if value="{{ o.paid }}" hint-placeholder-val="{{ false }}"><span class="ad-fade" style="font-size: 13px; font-weight: 600; color: {{ t.ok }}">✓ Paid · everything restored</span></sc-if>
+          <sc-if value="{{ o.unpaid }}" hint-placeholder-val="{{ true }}">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <button type="button" style="cursor: pointer; height: 40px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">WhatsApp reminder</button>
+              <button type="button" onClick="{{ o.pay }}" style="cursor: pointer; height: 40px; border-radius: 10px; border: 0; background: {{ t.ok }}; color: #FFFFFF; font: 600 13px Inter, sans-serif">Mark paid</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+      <span style="font-size: 12px; color: {{ t.muted }}">Grace period is 14 days by default and can be changed per client. Data and domain are never held: login and export always work.</span>
+    </div>
+  </sc-if>
+
+  <!-- COMPLIANCE GATE -->
+  <sc-if value="{{ vGate }}" hint-placeholder-val="{{ false }}">
+    <div class="ad-fade" style="padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+      <button type="button" onClick="{{ toClients }}" style="cursor: pointer; align-self: flex-start; border: 0; background: transparent; color: {{ t.muted }}; padding: 6px 0; font: 500 13px Inter, sans-serif">← Clients</button>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700">Data protection</h1>
+      <div style="border-radius: 14px; background: {{ t.card }}; border: 1px solid {{ t.line }}; overflow: hidden">
+        <sc-for list="{{ gateRows }}" as="g" hint-placeholder-count="3">
+          <div style="display: flex; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid {{ t.line }}; font-size: 14px"><span style="color: {{ t.muted }}">{{ g.k }}</span><span style="font-weight: 600; text-align: right; color: {{ g.c }}">{{ g.v }}</span></div>
+        </sc-for>
+      </div>
+      <div style="border-radius: 14px; border: 1px solid {{ gateBorder }}; background: {{ gateBg }}; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-weight: 600; font-size: 15px">{{ gateTitle }}</span>
+        <span style="font-size: 13px; line-height: 1.45">{{ gateBody }}</span>
+        <sc-if value="{{ gateLocked }}" hint-placeholder-val="{{ true }}">
+          <label style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; color: {{ t.muted }}">NCSA authorization number</span><input value="" placeholder="Required to unlock" style="height: 42px; border-radius: 10px; border: 1px solid {{ t.line }}; background: {{ t.card }}; color: {{ t.ink }}; padding: 0 12px; font: 400 14px Inter, sans-serif"></label>
+          <button type="button" onClick="{{ unlockGate }}" style="cursor: pointer; height: 46px; border: 0; border-radius: 12px; background: {{ t.ink }}; color: {{ t.bg }}; font: 600 14px Inter, sans-serif">Unlock guest data (demo)</button>
+        </sc-if>
+        <sc-if value="{{ gateOpen }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ lockGate }}" style="cursor: pointer; height: 40px; border-radius: 10px; border: 1px solid {{ t.ink }}; background: transparent; color: {{ t.ink }}; font: 600 13px Inter, sans-serif">↺ Lock again (demo)</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="flex: 1 1 auto"></div>
+  <div style="position: sticky; bottom: 0; height: 64px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: {{ t.card }}; border-top: 1px solid {{ t.line }}">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+      <button type="button" onClick="{{ n.go }}" style="cursor: pointer; border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: {{ n.color }}; font-family: Inter, system-ui, sans-serif; position: relative">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="{{ n.icon }}" fill="none" stroke="{{ n.color }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-size: 11px; font-weight: 600">{{ n.name }}</span>
+        <sc-if value="{{ n.badge }}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 8px; left: 50%; margin-left: 6px; min-width: 16px; height: 16px; border-radius: 999px; background: {{ t.danger }}; color: #FFFFFF; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{ n.badgeN }}</span></sc-if>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"night":{"editor":"boolean","default":false},"$preview":{"width":360,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'clients', cf: 0, preset: 0, style: 1, tpl: 1, demo: false, created: false,
+      mods: { starter: true, booking: false, menu: true, mgr: true, staff: false, stock: false, reports: false }, disc: 1, paid: {}, gate: false };
+  }
+  renderVals() {
+    const night = !!this.props.night;
+    const t = night
+      ? { bg: '#100E14', card: '#1A1720', ink: '#EEEAF3', muted: '#A59DB1', line: '#2D2836', accent: '#9B7BD6', head: '#3B2763', ok: '#7CC39B', okBg: '#16241C', warn: '#E0A84A', warnBg: '#2B2416', danger: '#F08A7E', dangerBg: '#2E1715' }
+      : { bg: '#F7F6F9', card: '#FFFFFF', ink: '#17141C', muted: '#5F5869', line: '#E4E1E8', accent: '#5B3FA0', head: '#3B2763', ok: '#2F6B4F', okBg: '#E8F2EC', warn: '#B26A00', warnBg: '#FFF4E0', danger: '#B3261E', dangerBg: '#FDECEA' };
+    const s = this.state;
+    const fmt = n => 'RWF ' + n.toLocaleString('en-US');
+    const C = [
+      ['Kinigi Hills Lodge', 'Lodge · Field Journal', 'demo', 0],
+      ['Twin Lakes Bistro', 'Restaurant & Bar · Imigongo', 'grace', 45000],
+      ['Muhabura Rise Hotel', 'Town hotel · Cinematic', 'active', 30000],
+      ['Bisoke Backpackers', 'Guesthouse · Field Journal', 'paused', 20000],
+      ['Red Rocks Café', 'Restaurant & Bar · Imigongo', 'active', 30000],
+      ['Gahinga View Lodge', 'Lodge · Field Journal', 'active', 30000],
+      ['Market Street Grill', 'Restaurant & Bar · Cinematic', 'active', 55000]
+    ];
+    if (s.created) C.splice(1, 0, ['Kalisimbi Garden Hotel', 'Town hotel · Imigongo · owner invite sent', 'setup', 0]);
+    const TAG = { active: ['ACTIVE', t.okBg, t.ok], grace: ['GRACE · DAY 18', t.warnBg, t.warn], paused: ['SITE PAUSED', t.dangerBg, t.danger], demo: ['DEMO', t.line, t.ink], setup: ['SETTING UP', t.line, t.ink] };
+    const FK = ['all', 'active', 'grace', 'paused', 'demo'];
+    const cfilters = ['All', 'Active', 'Grace', 'Paused', 'Demo'].map((n, i) => ({ name: n, border: s.cf === i ? t.ink : t.line, bg: s.cf === i ? t.ink : 'transparent', fg: s.cf === i ? t.bg : t.ink, pick: () => this.setState({ cf: i }) }));
+    const clients = C.filter(c => s.cf === 0 || c[2] === FK[s.cf]).map(c => ({ name: c[0], meta: c[1], tag: TAG[c[2]][0], tagBg: TAG[c[2]][1], tagFg: TAG[c[2]][2], mrr: c[3] ? fmt(c[3]) + ' / mo' : '—', open: () => { if (c[0] === 'Twin Lakes Bistro') this.setState({ view: 'client' }); } }));
+    const mrr = C.reduce((a, c) => a + (c[2] === 'active' ? c[3] : 0), 0);
+    const kpis = [{ n: String(C.filter(c => c[2] !== 'demo').length), label: 'clients', c: t.ink }, { n: (mrr / 1000) + 'k', label: 'RWF / month (paid up)', c: t.ink }, { n: '3', label: 'overdue', c: t.danger }];
+    const presets = ['Hotel / Lodge', 'Restaurant & Bar'].map((n, i) => ({ name: n, border: s.preset === i ? t.accent : t.line, pick: () => this.setState({ preset: i, style: i === 0 ? 1 : 0 }) }));
+    const ST = s.preset === 0 ? ['Lodge', 'Town hotel', 'Guesthouse'] : ['Restaurant-first', 'Bar-first'];
+    const styles = ST.map((n, i) => ({ name: n, border: s.style === i ? t.ink : t.line, bg: s.style === i ? t.ink : 'transparent', fg: s.style === i ? t.bg : t.ink, pick: () => this.setState({ style: i }) }));
+    const notes = s.preset === 0 ? ['Turns on: activities around, host story, distance to park.', 'Turns on: facilities, meetings & events, restaurant menu.', 'Turns on: host story, facilities, long-stay note.'] : ['Wording: table, order, dish, bill.', 'Wording: table or counter, tab, drink.'];
+    const TP = [['Field Journal', 'Free nearby', false], ['Imigongo', 'Free nearby', false], ['Cinematic', 'Used by Muhabura Rise Hotel, 600 m away', true]];
+    const tpls = TP.map((x, i) => ({ name: x[0], note: x[1], noteC: x[2] ? t.warn : t.muted, border: s.tpl === i ? t.accent : t.line, tag: s.tpl === i ? '✓' : '', pick: () => this.setState({ tpl: i }) }));
+    const M = [
+      ['starter', 'Starter', 'Website, menu, buttons, Google profile', 500000, 20000, 'fixed'],
+      ['booking', 'Booking requests', 'Form + availability calendar', 100000, 10000, ''],
+      ['menu', 'Menu + WhatsApp orders', 'QR, pick-up, delivery, tables', 100000, 10000, ''],
+      ['mgr', 'Manager orders page', 'Live orders list', 100000, 15000, 'gate'],
+      ['staff', 'Staff management', 'PIN logins, roles', 150000, 15000, ''],
+      ['stock', 'Stock', 'Auto sold-out', 150000, 20000, ''],
+      ['reports', 'Reports and sales', 'Daily sales, best sellers', 100000, 10000, ''],
+      ['inbox', 'Booking inbox & guest list', 'Stores guest data', 0, 0, 'gate']
+    ];
+    let setup = 0, monthly = 0;
+    const mods = M.map(m => {
+      const fixed = m[5] === 'fixed', gated = m[5] === 'gate' && !s.gate;
+      const on = fixed || (!gated && !!s.mods[m[0]]);
+      if (on) { setup += m[3]; monthly += m[4]; }
+      return { name: m[1], sub: gated ? 'Locked · waiting for NCSA authorization' : (m[3] ? fmt(m[3]) + ' + ' + fmt(m[4]) + '/mo · ' + m[2] : m[2]),
+        subC: gated ? t.warn : t.muted, op: gated ? '0.6' : '1', cursor: fixed || gated ? 'not-allowed' : 'pointer',
+        track: on ? t.ok : t.line, knob: on ? '21px' : '3px',
+        tap: () => { if (fixed || gated) return; const n = { ...s.mods }; n[m[0]] = !n[m[0]]; this.setState({ mods: n }); } };
+    });
+    const D = [0, 10, 20, 30];
+    const discounts = D.map((d, i) => ({ name: d + '%', border: s.disc === i ? t.ink : t.line, bg: s.disc === i ? t.ink : 'transparent', fg: s.disc === i ? t.bg : t.ink, pick: () => this.setState({ disc: i }) }));
+    const dd = D[s.disc] / 100;
+    const totalList = setup + monthly * 12;
+    const cut = totalList * dd;
+    const setupCut = Math.min(setup, cut);
+    const monthlyCut = Math.max(0, cut - setupCut) / 12;
+    const round = n => Math.round(n / 500) * 500;
+    const O = [
+      ['Twin Lakes Bistro', 45000, 'Day 18 · reminder sent 1 Nov', 'ADD-ONS PAUSED', t.warnBg, t.warn],
+      ['Bisoke Backpackers', 20000, 'Day 33', 'SITE PAUSED', t.dangerBg, t.danger],
+      ['Gahinga View Lodge', 30000, 'Day 5', 'REMINDER SENT', t.line, t.ink]
+    ];
+    const overdue = O.map(o => { const p = !!s.paid[o[0]]; return { name: o[0], amount: fmt(o[1]), days: o[2], tag: p ? 'PAID' : o[3], tagBg: p ? t.okBg : o[4], tagFg: p ? t.ok : o[5], border: p ? t.line : o[5], paid: p, unpaid: !p, pay: () => this.setState({ paid: { ...s.paid, [o[0]]: true } }) }; });
+    const timeline = [['Due · reminder', t.line], ['Grace 14 days', t.warn], ['Day 15 · add-ons pause', t.warn], ['Day 30 · site paused', t.danger], ['Day 90 · final notice, export', t.danger]].map(x => ({ name: x[0], c: x[1] }));
+    const gateRows = [
+      { k: 'NCSA registration', v: 'Filed · 8 Nov 2026', c: t.ok },
+      { k: 'Storage outside Rwanda', v: s.gate ? 'Authorized (demo)' : 'Applied · waiting', c: s.gate ? t.ok : t.warn },
+      { k: 'Data protection officer', v: 'Designated', c: t.ok }
+    ];
+    const nOver = overdue.filter(o => o.unpaid).length;
+    const NV = [['Clients', 'M9 11 a3 3 0 1 0 0 -6 a3 3 0 1 0 0 6 M3 20 a6 6 0 0 1 12 0 M16 11 a2.5 2.5 0 1 0 0 -5 M15 14 a5 5 0 0 1 6 6', 'clients'], ['Billing', 'M3 6 h18 v12 h-18 Z M3 10 h18 M7 15 h4', 'billing'], ['Settings', 'M12 15 a3 3 0 1 0 0 -6 a3 3 0 1 0 0 6 M19 12 a7 7 0 0 0 -0.1 -1.2 l2 -1.5 l-2 -3.4 l-2.3 1 a7 7 0 0 0 -2 -1.2 L14.3 3 h-4 l-0.4 2.7 a7 7 0 0 0 -2 1.2 l-2.3 -1 l-2 3.4 l2 1.5 A7 7 0 0 0 5 12 a7 7 0 0 0 0.1 1.2 l-2 1.5 l2 3.4 l2.3 -1 a7 7 0 0 0 2 1.2 l0.4 2.7 h4 l0.4 -2.7 a7 7 0 0 0 2 -1.2 l2.3 1 l2 -3.4 l-2 -1.5 A7 7 0 0 0 19 12', 'gate']];
+    const actView = s.view === 'create' || s.view === 'client' ? 'clients' : s.view;
+    const nav = NV.map(n => ({ name: n[0], icon: n[1], color: actView === n[2] ? t.accent : t.muted, badge: n[2] === 'billing' && nOver > 0, badgeN: String(nOver), go: () => this.setState({ view: n[2] }) }));
+    const TITLES = { clients: 'Clients', create: 'New business', client: 'Client', billing: 'Billing', gate: 'Settings' };
+    return {
+      t, kpis, cfilters, clients, presets, styles, tpls, mods, discounts, overdue, timeline, gateRows, nav,
+      title: TITLES[s.view],
+      vClients: s.view === 'clients', vCreate: s.view === 'create', vClient: s.view === 'client', vBilling: s.view === 'billing', vGate: s.view === 'gate',
+      styleLabel: s.preset === 0 ? 'Property style' : 'Venue style', styleNote: notes[s.style] || '',
+      demoTrack: s.demo ? t.ok : t.line, demoKnob: s.demo ? '21px' : '3px', toggleDemo: () => this.setState({ demo: !s.demo }),
+      createIt: () => this.setState({ created: true, view: 'clients', cf: 0 }),
+      listSetup: fmt(setup), listMonthly: fmt(monthly), paySetup: fmt(round(setup - setupCut)), payMonthly: fmt(round(monthly - monthlyCut)),
+      gateLocked: !s.gate, gateOpen: s.gate,
+      gateTitle: s.gate ? 'Guest data: unlocked' : 'Guest data: locked for all clients',
+      gateSub: s.gate ? 'Booking inbox and guest lists can be switched on' : 'Waiting for NCSA storage authorization',
+      gateBody: s.gate ? 'Booking inbox, stored orders and guest lists can now be switched on per client. Changes to hosting or countries must be reported to NCSA first.' : 'Until storage authorization arrives, bookings and orders go through the guest\u2019s own WhatsApp or email and nothing is stored. Demos with fake data still show every feature.',
+      gateBg: s.gate ? t.okBg : t.warnBg, gateBorder: s.gate ? t.ok : t.warn,
+      unlockGate: () => this.setState({ gate: true }), lockGate: () => this.setState({ gate: false }),
+      toClients: () => this.setState({ view: 'clients' }), toCreate: () => this.setState({ view: 'create' }), toGate: () => this.setState({ view: 'gate' })
+    };
+  }
+}
+</script>
+</body>
+</html>

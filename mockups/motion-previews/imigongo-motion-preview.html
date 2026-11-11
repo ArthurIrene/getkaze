@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Twin Lakes Bistro · Imigongo v2 motion preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@900&family=DM+Sans:wght@400;700&display=swap">
+<style>
+:root{--bg:#EFE6D6;--ink:#1E1712;--onink:#EFE6D6;--clay:#A8472A;--onclay:#F6EEE2;--soft:#E4D8C4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#14110E;--ink:#F0E7D8;--onink:#14110E;--clay:#B04E2E;--onclay:#FFF6EA;--soft:#221D18;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14110E;--ink:#F0E7D8;--onink:#14110E;--clay:#B04E2E;--onclay:#FFF6EA;--soft:#221D18;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+.wrap{max-width:480px;margin:0 auto;overflow-x:clip}
+.u{font-family:Unbounded,"Arial Black",sans-serif;font-weight:900}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:var(--bg)}
+.logo{display:flex;align-items:center;gap:8px;font-size:14px}.logo svg{animation:spinIn .9s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes spinIn{from{transform:rotate(-135deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
+.theme{height:32px;padding:0 10px;border:2px solid var(--ink);font-weight:700;font-size:12px}
+.hero{position:relative;height:320px;overflow:hidden;background:#3A2A20}
+.hero svg{position:absolute;inset:0;width:100%;height:100%;opacity:.55;animation:kb 16s ease-in-out infinite alternate}
+@keyframes kb{to{transform:scale(1.12) translate(-6px,4px)}}
+.ph{position:absolute;right:10px;top:10px;font-size:11px;background:rgba(0,0,0,.5);color:#fff;padding:3px 8px}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:18px 14px 16px;background:linear-gradient(transparent,rgba(20,17,14,.85));color:#F6EEE2}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;background:#F6EEE2;color:#1E1712;padding:4px 10px;animation:up .5s .3s both}
+.pill i{width:8px;height:8px;background:var(--clay);transform:rotate(45deg);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{transform:rotate(45deg) scale(1.4)}}
+.cap h1{margin:10px 0 4px;font-size:32px;line-height:1;animation:stamp .5s .45s cubic-bezier(.2,1.4,.4,1) both}
+.cap p{margin:0;font-size:16px;animation:up .5s .65s both}
+@keyframes stamp{from{transform:translateY(-14px) scale(1.25);opacity:0}to{transform:none;opacity:1}}
+@keyframes up{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:14px 12px 6px}
+.btn{height:54px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;transition:transform .15s}
+.btn:active,.dish:active{transform:scale(.97)}
+.dark{background:var(--ink);color:var(--bg)}.line{border:3px solid var(--ink)}
+.link{display:block;padding:6px 14px 16px;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.band{height:16px;overflow:hidden}.band svg{display:block}
+.tonight{margin:22px 12px 0;display:flex;background:var(--clay);color:var(--onclay)}
+.tonight .im{flex:0 0 130px;height:130px;background:#6B3A24;position:relative}
+.tonight div{padding:12px;display:flex;flex-direction:column;justify-content:space-between}
+.sec{padding:26px 12px 10px;display:flex;justify-content:space-between;align-items:baseline}
+.sec h2{margin:0;font-size:22px}
+.dishes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0 12px}
+.dish{display:flex;flex-direction:column;gap:6px;transition:transform .15s}
+.dish .im{aspect-ratio:1;border:3px solid var(--ink);position:relative}
+.dish .im::after{content:"";position:absolute;right:-3px;top:-3px;width:26px;height:26px;background:var(--bg);clip-path:polygon(0 0,100% 0,100% 100%)}
+.small{position:absolute;left:6px;bottom:6px;font-size:10px;background:rgba(0,0,0,.5);color:#fff;padding:2px 6px}
+.visit{padding:22px 12px 0;display:grid;gap:10px}
+.map{height:130px;background:var(--soft);border:3px solid var(--ink)}
+.map svg{width:100%;height:100%}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.three a{height:46px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.rev{margin:26px 12px 0;padding:16px;border:3px solid var(--ink);display:flex;gap:14px;align-items:center}
+footer{margin-top:26px;background:var(--ink);color:var(--onink);padding:20px 14px 40px}
+.panel{position:fixed;inset:0;z-index:20;background:var(--bg);overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 16px) 14px 40px;display:none}
+.panel.on{display:block}
+.back{height:40px;padding:0 14px;border:3px solid var(--ink);font-weight:700}
+.grp{margin:22px 0 6px;font-size:14px;font-weight:700;color:var(--clay)}
+.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:2px solid var(--soft);font-size:16px}
+@supports (animation-timeline: view()){
+ .slideL{animation:slideL linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+ .slideR{animation:slideR linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+ .dish:nth-child(odd),.tonight,.rev{animation:inL linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+ .dish:nth-child(even),.map{animation:inR linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
+}
+@keyframes slideL{from{transform:translateX(0)}to{transform:translateX(-300px)}}
+@keyframes slideR{from{transform:translateX(-300px)}to{transform:translateX(0)}}
+@keyframes inL{from{transform:translateX(-36px);opacity:0}to{transform:none;opacity:1}}
+@keyframes inR{from{transform:translateX(36px);opacity:0}to{transform:none;opacity:1}}
+.js-in .rise{opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s}.js-in .rise.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.js-in .rise{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<pattern id="zig" width="24" height="16" patternUnits="userSpaceOnUse"><path d="M0 14 L6 4 L12 14 L18 4 L24 14" fill="none" stroke="var(--ink)" stroke-width="3"/></pattern>
+<pattern id="step" width="32" height="16" patternUnits="userSpaceOnUse"><path d="M0 16 V12 H4 V8 H8 V4 H12 V0 H20 V4 H24 V8 H28 V12 H32 V16 Z" fill="var(--clay)"/></pattern>
+</defs></svg>
+<header><div class="logo"><svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><path d="M14 1 L27 14 L14 27 L1 14 Z" fill="var(--ink)"/><path d="M14 7 L21 14 L14 21 L7 14 Z" fill="var(--clay)"/><path d="M14 11 L17 14 L14 17 L11 14 Z" fill="var(--bg)"/></svg><b class="u">Twin Lakes</b></div>
+<button class="theme" id="theme" aria-label="Switch day or night">DAY / NIGHT</button></header>
+
+<section class="hero"><svg viewBox="0 0 360 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect x="40" y="160" width="280" height="10" fill="#1E1712"/><circle cx="110" cy="138" r="18" fill="none" stroke="#F6EEE2" stroke-width="2"/><circle cx="250" cy="138" r="18" fill="none" stroke="#F6EEE2" stroke-width="2"/><path d="M80 60 V110 M180 50 V110 M280 60 V110" stroke="#F6EEE2" stroke-width="1.5"/><circle cx="80" cy="114" r="6" fill="#E9B36A"/><circle cx="180" cy="114" r="6" fill="#E9B36A"/><circle cx="280" cy="114" r="6" fill="#E9B36A"/></svg>
+<span class="ph">Photo: the bar at night</span>
+<div class="cap"><span class="pill"><i></i>Open now · until 23:00</span><h1 class="u">Twin Lakes Bistro</h1><p>Rwandan grill &amp; bar · Musanze town</p></div></section>
+
+<div class="acts"><a class="btn dark" href="#" id="menuBtn">See the menu</a><a class="btn line" href="#">Book a table</a></div>
+<a class="link" href="#">Order for pick-up or delivery →</a>
+<div class="band"><svg class="slideL" width="780" height="16" aria-hidden="true"><rect width="780" height="16" fill="url(#zig)"/></svg></div>
+
+<div class="tonight rise"><div class="im"><span class="small">Photo: brochettes</span></div><div><b style="font-size:13px">Tonight only</b><b class="u" style="font-size:18px;line-height:1.1">Brochette night</b><span style="font-size:14px">RWF 10,000 for two · from 18:00</span></div></div>
+
+<div class="sec"><h2 class="u">Popular here</h2><a href="#" id="menuLink" style="font-weight:700;font-size:14px">Full menu →</a></div>
+<div class="dishes">
+<a class="dish rise" href="#"><span class="im" style="background:#6B3A24"><span class="small">Photo</span></span><b>Goat brochettes</b><span>RWF 7,000</span></a>
+<a class="dish rise" href="#"><span class="im" style="background:#4A5A5E"><span class="small">Photo</span></span><b>Grilled tilapia</b><span>RWF 14,000</span></a>
+<a class="dish rise" href="#"><span class="im" style="background:#4E5B35"><span class="small">Photo</span></span><b>Isombe &amp; rice</b><span>RWF 6,000</span></a>
+<a class="dish rise" href="#"><span class="im" style="background:#B07A2A"><span class="small">Photo</span></span><b>Passion juice</b><span>RWF 3,000</span></a>
+</div>
+<div class="band" style="margin-top:26px"><svg class="slideR" width="780" height="16" aria-hidden="true"><rect width="780" height="16" fill="url(#step)"/></svg></div>
+
+<section class="visit"><h2 class="u" style="margin:0;font-size:22px">Visit us</h2>
+<div class="map rise"><svg viewBox="0 0 330 124" aria-hidden="true"><path d="M0 84 H120 V48 H330 M200 0 V124" fill="none" stroke="var(--ink)" stroke-width="2"/><path d="M160 26 L172 38 L160 50 L148 38 Z" fill="var(--clay)" stroke="var(--ink)" stroke-width="2.5"/></svg></div>
+<div style="display:grid;gap:4px;font-size:15px"><span><b>Where:</b> Main road, 2 min from Musanze market</span><span><b>Today:</b> 11:00 – 23:00 · Fri–Sat until 01:00</span><span><b>Pay:</b> cash, MTN MoMo, Airtel Money</span></div>
+<div class="three"><a class="dark" href="#">Directions</a><a class="line" href="#">Call</a><a class="line" href="#">WhatsApp</a></div></section>
+
+<div class="rev rise"><b class="u" style="font-size:34px;line-height:1" data-count="4.5">0</b><span style="font-size:14px"><b>On Google · 210 reviews</b><br>“Best brochettes in town, great music on Fridays.”</span></div>
+<footer><b class="u" style="font-size:18px">Twin Lakes Bistro</b><p style="font-size:12px;opacity:.75">Demo for motion only</p></footer>
+</div>
+
+<div class="panel" id="panel" aria-hidden="true">
+<button class="back" id="back">← Back</button>
+<h2 class="u" style="font-size:34px;margin:16px 0 0">Menu</h2>
+<p class="grp">Grill</p><div class="row"><span>Goat brochettes</span><b>7,000</b></div><div class="row"><span>Grilled tilapia</span><b>14,000</b></div><div class="row"><span>Chicken, half</span><b>9,000</b></div>
+<p class="grp">Rwandan</p><div class="row"><span>Isombe &amp; rice</span><b>6,000</b></div><div class="row"><span>Agatogo</span><b>7,000</b></div>
+<p class="grp">Drinks</p><div class="row"><span>Passion juice</span><b>3,000</b></div><div class="row"><span>Local beer</span><b>2,500</b></div>
+</div>
+<script>
+(function(){
+var root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,vt=!!document.startViewTransition&&!reduce;
+document.getElementById('theme').onclick=function(){var dark=root.getAttribute('data-theme')==='dark'||(!root.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);var go=function(){root.setAttribute('data-theme',dark?'light':'dark')};vt?document.startViewTransition(go):go()};
+var panel=document.getElementById('panel'),src=null;
+function open(e){e.preventDefault();src=e.currentTarget;var go=function(){panel.classList.add('on');panel.setAttribute('aria-hidden','false');src.style.viewTransitionName='';panel.style.viewTransitionName='menu';scrollTo(0,0)};if(vt){src.style.viewTransitionName='menu';document.startViewTransition(go)}else go()}
+function close(){var go=function(){panel.classList.remove('on');panel.setAttribute('aria-hidden','true');panel.style.viewTransitionName='';if(src)src.style.viewTransitionName='menu'};if(vt){panel.style.viewTransitionName='menu';document.startViewTransition(go).finished.then(function(){if(src)src.style.viewTransitionName=''})}else go()}
+document.getElementById('menuBtn').onclick=open;document.getElementById('menuLink').onclick=open;document.getElementById('back').onclick=close;
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var el=e.target;el.classList.add('in');var c=el.querySelector('[data-count]');if(c&&!c.dataset.done){c.dataset.done=1;var to=parseFloat(c.dataset.count),t0=null;if(reduce){c.textContent=c.dataset.count;return}(function st(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/900);c.textContent=(to*(1-Math.pow(1-p,3))).toFixed(1);if(p<1)requestAnimationFrame(st)})(performance.now())}})},{threshold:.2});
+document.querySelectorAll('.rise').forEach(function(el){io.observe(el)});
+if(!reduce&&!(window.CSS&&CSS.supports('animation-timeline: view()'))){root.classList.add('js-in');var bands=[].slice.call(document.querySelectorAll('.slideL,.slideR')),tick=false;function mv(){bands.forEach(function(b){var r=b.parentNode.getBoundingClientRect(),h=innerHeight,p=Math.min(1,Math.max(0,(h-r.top)/(h+r.height)));b.style.transform='translateX('+(b.classList.contains('slideL')?-300*p:-300+300*p)+'px)'});tick=false}addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(mv)}},{passive:true});mv()}
+})();
+</script>
+</body>
+</html>
