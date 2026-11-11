@@ -17,11 +17,22 @@ Multi-business platform for Musanze, Rwanda (hotels, lodges, restaurants, bars).
 ## Stack
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
 
-## Folders (planned)
-apps/web · packages/core · supabase/migrations · docs · specs · mockups
+## Folders
+apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase/migrations (planned)
 
 ## Commands
-To be filled in during the first Claude Code session (run, test, migrate).
+Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run from the repo root:
+- Install: `pnpm install`
+- Run (dev server, http://localhost:3000): `pnpm dev`
+- Build: `pnpm build`
+- Run the build: `pnpm start`
+- Lint: `pnpm lint`
+- Type check: `pnpm typecheck`
+- One package only: `pnpm --filter @getkaze/web <script>`
+- Test, migrate: not set up yet (arrive with Supabase, day 5–6).
+
+Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
+Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.
 
 ## How to work
 Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan before writing code." One feature per branch (`feature/<name>`), commit after each working step, merge to `staging` before `main`.
