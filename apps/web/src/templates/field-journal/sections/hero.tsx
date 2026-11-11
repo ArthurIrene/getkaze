@@ -8,7 +8,7 @@ export async function Hero({ site }: TemplateProps) {
   const t = await getTranslations("FieldJournal");
   return (
     <section className="fj-hero" aria-label={site.hero.photo.alt}>
-      <svg viewBox="0 0 360 440" preserveAspectRatio="xMidYMax slice" className="fj-hero-art" aria-hidden="true">
+      <svg viewBox="0 0 360 440" preserveAspectRatio="none" className="fj-hero-art" aria-hidden="true">
         <rect width="360" height="440" className="fj-ph-fill" />
         <polygon points="0,270 48,232 92,172 118,158 144,176 188,230 228,150 254,134 280,152 330,232 360,250 360,440 0,440" className="fj-ph-far" />
         <polygon points="0,330 80,304 170,324 260,296 360,318 360,440 0,440" className="fj-ph-near" />
@@ -18,6 +18,7 @@ export async function Hero({ site }: TemplateProps) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
+          vectorEffect="non-scaling-stroke"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -27,6 +28,7 @@ export async function Hero({ site }: TemplateProps) {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.4"
+          vectorEffect="non-scaling-stroke"
           strokeLinecap="round"
         />
       </svg>

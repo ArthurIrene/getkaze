@@ -69,6 +69,7 @@
 .fj-ph-far { fill: var(--ph-far); }
 .fj-ph-near { fill: var(--ph-near); }
 .fj-photo { display: block; width: 100%; object-fit: cover; }
+.fj-photo.fj-ph { display: flex; }
 
 /* ---------- Header ---------- */
 .fj-header {
@@ -99,18 +100,18 @@
 @supports not selector(:has(*)) { .fj-cur { display: none; } }
 
 /* ---------- Hero ---------- */
-.fj-hero { position: relative; height: 440px; color: #2b2620; }
+.fj-hero { position: relative; height: 440px; color: var(--ink); }
 .fj-hero-art { display: block; width: 100%; height: 100%; }
 .fj-hero-title {
   position: absolute; left: 16px; top: 22px; right: 16px;
   font: 900 38px/1 var(--f-display); letter-spacing: -0.02em;
 }
-.fj-hero-title .fj-hand { display: block; font-size: 50px; line-height: 1; color: #3f5b3a; letter-spacing: 0; }
+.fj-hero-title .fj-hand { display: block; font-size: 50px; line-height: 1; color: var(--accent); letter-spacing: 0; }
 .fj-stamp {
   position: absolute; right: 14px; bottom: -48px; width: 112px; height: 112px;
   border-radius: 999px; background: var(--paper); border: 1.5px solid var(--ink); color: var(--ink);
 }
-.fj-stamp svg { position: absolute; inset: -1.5px; width: 112px; height: 112px; }
+.fj-stamp > svg { position: absolute; inset: -1.5px; width: 112px; height: 112px; }
 .fj-stamp-text { font: 500 10.5px var(--f-mono); letter-spacing: 1.6px; fill: currentColor; }
 .fj-stamp-dot {
   position: absolute; left: 32px; top: 32px; width: 48px; height: 48px; border-radius: 999px;
@@ -125,7 +126,7 @@
 /* Horizontal rows that snap on phones */
 .fj-row {
   display: flex; gap: 14px; overflow-x: auto; padding: 4px 16px 10px;
-  scroll-snap-type: x mandatory; scrollbar-width: none; list-style: none; margin: 0;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; list-style: none; margin: 0;
 }
 .fj-row::-webkit-scrollbar { display: none; }
 .fj-row > * { scroll-snap-align: start; }
@@ -173,6 +174,7 @@
 /* ---------- At our table ---------- */
 .fj-dining { margin: 0 16px 16px; position: relative; border-radius: 20px; overflow: hidden; }
 .fj-dining .fj-photo { height: 170px; }
+.fj-dining:has(.fj-ph) .fj-dining-name { color: var(--ink); text-shadow: none; }
 .fj-dining-name { position: absolute; left: 16px; bottom: 14px; font-size: 22px; color: #f4eee3; text-shadow: 0 1px 2px rgb(0 0 0 / 0.4); }
 .fj-dining-cta {
   position: absolute; right: 12px; bottom: 12px; height: 40px; padding: 0 14px; border-radius: 999px;
@@ -187,30 +189,24 @@
 
 /* ---------- Around us (flip cards: <details>) ---------- */
 .fj-card {
-  flex: 0 0 200px; height: 260px; border-radius: 20px; color: #fbf7f0; box-sizing: border-box;
-  background: #3f5b3a;
+  flex: 0 0 200px; height: 260px; border-radius: 20px; color: #fbf7f0; background: #3f5b3a;
 }
 .fj-card:nth-child(5n + 2) { background: #b5643c; }
 .fj-card:nth-child(5n + 3) { background: #5b4636; }
 .fj-card:nth-child(5n + 4) { background: #2b3a4a; }
 .fj-card:nth-child(5n + 5) { background: #8a6a2e; }
-.fj-card details { height: 100%; }
-.fj-card summary {
-  list-style: none; cursor: pointer; height: 100%; box-sizing: border-box; padding: 16px;
-  display: flex; flex-direction: column; justify-content: space-between;
-}
+.fj-card details { height: 100%; display: flex; flex-direction: column; padding: 16px; box-sizing: border-box; }
+.fj-card summary { list-style: none; cursor: pointer; flex: 1; display: flex; }
 .fj-card summary::-webkit-details-marker { display: none; }
-.fj-card details[open] summary { display: none; }
+.fj-front, .fj-back { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+.fj-back, .fj-card details[open] .fj-front { display: none; }
+.fj-card details[open] .fj-back { display: flex; justify-content: flex-start; }
 .fj-dist { align-self: flex-end; border: 1px solid #fbf7f0; border-radius: 999px; padding: 3px 8px; font-size: 11px; }
-.fj-card .fj-icon { align-self: center; width: 120px; height: 80px; }
+.fj-front .fj-icon { align-self: center; width: 120px; height: 80px; }
 .fj-card-name { font: 700 22px/1.05 var(--f-display); }
-.fj-card-back {
-  height: 100%; box-sizing: border-box; padding: 16px; display: flex; flex-direction: column;
-  justify-content: space-between; gap: 10px; cursor: pointer;
-}
-.fj-card-back p { font-size: 14px; line-height: 1.45; }
-.fj-card-back a {
-  align-self: flex-start; font-size: 13px; font-weight: 600; background: #fbf7f0; color: #2b2620;
+.fj-card-line { font-size: 14px; line-height: 1.45; }
+.fj-arrange {
+  align-self: flex-start; font-size: 13px; font-weight: 600; background: #fbf7f0; color: #2b2620 !important;
   padding: 9px 13px; border-radius: 999px; text-decoration: none;
 }
 
@@ -221,9 +217,8 @@
 .fj-host .fj-tape { left: 32px; width: 56px; height: 16px; top: -8px; }
 .fj-host .fj-polaroid .fj-photo { height: 124px; }
 .fj-host .fj-polaroid figcaption { font-size: 17px; text-align: center; }
-.fj-host-text { display: flex; flex-direction: column; gap: 10px; }
 .fj-host-greeting { font: 900 26px/1.05 var(--f-display); }
-.fj-host summary { list-style: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.fj-host summary { margin-top: 14px; list-style: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .fj-host summary::-webkit-details-marker { display: none; }
 .fj-host details .fj-less, .fj-host details[open] .fj-more { display: none; }
 .fj-host details[open] .fj-less { display: inline; }
