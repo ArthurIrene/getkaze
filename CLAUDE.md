@@ -2,17 +2,25 @@
 
 Multi-business platform for Musanze, Rwanda (hotels, lodges, restaurants, bars). Source of truth: /docs. Feature specs: /specs. Visual reference: /mockups (not app code).
 
-## Core rules (short)
-1. One shared database; every row has `business_id`; row-level security enforces isolation; isolation test must pass.
-2. Features are modules switched per business; new modules arrive switched off.
-3. Business type = preset (modules, wording, roles, template); property style / venue style are settings.
-4. Templates only read data. No client-specific code, ever.
-5. Business rules live in the database and `packages/core`, never inside screens.
-6. Data changes only add (no removes or renames in migrations).
-7. Guests always pay the business directly; we never hold guest money.
-8. Guest data (bookings, guest lists, stored orders) only behind the compliance gate (D-033, D-049).
-9. Mobile-first, light pages: about 300 KB first view on slow 3G; light motion kit only (D-041).
-10. English required; Kinyarwanda and French optional with English fallback.
+## Core rules (from docs/PROJECT.md section 4)
+Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
+
+1. One shared backend and database. Every record carries a `business_id`. Data isolation is enforced by the database (row-level security), not only by code.
+2. Features are modules that can be switched on or off per business.
+3. A business type is a preset: default modules, wording, roles, and default template.
+4. Templates only read data. No client-specific code, ever. Paid custom requests become general modules (on for that client first, offered to others later), or go to Owned or a paid custom front end (D-018).
+5. Customization order: settings first, then templates, then paid custom work.
+6. Clients own their domain and their data (export on request). We never hold domain or data hostage.
+7. Two service models: **Managed** (we host, recurring fee) and **Owned** (one-time price, handover, 3-month support window).
+8. Roles are permission settings, not fixed code. One person can hold several roles.
+9. Mobile-first, light, and fast. Web (PWA) first for everyone. Native staff app (Expo) later, when time allows (D-037). Guests always use the web, never an app.
+10. WhatsApp and MTN MoMo / Airtel Money are first-class.
+11. Content: English required; Kinyarwanda and French optional, with English fallback. Platform screens: English and Kinyarwanda, French optional (D-029).
+12. Build in small slices. Design everything, build only the sellable core. Paying clients set the order of later features.
+13. No client versions: every Managed client runs the latest code. We sell plans. New features arrive switched off; data changes only add (D-021).
+14. Guests always pay the business directly. We never hold guest money (D-027).
+15. Comply with Rwanda's data protection law (Law No. 058/2021): registration filed before going live; guest data only after storage authorization or on a Rwanda host (D-033, COMPLIANCE.md).
+16. All business rules live in the database and `packages/core`, never inside screens, so any future app can connect (D-036).
 
 ## Stack
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
