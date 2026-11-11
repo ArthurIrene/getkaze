@@ -1,3 +1,5 @@
+Superseded by specs/field-journal-template.md.
+
 # Feature: Field Journal home page
 Module: Templates   Priority: P1   Preset: Hotel/Lodge
 Goal: A lodge looks designed and bookable on a cheap phone, even with few photos.

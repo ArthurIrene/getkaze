@@ -24,7 +24,7 @@ Users: Guests (no login) see the site. The owner changes the content later in th
 - **Not designed yet (MOCKUPS.md, "Still to design"):** desktop views, the open menu (burger) and the language list. Part 1 uses a simple desktop layout from the phone design and shows EN / RW as two links instead of a menu.
 
 ## Data (DATA.md, read only)
-- **Business:** name, legal name for the footer, template (`field-journal`), default currency display, languages on.
+- **Business:** name, legal name for the footer, template (`field-journal`), default currency (`defaultCurrency`: `rwf` or `usd`; the RWF/USD switch starts on it), languages on.
 - **Contacts:** phone (Call), WhatsApp number, email (optional).
 - **Location:** map link (Directions), area line, distance note on the map drawing.
 - **Hours and payment:** short lines (for example "Reception every day, 6:00 to 22:00"; accepted payment methods).
@@ -66,7 +66,7 @@ Public, read only. Templates only read data (CLAUDE.md rule 4). The owner edits 
 **Part 1 (home)**
 1. Given a business with a section switched off, when the home page loads, then that section does not render, and the others follow the owner's order.
 2. Given the Kinyarwanda page and an owner text with no Kinyarwanda version, when the page loads, then the English text shows (no blank, no raw key).
-3. Given the RWF/USD switch, when the guest picks USD, then every price on the page shows the owner's USD price.
+3. Given the RWF/USD switch, when the page loads it starts on the business's default currency; when the guest picks the other currency, then every price on the page shows the owner's price in that currency.
 4. Given no photo for a spot, when the page loads, then a grey placeholder of the right size shows.
 5. Given reduced motion, when the page loads, then no animation runs and all content is visible.
 6. Given a 360 px wide phone and a desktop screen, when the page loads, then nothing overflows sideways and all content is readable.
@@ -84,6 +84,10 @@ Public, read only. Templates only read data (CLAUDE.md rule 4). The owner edits 
 - Supabase, business lookup by domain or subdomain (day 7).
 - Templates 2 and 3 (Imigongo, Cinematic): later, reading the same data.
 - Webfonts: system fonts only until the cost is approved.
+- End-to-end test: the Playwright happy path (BUILD_GUIDE.md §3) is deferred to part 2; it needs `@playwright/test` added.
+
+## Search engines
+The whole app is `noindex` for now (robots meta, `X-Robots-Tag` header and `robots.txt`), because only demo data is live. Remove it at gate G2 (first real client live, BUILD_GUIDE.md §8), per business, once that business's own content is in.
 
 ## Definition of Done (BUILD_GUIDE.md §2)
 - [ ] Acceptance criteria in the spec all pass.
