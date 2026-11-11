@@ -1,6 +1,17 @@
 node_modules/
 .env
 .env.*
+!.env.example
 .DS_Store
 .next/
 .turbo/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.wrangler/
+.open-next/
+npm-debug.log*
+pnpm-debug.log*
