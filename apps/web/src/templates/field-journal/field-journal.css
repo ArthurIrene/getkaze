@@ -1,0 +1,322 @@
+/*
+ * Field Journal template (D-039). Scoped under .fj so other templates can
+ * sit beside it. System fonts only (no webfonts until approved).
+ * Motion: CSS only, transform and opacity, off for reduced motion (D-041).
+ */
+
+/* ---------- Colours: day, and night via the system setting ---------- */
+.fj {
+  --paper: #f4eee3;
+  --card: #fbf7f0;
+  --ink: #2b2620;
+  --muted: #5e554a;
+  --line: #d8ccb8;
+  --accent: #3f5b3a;
+  --on-accent: #ffffff;
+  --inv: #2b2620;
+  --inv-fg: #f4eee3;
+  --bar: rgb(244 238 227 / 0.96);
+  --ph: #d6d2cc;
+  --ph-far: #c4bfb8;
+  --ph-near: #b1aba3;
+  --ph-ink: #6f6a63;
+  --tape: rgb(200 145 58 / 0.5);
+  --f-display: Georgia, "Times New Roman", serif;
+  --f-hand: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  --f-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --f-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  color-scheme: light;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body);
+  min-height: 100vh;
+  overflow-x: clip;
+}
+@media (prefers-color-scheme: dark) {
+  .fj {
+    --paper: #1e1b17;
+    --card: #2a2621;
+    --ink: #f1eadd;
+    --muted: #bbaf9c;
+    --line: #433c33;
+    --accent: #8faf7e;
+    --on-accent: #1e1b17;
+    --inv: #f1eadd;
+    --inv-fg: #1e1b17;
+    --bar: rgb(30 27 23 / 0.96);
+    --ph: #3a3631;
+    --ph-far: #46413a;
+    --ph-near: #524c44;
+    --ph-ink: #b7ada0;
+    color-scheme: dark;
+  }
+}
+
+.fj a { color: inherit; }
+.fj h1, .fj h2, .fj p { margin: 0; }
+.fj-sr {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.fj-hand { font-family: var(--f-hand); font-weight: 600; }
+.fj-mono { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+.fj :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Photo placeholders (grey; no images downloaded) ---------- */
+.fj-ph { background: var(--ph); color: var(--ph-ink); display: flex; align-items: center; justify-content: center; }
+.fj-ph-fill { fill: var(--ph); }
+.fj-ph-far { fill: var(--ph-far); }
+.fj-ph-near { fill: var(--ph-near); }
+.fj-photo { display: block; width: 100%; object-fit: cover; }
+.fj-photo.fj-ph { display: flex; }
+
+/* ---------- Header ---------- */
+.fj-header {
+  height: 56px; display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; padding: 0 14px 0 16px;
+}
+.fj-logo { font: 900 20px/1 var(--f-display); letter-spacing: -0.01em; }
+.fj-header-tools { display: flex; gap: 6px; align-items: center; }
+.fj-pills {
+  display: flex; height: 32px; margin: 0; padding: 0; border: 1px solid var(--ink);
+  border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 600;
+}
+.fj-pills a, .fj-pills label {
+  display: flex; align-items: center; padding: 0 9px; text-decoration: none; cursor: pointer;
+}
+.fj-pills a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+.fj-cur input { position: absolute; opacity: 0; pointer-events: none; }
+.fj-cur input:checked + label { background: var(--ink); color: var(--paper); }
+.fj-cur input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---------- Currency switch (no JavaScript) ----------
+ * Every price is in the HTML twice. data-cur on .fj is the business default,
+ * so the right price shows even where :has() is not supported; there the
+ * switch is hidden. */
+.fj[data-cur="rwf"] .fj-cur-usd, .fj[data-cur="usd"] .fj-cur-rwf { display: none; }
+.fj:has(#fj-cur-usd:checked) .fj-cur-usd, .fj:has(#fj-cur-rwf:checked) .fj-cur-rwf { display: inline; }
+.fj:has(#fj-cur-usd:checked) .fj-cur-rwf, .fj:has(#fj-cur-rwf:checked) .fj-cur-usd { display: none; }
+@supports not selector(:has(*)) { .fj-cur { display: none; } }
+
+/* ---------- Hero ---------- */
+.fj-hero { position: relative; height: 440px; color: var(--ink); }
+.fj-hero-art { display: block; width: 100%; height: 100%; }
+.fj-hero-title {
+  position: absolute; left: 16px; top: 22px; right: 16px;
+  font: 900 38px/1 var(--f-display); letter-spacing: -0.02em;
+}
+.fj-hero-title .fj-hand { display: block; font-size: 50px; line-height: 1; color: var(--accent); letter-spacing: 0; }
+.fj-stamp {
+  position: absolute; right: 14px; bottom: -48px; width: 112px; height: 112px;
+  border-radius: 999px; background: var(--paper); border: 1.5px solid var(--ink); color: var(--ink);
+}
+.fj-stamp > svg { position: absolute; inset: -1.5px; width: 112px; height: 112px; }
+.fj-stamp-text { font: 500 10.5px var(--f-mono); letter-spacing: 1.6px; fill: currentColor; }
+.fj-stamp-dot {
+  position: absolute; left: 32px; top: 32px; width: 48px; height: 48px; border-radius: 999px;
+  background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: center;
+}
+
+/* ---------- Section headings ---------- */
+.fj-head { padding: 40px 16px 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.fj-head h2 { font: 900 34px/1.05 var(--f-display); letter-spacing: -0.02em; }
+.fj-kicker { display: block; font-size: 24px; line-height: 1; color: var(--accent); }
+
+/* Horizontal rows that snap on phones */
+.fj-row {
+  display: flex; gap: 14px; overflow-x: auto; padding: 4px 16px 10px;
+  scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; list-style: none; margin: 0;
+}
+.fj-row::-webkit-scrollbar { display: none; }
+.fj-row > * { scroll-snap-align: start; }
+
+/* ---------- Quick facts (tap for detail: <details>) ---------- */
+.fj-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 64px 16px 0; }
+.fj-fact { border: 1.5px dashed var(--ink); border-radius: 14px; }
+.fj-fact:nth-child(1) { rotate: -2deg; }
+.fj-fact:nth-child(2) { rotate: 1.5deg; }
+.fj-fact:nth-child(3) { rotate: -1deg; }
+.fj-fact[open] { border-color: var(--accent); background: var(--card); }
+.fj-fact summary {
+  list-style: none; cursor: pointer; padding: 12px 6px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.fj-fact summary::-webkit-details-marker { display: none; }
+.fj-fact b { font: 900 20px/1 var(--f-display); }
+.fj-fact p { padding: 0 10px 12px; font-size: 13px; line-height: 1.35; text-align: center; }
+
+/* ---------- Life strip (scrapbook) ---------- */
+.fj-life { padding-top: 44px; }
+.fj-life .fj-row { gap: 16px; padding: 10px 16px 18px; }
+.fj-polaroid {
+  position: relative; flex: 0 0 210px; background: #fbf7f0; color: #2b2620;
+  padding: 9px 9px 6px; box-shadow: 0 3px 10px rgb(0 0 0 / 0.18);
+}
+.fj-polaroid:nth-child(4n + 1) { rotate: -2deg; }
+.fj-polaroid:nth-child(4n + 2) { rotate: 1.5deg; }
+.fj-polaroid:nth-child(4n + 3) { rotate: -1deg; }
+.fj-polaroid:nth-child(4n + 4) { rotate: 2deg; }
+.fj-tape { position: absolute; top: -9px; left: 66px; width: 76px; height: 20px; background: var(--tape); }
+.fj-polaroid .fj-photo { height: 210px; }
+.fj-polaroid figcaption { font-size: 21px; padding-top: 4px; }
+
+/* ---------- Rooms ---------- */
+.fj-room { flex: 0 0 260px; display: flex; flex-direction: column; gap: 10px; }
+.fj-room-pic { position: relative; border-radius: 20px; overflow: hidden; }
+.fj-room-pic .fj-photo { height: 300px; }
+.fj-tag {
+  position: absolute; right: 12px; top: 12px; background: #2b2620; color: #f4eee3;
+  padding: 7px 11px; border-radius: 12px; font: 700 15px var(--f-display); rotate: 3deg;
+}
+.fj-room-name { font: 700 20px/1.15 var(--f-display); padding-left: 2px; }
+
+/* ---------- At our table ---------- */
+.fj-dining { margin: 0 16px 16px; position: relative; border-radius: 20px; overflow: hidden; }
+.fj-dining .fj-photo { height: 170px; }
+.fj-dining:has(.fj-ph) .fj-dining-name { color: var(--ink); text-shadow: none; }
+.fj-dining-name { position: absolute; left: 16px; bottom: 14px; font-size: 22px; color: #f4eee3; text-shadow: 0 1px 2px rgb(0 0 0 / 0.4); }
+.fj-dining-cta {
+  position: absolute; right: 12px; bottom: 12px; height: 40px; padding: 0 14px; border-radius: 999px;
+  background: #f4eee3; color: #2b2620 !important; display: flex; align-items: center;
+  font-weight: 600; font-size: 13px; text-decoration: none;
+}
+.fj-dishes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0 16px; list-style: none; margin: 0; }
+.fj-dish { display: flex; flex-direction: column; gap: 6px; text-align: center; }
+.fj-dish .fj-photo { aspect-ratio: 1; border-radius: 999px; }
+.fj-dish b { font-weight: 600; font-size: 13px; line-height: 1.2; }
+.fj-dish .fj-mono { font-size: 11px; color: var(--muted); text-transform: none; }
+
+/* ---------- Around us (flip cards: <details>) ---------- */
+.fj-card {
+  flex: 0 0 200px; height: 260px; border-radius: 20px; color: #fbf7f0; background: #3f5b3a;
+}
+.fj-card:nth-child(5n + 2) { background: #b5643c; }
+.fj-card:nth-child(5n + 3) { background: #5b4636; }
+.fj-card:nth-child(5n + 4) { background: #2b3a4a; }
+.fj-card:nth-child(5n + 5) { background: #8a6a2e; }
+.fj-card details { height: 100%; display: flex; flex-direction: column; padding: 16px; box-sizing: border-box; }
+.fj-card summary { list-style: none; cursor: pointer; flex: 1; display: flex; }
+.fj-card summary::-webkit-details-marker { display: none; }
+.fj-front, .fj-back { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+.fj-back, .fj-card details[open] .fj-front { display: none; }
+.fj-card details[open] .fj-back { display: flex; justify-content: flex-start; }
+.fj-dist { align-self: flex-end; border: 1px solid #fbf7f0; border-radius: 999px; padding: 3px 8px; font-size: 11px; }
+.fj-front .fj-icon { align-self: center; width: 120px; height: 80px; }
+.fj-card-name { font: 700 22px/1.05 var(--f-display); }
+.fj-card-line { font-size: 14px; line-height: 1.45; }
+.fj-arrange {
+  align-self: flex-start; font-size: 13px; font-weight: 600; background: #fbf7f0; color: #2b2620 !important;
+  padding: 9px 13px; border-radius: 999px; text-decoration: none;
+}
+
+/* ---------- Host ---------- */
+.fj-host { padding: 48px 16px 0; }
+.fj-host-row { display: flex; gap: 18px; align-items: center; }
+.fj-host .fj-polaroid { flex: 0 0 120px; padding: 7px 7px 4px; rotate: -4deg; }
+.fj-host .fj-tape { left: 32px; width: 56px; height: 16px; top: -8px; }
+.fj-host .fj-polaroid .fj-photo { height: 124px; }
+.fj-host .fj-polaroid figcaption { font-size: 17px; text-align: center; }
+.fj-host-greeting { font: 900 26px/1.05 var(--f-display); }
+.fj-host summary { margin-top: 14px; list-style: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.fj-host summary::-webkit-details-marker { display: none; }
+.fj-host details .fj-less, .fj-host details[open] .fj-more { display: none; }
+.fj-host details[open] .fj-less { display: inline; }
+.fj-host-note { margin-top: 14px; font-size: 21px; line-height: 1.3; }
+
+/* ---------- Reviews ---------- */
+.fj-review {
+  margin: 44px 16px 0; padding: 22px 20px; background: var(--inv); color: var(--inv-fg);
+  border-radius: 20px; display: flex; flex-direction: column; gap: 16px;
+}
+.fj-review blockquote { margin: 0; font-size: 28px; line-height: 1.15; }
+.fj-scores { display: flex; gap: 24px; margin: 0; }
+.fj-scores div { display: flex; flex-direction: column-reverse; }
+.fj-scores dd { margin: 0; font: 900 30px/1 var(--f-display); }
+.fj-scores dt { font-size: 10px; opacity: 0.8; }
+
+/* ---------- Find us ---------- */
+.fj-find { padding: 48px 16px 0; display: flex; flex-direction: column; gap: 14px; }
+.fj-find h2 { font: 900 34px/1.05 var(--f-display); letter-spacing: -0.02em; }
+.fj-map { position: relative; height: 200px; border-radius: 20px; background: var(--card); overflow: hidden; display: block; text-decoration: none; }
+.fj-map svg { display: block; width: 100%; height: 100%; }
+.fj-map-here { position: absolute; left: 58%; top: 44%; font-size: 21px; }
+.fj-map-note { position: absolute; left: 14px; bottom: 12px; font-size: 10px; color: var(--muted); }
+.fj-actions { display: flex; justify-content: center; gap: 22px; list-style: none; margin: 0; padding: 0; }
+.fj-actions a { display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; font-size: 12px; font-weight: 600; }
+.fj-actions span {
+  width: 58px; height: 58px; border-radius: 999px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+}
+.fj-actions .fj-accent span { background: var(--accent); color: var(--on-accent); }
+.fj-info { border-top: 1.5px dashed var(--line); border-bottom: 1.5px dashed var(--line); }
+.fj-info summary {
+  list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; font-weight: 600; font-size: 15px;
+}
+.fj-info summary::-webkit-details-marker { display: none; }
+.fj-info summary::after { content: "+"; font-size: 20px; font-weight: 400; }
+.fj-info[open] summary::after { content: "\2212"; }
+.fj-info ul { list-style: none; margin: 0; padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.fj-info .fj-muted { color: var(--muted); }
+
+/* ---------- Footer and sticky bar ---------- */
+.fj-footer {
+  margin-top: 40px; padding: 24px 16px 96px; background: #2b2620; color: #f4eee3;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.fj-footer-name { font: 900 26px var(--f-display); }
+.fj-footer-welcome { font-size: 22px; color: #e9c9a0; }
+.fj-footer small { font-size: 12px; opacity: 0.8; margin-top: 8px; }
+.fj-bar {
+  position: sticky; bottom: 0; margin-top: -76px; padding: 12px 16px 14px; background: var(--bar);
+  border-top: 1px solid var(--line); display: flex; gap: 10px;
+}
+.fj-bar-main {
+  flex: 1 1 0; height: 50px; border-radius: 14px; background: var(--accent); color: var(--on-accent) !important;
+  display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; text-decoration: none;
+}
+.fj-bar-call {
+  flex: 0 0 56px; height: 50px; border-radius: 14px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---------- Motion kit (D-041): CSS only, transform and opacity ---------- */
+.fj-draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: fj-draw 2.8s ease-out 0.3s forwards; }
+@keyframes fj-draw { to { stroke-dashoffset: 0; } }
+.fj-spin { animation: fj-spin 22s linear infinite; transform-origin: 50% 50%; }
+@keyframes fj-spin { to { transform: rotate(360deg); } }
+.fj-fade { animation: fj-fade 0.35s ease-out both; }
+@keyframes fj-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@supports (animation-timeline: view()) {
+  .fj-rise { animation: fj-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  @keyframes fj-rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fj-draw { animation: none; stroke-dashoffset: 0; }
+  .fj-spin, .fj-fade, .fj-rise { animation: none; }
+}
+
+/* ---------- Desktop (not in the mockups yet: simple layout from the phone design) ---------- */
+@media (min-width: 768px) {
+  .fj > main, .fj-header { max-width: 1120px; margin-inline: auto; }
+  .fj-header { padding-inline: 24px; }
+  .fj-hero { height: 520px; margin-inline: 24px; border-radius: 24px; overflow: hidden; }
+  .fj-hero-title { left: 40px; top: 40px; font-size: 56px; }
+  .fj-hero-title .fj-hand { font-size: 72px; }
+  .fj-stamp { bottom: 24px; right: 32px; }
+  .fj-facts { padding: 40px 24px 0; max-width: 720px; }
+  .fj-head, .fj-find, .fj-host { padding-inline: 24px; }
+  .fj-row { padding-inline: 24px; }
+  .fj-row.fj-grid { display: grid; overflow: visible; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .fj-row.fj-grid > * { flex: none; }
+  .fj-dining, .fj-review { margin-inline: 24px; }
+  .fj-dishes { padding-inline: 24px; max-width: 560px; }
+  .fj-host-note { max-width: 640px; }
+  .fj-find { display: grid; grid-template-columns: 1.4fr 1fr; align-items: start; column-gap: 32px; }
+  .fj-find h2 { grid-column: 1 / -1; }
+  .fj-map { grid-row: span 2; height: 280px; }
+  .fj-footer { padding-inline: max(24px, calc((100vw - 1072px) / 2)); }
+  .fj-bar { justify-content: flex-end; padding-inline: max(24px, calc((100vw - 1072px) / 2)); }
+  .fj-bar-main { flex: 0 0 260px; }
+}

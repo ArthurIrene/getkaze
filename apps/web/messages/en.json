@@ -1,9 +1,33 @@
 {
-  "Home": {
-    "title": "Kaze is running",
-    "subtitle": "The platform is set up. Nothing else is here yet.",
-    "languageLabel": "Language",
-    "sharedCore": "Shared core package: {name}"
+  "FieldJournal": {
+    "language": "Language",
+    "currency": "Currency",
+    "stamp": "CHAT WITH US · MURAKAZA NEZA · ",
+    "stampLabel": "Chat with us on WhatsApp",
+    "facts": "Quick facts",
+    "life": "Life at the lodge",
+    "rooms": "Rooms",
+    "tableKicker": "open to all",
+    "table": "At our table",
+    "reserve": "Reserve a table",
+    "reserveMessage": "Hello {name}, I'd like to reserve a table.",
+    "around": "Around us",
+    "tapCard": "Tap a card",
+    "arrange": "Ask us to arrange",
+    "arrangeMessage": "Hello {name}, could you arrange {activity} for me?",
+    "hostMore": "Read the note +",
+    "hostLess": "Close note −",
+    "reviews": "What guests say",
+    "findUs": "Find us",
+    "here": "we're here!",
+    "directions": "Directions",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "hoursPayment": "Hours & payment",
+    "check": "Check availability",
+    "checkMessage": "Hello {name}, I'd like to check availability.",
+    "welcome": "murakaza neza",
+    "copyright": "© {name}"
   },
   "Languages": {
     "en": "English",

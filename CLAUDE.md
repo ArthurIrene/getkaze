@@ -42,7 +42,8 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
 - Lint: `pnpm lint`
 - Type check: `pnpm typecheck`
 - One package only: `pnpm --filter @getkaze/web <script>`
-- Test, migrate: not set up yet (arrive with Supabase, day 5–6).
+- Test (unit, Vitest in packages/core): `pnpm test`
+- Migrate: not set up yet (arrives with Supabase, day 5).
 
 Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
 Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.
@@ -59,3 +60,4 @@ Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan
 - Vercel-only features.
 - Connect tools to the live database with write access.
 - Store guest data while the compliance gate is locked.
+- Remove the app-wide `noindex` (robots meta, X-Robots-Tag, robots.txt) before gate G2; remove it at G2, per business with real content.

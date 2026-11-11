@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
   // Compile the shared TypeScript package directly from source.
   transpilePackages: ["@getkaze/core"],
   poweredByHeader: false,
+  // Demo data only: noindex everything until gate G2 (CLAUDE.md "Never do").
+  // No robots.txt Disallow on purpose: crawlers must fetch pages to see noindex.
+  async headers() {
+    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
+  },
   turbopack: {
     rules: {
       "*.css": {

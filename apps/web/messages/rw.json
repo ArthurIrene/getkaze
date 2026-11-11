@@ -1,8 +1,33 @@
 {
-  "Home": {
-    "title": "Kaze irakora",
-    "subtitle": "Urubuga rwateguwe. Nta kindi kirimo ubu.",
-    "languageLabel": "Ururimi"
+  "FieldJournal": {
+    "language": "Ururimi",
+    "currency": "Ifaranga",
+    "stamp": "TUVUGANE · MURAKAZA NEZA · ",
+    "stampLabel": "Tuvugane kuri WhatsApp",
+    "facts": "Iby'ingenzi",
+    "life": "Ubuzima hano",
+    "rooms": "Ibyumba",
+    "tableKicker": "kuri bose",
+    "table": "Ku meza yacu",
+    "reserve": "Fata ameza",
+    "reserveMessage": "Muraho {name}, ndashaka gufata ameza.",
+    "around": "Hafi yacu",
+    "tapCard": "Kanda ku ikarita",
+    "arrange": "Dusabe kubitegura",
+    "arrangeMessage": "Muraho {name}, mwantegurira {activity}?",
+    "hostMore": "Soma ubutumwa +",
+    "hostLess": "Funga ubutumwa −",
+    "reviews": "Ibyo abashyitsi bavuga",
+    "findUs": "Aho turi",
+    "here": "turi hano!",
+    "directions": "Inzira",
+    "call": "Hamagara",
+    "whatsapp": "WhatsApp",
+    "hoursPayment": "Amasaha no kwishyura",
+    "check": "Reba ibyumba bihari",
+    "checkMessage": "Muraho {name}, ndashaka kumenya niba hari icyumba kiboneka.",
+    "welcome": "murakaza neza",
+    "copyright": "© {name}"
   },
   "Languages": {
     "en": "Icyongereza",
