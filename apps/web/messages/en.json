@@ -1,0 +1,12 @@
+{
+  "Home": {
+    "title": "Kaze is running",
+    "subtitle": "The platform is set up. Nothing else is here yet.",
+    "languageLabel": "Language",
+    "sharedCore": "Shared core package: {name}"
+  },
+  "Languages": {
+    "en": "English",
+    "rw": "Kinyarwanda"
+  }
+}

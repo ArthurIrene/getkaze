@@ -2,26 +2,50 @@
 
 Multi-business platform for Musanze, Rwanda (hotels, lodges, restaurants, bars). Source of truth: /docs. Feature specs: /specs. Visual reference: /mockups (not app code).
 
-## Core rules (short)
-1. One shared database; every row has `business_id`; row-level security enforces isolation; isolation test must pass.
-2. Features are modules switched per business; new modules arrive switched off.
-3. Business type = preset (modules, wording, roles, template); property style / venue style are settings.
-4. Templates only read data. No client-specific code, ever.
-5. Business rules live in the database and `packages/core`, never inside screens.
-6. Data changes only add (no removes or renames in migrations).
-7. Guests always pay the business directly; we never hold guest money.
-8. Guest data (bookings, guest lists, stored orders) only behind the compliance gate (D-033, D-049).
-9. Mobile-first, light pages: about 300 KB first view on slow 3G; light motion kit only (D-041).
-10. English required; Kinyarwanda and French optional with English fallback.
+## Core rules (from docs/PROJECT.md section 4)
+Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
+
+1. One shared backend and database. Every record carries a `business_id`. Data isolation is enforced by the database (row-level security), not only by code.
+2. Features are modules that can be switched on or off per business.
+3. A business type is a preset: default modules, wording, roles, and default template.
+4. Templates only read data. No client-specific code, ever. Paid custom requests become general modules (on for that client first, offered to others later), or go to Owned or a paid custom front end (D-018).
+5. Customization order: settings first, then templates, then paid custom work.
+6. Clients own their domain and their data (export on request). We never hold domain or data hostage.
+7. Two service models: **Managed** (we host, recurring fee) and **Owned** (one-time price, handover, 3-month support window).
+8. Roles are permission settings, not fixed code. One person can hold several roles.
+9. Mobile-first, light, and fast. Web (PWA) first for everyone. Native staff app (Expo) later, when time allows (D-037). Guests always use the web, never an app.
+10. WhatsApp and MTN MoMo / Airtel Money are first-class.
+11. Content: English required; Kinyarwanda and French optional, with English fallback. Platform screens: English and Kinyarwanda, French optional (D-029).
+12. Build in small slices. Design everything, build only the sellable core. Paying clients set the order of later features.
+13. No client versions: every Managed client runs the latest code. We sell plans. New features arrive switched off; data changes only add (D-021).
+14. Guests always pay the business directly. We never hold guest money (D-027).
+15. Comply with Rwanda's data protection law (Law No. 058/2021): registration filed before going live; guest data only after storage authorization or on a Rwanda host (D-033, COMPLIANCE.md).
+16. All business rules live in the database and `packages/core`, never inside screens, so any future app can connect (D-036).
+
+## Always do
+- Run the isolation test (Business A cannot read Business B) before any change that touches data; it must pass.
+- Guest data (bookings, customers, stored orders) stays behind the compliance gate (D-049). Do not store it until the gate is open.
+- Guest pages: keep to the first-view budget in docs/FEATURES.md section 5 and the light motion kit (D-041). Check page weight before finishing a guest page.
 
 ## Stack
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
 
-## Folders (planned)
-apps/web · packages/core · supabase/migrations · docs · specs · mockups
+## Folders
+apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase/migrations (planned)
 
 ## Commands
-To be filled in during the first Claude Code session (run, test, migrate).
+Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run from the repo root:
+- Install: `pnpm install`
+- Run (dev server, http://localhost:3000): `pnpm dev`
+- Build: `pnpm build`
+- Run the build: `pnpm start`
+- Lint: `pnpm lint`
+- Type check: `pnpm typecheck`
+- One package only: `pnpm --filter @getkaze/web <script>`
+- Test, migrate: not set up yet (arrive with Supabase, day 5–6).
+
+Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
+Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.
 
 ## How to work
 Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan before writing code." One feature per branch (`feature/<name>`), commit after each working step, merge to `staging` before `main`.
