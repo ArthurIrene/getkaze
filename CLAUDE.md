@@ -22,6 +22,11 @@ Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
 15. Comply with Rwanda's data protection law (Law No. 058/2021): registration filed before going live; guest data only after storage authorization or on a Rwanda host (D-033, COMPLIANCE.md).
 16. All business rules live in the database and `packages/core`, never inside screens, so any future app can connect (D-036).
 
+## Always do
+- Run the isolation test (Business A cannot read Business B) before any change that touches data; it must pass.
+- Guest data (bookings, customers, stored orders) stays behind the compliance gate (D-049). Do not store it until the gate is open.
+- Guest pages: keep to the first-view budget in docs/FEATURES.md section 5 and the light motion kit (D-041). Check page weight before finishing a guest page.
+
 ## Stack
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
 
