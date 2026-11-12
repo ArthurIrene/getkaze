@@ -20,3 +20,4 @@ export * from "./modules";
 export * from "./sections";
 export * from "./site/types";
 export * from "./site/view";
+export * from "./pages";

@@ -32,5 +32,15 @@
   "Languages": {
     "en": "English",
     "rw": "Kinyarwanda"
+  },
+  "Nav": {
+    "site": "Site",
+    "menu": "Menu",
+    "close": "Close",
+    "home": "Home",
+    "rooms": "Rooms",
+    "contact": "Contact",
+    "book": "Check availability",
+    "privacy": "Privacy"
   }
 }

@@ -32,5 +32,15 @@
   "Languages": {
     "en": "Icyongereza",
     "rw": "Ikinyarwanda"
+  },
+  "Nav": {
+    "site": "Urubuga",
+    "menu": "Ibikubiyemo",
+    "close": "Funga",
+    "home": "Ahabanza",
+    "rooms": "Ibyumba",
+    "contact": "Twandikire",
+    "book": "Reba ibyumba bihari",
+    "privacy": "Ubuzima bwite"
   }
 }
