@@ -451,6 +451,13 @@
 .fj-book-error p { font-size: 16px; line-height: 1.4; }
 .fj-book-error .fj-btn { align-self: flex-start; }
 
+/* ---------- Privacy notice (plain reading page) ---------- */
+.fj-legal { max-width: 640px; margin-inline: auto; padding: 18px 16px 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.55; }
+.fj-legal h1 { font: 900 40px/1.05 var(--f-display); letter-spacing: -0.02em; }
+.fj-legal h2 { font: 900 22px/1.15 var(--f-display); margin: 18px 0 6px; }
+.fj-legal p + p { margin-top: 8px; }
+.fj-draft { align-self: flex-start; border: 1px dashed var(--ink); border-radius: 999px; padding: 5px 10px; font-size: 11px; }
+
 /* ---------- Motion kit (D-041): CSS only, transform and opacity ---------- */
 .fj-draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: fj-draw 2.8s ease-out 0.3s forwards; }
 @keyframes fj-draw { to { stroke-dashoffset: 0; } }

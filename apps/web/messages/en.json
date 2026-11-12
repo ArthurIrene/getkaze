@@ -122,5 +122,41 @@
       "note": "Note: {note}",
       "subject": "Booking request: {room}, {from} to {to}"
     }
+  },
+  "Privacy": {
+    "title": "Privacy notice",
+    "draft": "Draft, pending legal review",
+    "updated": "Last updated {date}",
+    "who": {
+      "title": "Who we are",
+      "body": "This website belongs to {legalName} (\"{business}\"), {area}. {business} decides how guests' personal data is used: it is the data controller.",
+      "contact": "Contact {business}: phone {phone}, WhatsApp {whatsapp}.",
+      "contactEmail": "Contact {business}: phone {phone}, WhatsApp {whatsapp}, email {email}.",
+      "processor": "The website is built and run for {business} by {processor} ({platform}), which acts as data processor.",
+      "registration": "Data protection registration: {registration}."
+    },
+    "collect": {
+      "title": "What this site collects",
+      "body": "You can browse this site without giving any personal data. It sets no cookies, runs no analytics and shows no ads.",
+      "logs": "Like every website, our hosting provider briefly keeps technical logs (IP address, page, time and browser) to run and protect the service."
+    },
+    "booking": {
+      "title": "Booking requests and messages",
+      "body": "When you use \"Check availability\", the details you type (room, dates, guests, payment choice, your name and an optional note) are used for a moment to write your message. Then you send it from your own WhatsApp or email directly to {business}. This website does not store these details. WhatsApp (Meta) or your email provider carry the message under their own terms.",
+      "use": "{business} uses your message only to answer you and arrange your stay. Calling or writing to {business} works the same way."
+    },
+    "where": {
+      "title": "Where data is kept",
+      "body": "This website is served by: {hosting}. The details you send are kept in {business}'s WhatsApp or email, not on this website."
+    },
+    "rights": {
+      "title": "Your rights",
+      "body": "Under Law No. 058/2021 on the protection of personal data and privacy, you may ask {business} for access to, correction of, or deletion of your personal data, object to its use, and ask to move it. Contact {business} using the details above.",
+      "complain": "You can also complain to the National Cyber Security Authority (NCSA), Data Protection and Privacy Office (dpo.gov.rw)."
+    },
+    "changes": {
+      "title": "Changes",
+      "body": "We will update this notice when the site starts to collect more, for example a booking inbox once it is authorised. The date at the top shows the latest version."
+    }
   }
 }

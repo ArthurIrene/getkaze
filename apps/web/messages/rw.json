@@ -122,5 +122,28 @@
       "note": "Icyitonderwa: {note}",
       "subject": "Icyifuzo cyo gufata icyumba: {room}, {from} kugeza {to}"
     }
+  },
+  "Privacy": {
+    "title": "Itangazo ryerekeye ubuzima bwite",
+    "draft": "Inyandiko y'agateganyo, itegereje isuzuma ry'umunyamategeko",
+    "updated": "Byavuguruwe ku wa {date}",
+    "who": {
+      "title": "Abo turi bo"
+    },
+    "collect": {
+      "title": "Ibyo uru rubuga rukusanya"
+    },
+    "booking": {
+      "title": "Ibyifuzo byo gufata icyumba"
+    },
+    "where": {
+      "title": "Aho amakuru abikwa"
+    },
+    "rights": {
+      "title": "Uburenganzira bwawe"
+    },
+    "changes": {
+      "title": "Impinduka"
+    }
   }
 }

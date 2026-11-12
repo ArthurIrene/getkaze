@@ -4,6 +4,7 @@ import type { TemplateProps } from "./types";
 import FieldJournalBook from "./field-journal/book";
 import FieldJournalContact from "./field-journal/contact";
 import FieldJournalHome from "./field-journal/home";
+import FieldJournalPrivacy from "./field-journal/privacy";
 import FieldJournalRooms from "./field-journal/rooms";
 
 /** A template's pages. Home is required; other pages are added as the template gets them. */
@@ -21,5 +22,6 @@ export const templates: Record<TemplateId, TemplatePages> = {
     rooms: FieldJournalRooms,
     contact: FieldJournalContact,
     book: FieldJournalBook,
+    privacy: FieldJournalPrivacy,
   },
 };
