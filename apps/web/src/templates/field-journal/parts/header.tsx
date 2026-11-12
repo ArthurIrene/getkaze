@@ -7,8 +7,9 @@ type HeaderProps = { site: SiteView; locale: Locale; page: PageId; pages: PageId
 
 /**
  * Name (links home), language links to the same page (plain links), the
- * CSS-only RWF/USD switch, and the site menu: a <details> on phones, inline
- * links on desktop. No JavaScript.
+ * CSS-only RWF/USD switch, and the site menu (Rooms, Contact): a <details>
+ * on phones, inline links on desktop. Sticky on every page. "Check
+ * availability" is here on desktop only; phones have the bottom bar. No JavaScript.
  */
 export async function Header({ site, locale, page, pages }: HeaderProps) {
   const t = await getTranslations("FieldJournal");
@@ -63,9 +64,6 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
           </summary>
           <nav aria-label={n("site")} className="fj-menu-panel fj-fade">
             <ul>{items}</ul>
-            <a className="fj-menu-check" href={check}>
-              {t("check")}
-            </a>
             <span className="fj-hand fj-menu-welcome">{t("welcome")}</span>
           </nav>
         </details>
