@@ -134,17 +134,21 @@
 .fj-head h2 { font: 900 34px/1.05 var(--f-display); letter-spacing: -0.02em; }
 .fj-kicker { display: block; font-size: 24px; line-height: 1; color: var(--accent); }
 
-/* Horizontal rows that snap on phones */
+/* Rows of cards. Phones: horizontal rows that snap; when every card fits,
+ * the auto margins centre them (they collapse to 0 once the row scrolls).
+ * Desktop: every row wraps and is centred, so 1, 2 or 3 cards sit in the middle. */
 .fj-row {
   display: flex; gap: 14px; overflow-x: auto; padding: 4px 16px 10px;
   scroll-snap-type: x mandatory; scroll-padding-inline: 16px; scrollbar-width: none; list-style: none; margin: 0;
 }
 .fj-row::-webkit-scrollbar { display: none; }
 .fj-row > * { scroll-snap-align: start; }
+.fj-row > :first-child { margin-inline-start: auto; }
+.fj-row > :last-child { margin-inline-end: auto; }
 
 /* ---------- Quick facts (tap for detail: <details>) ---------- */
-.fj-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 64px 16px 0; }
-.fj-fact { border: 1.5px dashed var(--ink); border-radius: 14px; }
+.fj-facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 64px 16px 0; }
+.fj-fact { flex: 0 1 calc((100% - 20px) / 3); min-width: 0; border: 1.5px dashed var(--ink); border-radius: 14px; }
 .fj-fact:nth-child(1) { rotate: -2deg; }
 .fj-fact:nth-child(2) { rotate: 1.5deg; }
 .fj-fact:nth-child(3) { rotate: -1deg; }
@@ -192,8 +196,8 @@
   background: #f4eee3; color: #2b2620 !important; display: flex; align-items: center;
   font-weight: 600; font-size: 13px; text-decoration: none;
 }
-.fj-dishes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 0 16px; list-style: none; margin: 0; }
-.fj-dish { display: flex; flex-direction: column; gap: 6px; text-align: center; }
+.fj-dishes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 0 16px; list-style: none; margin: 0; }
+.fj-dish { flex: 0 1 calc((100% - 20px) / 3); min-width: 0; display: flex; flex-direction: column; gap: 6px; text-align: center; }
 .fj-dish .fj-photo { aspect-ratio: 1; border-radius: 999px; }
 .fj-dish b { font-weight: 600; font-size: 13px; line-height: 1.2; }
 .fj-dish .fj-mono { font-size: 11px; color: var(--muted); text-transform: none; }
@@ -238,10 +242,10 @@
 /* ---------- Reviews ---------- */
 .fj-review {
   margin: 44px 16px 0; padding: 22px 20px; background: var(--inv); color: var(--inv-fg);
-  border-radius: 20px; display: flex; flex-direction: column; gap: 16px;
+  border-radius: 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center;
 }
 .fj-review blockquote { margin: 0; font-size: 28px; line-height: 1.15; }
-.fj-scores { display: flex; gap: 24px; margin: 0; }
+.fj-scores { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; margin: 0; }
 .fj-scores div { display: flex; flex-direction: column-reverse; }
 .fj-scores dd { margin: 0; font: 900 30px/1 var(--f-display); }
 .fj-scores dt { font-size: 10px; opacity: 0.8; }
@@ -316,13 +320,13 @@
   .fj-hero-title { left: calc(var(--hero-m) + 40px); top: 40px; font-size: 56px; }
   .fj-hero-title .fj-hand { font-size: 72px; }
   .fj-stamp { bottom: 24px; right: calc(var(--hero-m) + 32px); }
-  .fj-facts { padding: 40px 24px 0; max-width: 720px; }
+  .fj-facts { padding: 40px 24px 0; max-width: 720px; margin-inline: auto; }
   .fj-head, .fj-find, .fj-host { padding-inline: 24px; }
   .fj-row { padding-inline: 24px; }
-  .fj-row.fj-grid { display: grid; overflow: visible; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-  .fj-row.fj-grid > * { flex: none; }
+  .fj-row { flex-wrap: wrap; justify-content: center; overflow: visible; row-gap: 24px; }
+  .fj-row.fj-grid > * { flex: 0 1 240px; }
   .fj-dining, .fj-review { margin-inline: 24px; }
-  .fj-dishes { padding-inline: 24px; max-width: 560px; }
+  .fj-dishes { padding-inline: 24px; max-width: 560px; margin-inline: auto; }
   .fj-host-note { max-width: 640px; }
   .fj-find { display: grid; grid-template-columns: 1.4fr 1fr; align-items: start; column-gap: 32px; }
   .fj-find h2 { grid-column: 1 / -1; }
