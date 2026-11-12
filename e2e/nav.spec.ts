@@ -14,6 +14,7 @@ test("phone menu opens with the site pages and Check availability", async ({ pag
   const panel = await openMenu(page);
   await expect(panel.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
   await expect(panel.getByRole("link", { name: "Check availability" })).toBeVisible();
+  await expect(panel.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
   await panel.getByRole("link", { name: "Rooms" }).click();
   await expect(page).toHaveURL(/\/rooms$/);
   await expect(page.locator("h1")).toHaveText("Rooms");
@@ -31,6 +32,13 @@ test("language pills keep the page; logo links home", async ({ page }) => {
   await page.goto("/rw");
   await expect(page.locator(".fj-logo")).toHaveAttribute("href", "/rw");
   await expect(page.locator('.fj-pills a[hreflang="en"]')).toHaveAttribute("href", "/");
+});
+
+test("footer links Contact on every page", async ({ page }) => {
+  for (const path of ["/", "/rooms", "/contact"]) {
+    await page.goto(path);
+    await expect(page.locator(".fj-footer").getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
+  }
 });
 
 test.describe("desktop", () => {

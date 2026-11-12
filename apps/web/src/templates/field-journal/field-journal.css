@@ -389,6 +389,31 @@
 .fj-more[open] .fj-more-close { display: inline; }
 .fj-stay { margin: 40px 16px 0; }
 
+/* ---------- Contact page (wireframe in specs/contact-page.md) ---------- */
+.fj-find-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.fj-contact { padding: 24px 16px 0; display: flex; flex-direction: column; gap: 28px; }
+/* Phones follow the wireframe order: buttons, map, then the text blocks. */
+.fj-contact-main { display: contents; }
+.fj-contact-buttons { order: 1; }
+.fj-contact-map { order: 2; }
+.fj-contact-block { order: 3; }
+.fj-contact-buttons { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.fj-contact-btn {
+  min-height: 60px; padding: 10px 16px; border-radius: 16px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; gap: 14px; text-decoration: none;
+}
+.fj-contact-btn > span { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.fj-contact-btn b { font-size: 16px; }
+.fj-contact-btn .fj-mono { font-size: 12px; text-transform: none; overflow-wrap: anywhere; }
+.fj-contact-accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent) !important; }
+.fj-lower { text-transform: none; }
+.fj-contact-block h2 {
+  display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500; margin: 0 0 8px;
+}
+.fj-contact-block h2::after { content: ""; flex: 1; border-top: 1.5px dashed var(--line); }
+.fj-contact-block ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.4; }
+.fj-contact-map { display: flex; flex-direction: column; gap: 10px; }
+
 /* ---------- Motion kit (D-041): CSS only, transform and opacity ---------- */
 .fj-draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: fj-draw 2.8s ease-out 0.3s forwards; }
 @keyframes fj-draw { to { stroke-dashoffset: 0; } }
@@ -418,6 +443,10 @@
   .fj-room-list > :only-child { grid-column: 1 / -1; max-width: 540px; justify-self: center; }
   .fj-room-list .fj-gallery-row { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; }
   .fj-stay { max-width: 720px; margin-inline: auto; }
+  .fj-contact-main { display: flex; flex-direction: column; gap: 24px; }
+  .fj-contact { padding: 32px 24px 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; align-items: start; }
+  .fj-contact-map { position: sticky; top: 24px; }
+  .fj-contact-map .fj-map { height: 320px; }
   .fj-nav-check {
     height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--on-accent) !important;
     display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none;

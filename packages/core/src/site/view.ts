@@ -21,7 +21,7 @@ export type SiteView = {
   defaultCurrency: Currency;
   sections: SectionId[];
   contacts: { phone: string; whatsapp: string; email?: string; telHref: string };
-  location: { mapUrl: string; area: string; distanceNote?: string };
+  location: { mapUrl: string; area: string; distanceNote?: string; directions: string[] };
   hours: string[];
   payment: string[];
   hero: { title: string; line: string; photo: PhotoView };
@@ -80,6 +80,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       mapUrl: site.location.mapUrl,
       area: t(site.location.area),
       distanceNote: site.location.distanceNote && t(site.location.distanceNote),
+      directions: site.location.directions.map(t),
     },
     hours: site.hours.map(t),
     payment: site.payment.map(t),

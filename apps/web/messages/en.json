@@ -56,5 +56,19 @@
     "sleeps": "Sleeps {n}",
     "stayInfo": "Check-in, children & payment",
     "checkInOut": "Check-in from {in} · check-out by {out}"
+  },
+  "Contact": {
+    "title": "Contact",
+    "line": "we'd love to hear from you",
+    "callUs": "Call us",
+    "whatsappUs": "WhatsApp us",
+    "emailUs": "Email us",
+    "helloMessage": "Hello {name}, I have a question.",
+    "openMaps": "Open in Google Maps",
+    "address": "Address",
+    "hours": "Hours",
+    "gettingHere": "Getting here",
+    "payment": "Payment",
+    "allDetails": "All contact details →"
   }
 }

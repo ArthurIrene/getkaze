@@ -13,7 +13,7 @@ const site: SiteData = {
   languages: ["en", "rw"],
   modulesOn: [],
   contacts: { phone: "+250 788 000 000", whatsapp: "+250 788 000 001" },
-  location: { mapUrl: "https://maps.example/test", area: { en: "Kinigi" } },
+  location: { mapUrl: "https://maps.example/test", area: { en: "Kinigi" }, directions: [{ en: "Turn left", rw: "Kata ibumoso" }] },
   hours: [{ en: "Every day", rw: "Buri munsi" }],
   payment: [{ en: "Cash" }],
   sections: [
@@ -51,6 +51,7 @@ describe("toSiteView", () => {
     expect(view.hero.line).toBe("to the hills");
     expect(view.rooms[0]?.name).toBe("Garden Double");
     expect(view.hours).toEqual(["Buri munsi"]);
+    expect(view.location.directions).toEqual(["Kata ibumoso"]);
   });
 
   it("formats each price in both currencies and keeps the default currency", () => {

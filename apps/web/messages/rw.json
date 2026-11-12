@@ -56,5 +56,19 @@
     "sleeps": "Icyumba cy'abantu {n}",
     "stayInfo": "Kwinjira, abana no kwishyura",
     "checkInOut": "Kwinjira guhera {in} · gusohoka bitarenze {out}"
+  },
+  "Contact": {
+    "title": "Twandikire",
+    "line": "twishimiye kukwakira",
+    "callUs": "Duhamagare",
+    "whatsappUs": "Twandikire kuri WhatsApp",
+    "emailUs": "Twandikire kuri imeli",
+    "helloMessage": "Muraho {name}, mfite ikibazo.",
+    "openMaps": "Fungura muri Google Maps",
+    "address": "Aderesi",
+    "hours": "Amasaha",
+    "gettingHere": "Uko wahagera",
+    "payment": "Kwishyura",
+    "allDetails": "Aho mwatubariza hose →"
   }
 }

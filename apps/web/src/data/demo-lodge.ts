@@ -37,11 +37,18 @@ export const demoLodge: SiteData = {
   contacts: {
     phone: "+250 700 000 000",
     whatsapp: "+250 700 000 000",
+    // example.com is reserved for examples: this address never reaches anyone.
+    email: "hello@example.com",
   },
   location: {
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Kinigi%2C%20Musanze",
     area: { en: "Kinigi Sector, Musanze District", rw: "Umurenge wa Kinigi, Akarere ka Musanze" },
     distanceNote: { en: "Musanze 25'" },
+    directions: [
+      { en: "From Musanze town: 25 minutes by car on the Kinigi road.", rw: "Uvuye mu mujyi wa Musanze: iminota 25 n'imodoka ku muhanda wa Kinigi." },
+      { en: "From Kigali: about 2 hours 30 minutes.", rw: "Uvuye i Kigali: amasaha 2 n'iminota 30." },
+      { en: "Ask us for a driver from Kigali or Musanze." },
+    ],
   },
   hours: [{ en: "Reception every day, 6:00 to 22:00", rw: "Kwakira abashyitsi buri munsi, 6:00 kugeza 22:00" }],
   payment: [{ en: "Cash (RWF, USD), MTN MoMo, Airtel Money", rw: "Amafaranga (RWF, USD), MTN MoMo, Airtel Money" }],

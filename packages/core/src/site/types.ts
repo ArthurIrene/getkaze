@@ -106,6 +106,8 @@ export type SiteData = {
     area: LocalizedText;
     /** Short note on the map drawing, e.g. "Musanze 25'". */
     distanceNote?: LocalizedText;
+    /** "Getting here" lines on the contact page. */
+    directions: LocalizedText[];
   };
   hours: LocalizedText[];
   payment: LocalizedText[];
