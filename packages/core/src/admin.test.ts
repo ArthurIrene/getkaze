@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canSetStatus, looksLikeEmail, siteBaseUrl, sitePath, supportReasonProblems } from "./admin";
+import { canSetStatus, looksLikeEmail, ownerSiteSummary, siteBaseUrl, sitePath, supportReasonProblems } from "./admin";
 
 describe("site addresses (D-062)", () => {
   it("uses <slug>.<PLATFORM_DOMAIN> once set, else the /s/<slug> fallback", () => {
@@ -32,5 +32,22 @@ describe("admin checks", () => {
   it("checks invite emails", () => {
     expect(looksLikeEmail("owner@example.test")).toBe(true);
     expect(looksLikeEmail("not an email")).toBe(false);
+  });
+});
+
+describe("ownerSiteSummary", () => {
+  it("makes one card per business with status wording, address, languages and modules", () => {
+    const cards = ownerSiteSummary(
+      [
+        { id: "2", name: "Zebra Lodge", slug: "zebra", status: "draft", languages: ["en"], modulesOn: [] },
+        { id: "1", name: "Kinigi Hills", slug: "kinigi-hills", status: "active", languages: ["en", "rw"], modulesOn: ["ordering", "menu"] },
+      ],
+      { fallbackHost: "getkaze.vercel.app" },
+    );
+    expect(cards).toEqual([
+      { id: "1", name: "Kinigi Hills", statusKey: "live", address: "https://getkaze.vercel.app/s/kinigi-hills", languages: ["EN", "RW"], modulesOn: ["menu", "ordering"] },
+      { id: "2", name: "Zebra Lodge", statusKey: "notLive", address: "https://getkaze.vercel.app/s/zebra", languages: ["EN"], modulesOn: [] },
+    ]);
+    expect(ownerSiteSummary([{ id: "3", name: "P", slug: "ppp", status: "paused", languages: ["en"], modulesOn: [] }], { platformDomain: "altavision.rw", fallbackHost: "x" })[0]).toMatchObject({ statusKey: "paused", address: "https://ppp.altavision.rw" });
   });
 });

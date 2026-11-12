@@ -28,7 +28,8 @@ select id,
   '{"title": {"en": "Welcome"}}'::jsonb,
   array['lodge'],
   case when status = 'draft' then null else now() end
-from public.businesses;
+from public.businesses
+where slug in ('biz-a', 'biz-b', 'biz-c', 'biz-p');
 
 insert into public.business_modules (business_id, module_id, enabled) values
   ('00000000-0000-0000-0000-00000000000a', 'menu', true),
@@ -230,7 +231,7 @@ select ok(public.get_published_site('nope') is null, 'unknown slug: null');
 select ok(public.get_published_site() is null, 'no slug and no host: null');
 select is(jsonb_array_length(public.get_published_site('biz-b') -> 'items'), 1, 'hidden items are not published');
 select is(public.get_published_site('biz-a') -> 'modulesOn', '["menu"]'::jsonb, 'enabled modules are published');
-select results_eq($$ select * from public.list_published_slugs() $$, $$ values ('biz-a'), ('biz-b') $$, 'only active, published slugs are listed');
+select results_eq($$ select s from public.list_published_slugs() s where s in ('biz-a', 'biz-b', 'biz-c', 'biz-p') $$, $$ values ('biz-a'), ('biz-b') $$, 'only active, published slugs are listed');
 
 -- ================= 7. No personal data in the public JSON =================
 reset role;

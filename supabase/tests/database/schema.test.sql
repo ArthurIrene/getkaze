@@ -82,6 +82,12 @@ select throws_ok($$ insert into public.media (business_id, item_id, place, alt)
   select '00000000-0000-0000-0000-0000000000f2', id, 'room', '{"en": "x"}' from public.catalog_items where business_id = '00000000-0000-0000-0000-0000000000f1' limit 1 $$,
   '23503', null, 'media cannot point at another business''s item');
 
+-- The service role can write rows whose checks call the app helpers.
+set local role service_role;
+select lives_ok($$ insert into public.site_settings (business_id, hero) values ('00000000-0000-0000-0000-0000000000f2', '{"title": {"en": "Hi"}}') $$,
+  'service role can write a row checked by app.is_localized');
+reset role;
+
 -- Role permissions follow ROLES.md: owners have every permission in both presets.
 select is((select count(*) from public.role_permissions where role = 'owner')::int, 12, 'owner has the 6 permissions in both presets');
 

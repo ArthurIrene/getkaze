@@ -197,7 +197,18 @@
     "noSite": "No active site for this account."
   },
   "Owner": {
-    "title": "Your site"
+    "title": "Your site",
+    "live": "Live",
+    "notLive": "Not live yet",
+    "paused": "Paused",
+    "open": "Open your site ↗",
+    "languages": "Languages",
+    "modules": "Switched on",
+    "support": "Support visits",
+    "noSupport": "No support visits yet.",
+    "ongoing": "ongoing",
+    "help": "Need a change? WhatsApp us",
+    "helpMessage": "Hello Kaze, I need a change on my site."
   },
   "Admin": {
     "clients": "Clients",

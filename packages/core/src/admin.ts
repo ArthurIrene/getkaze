@@ -47,3 +47,37 @@ export function canSetStatus(status: BusinessStatus, site: { publishedAt: string
 export function looksLikeEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) && email.length <= 320;
 }
+
+export type OwnerBusinessRow = {
+  id: string;
+  name: string;
+  slug: string;
+  status: BusinessStatus;
+  languages: string[];
+  modulesOn: string[];
+};
+
+export type OwnerSiteCard = {
+  id: string;
+  name: string;
+  /** Wording key under Owner: live, notLive, paused. */
+  statusKey: "live" | "notLive" | "paused";
+  address: string;
+  languages: string[];
+  modulesOn: string[];
+};
+
+/** "Your site" cards (specs/owner-your-site.md): one per business, sorted by name. */
+export function ownerSiteSummary(rows: OwnerBusinessRow[], config: HostConfig): OwnerSiteCard[] {
+  const statusKey = { active: "live", draft: "notLive", paused: "paused" } as const;
+  return [...rows]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((r) => ({
+      id: r.id,
+      name: r.name,
+      statusKey: statusKey[r.status],
+      address: siteBaseUrl(r, config),
+      languages: r.languages.map((l) => l.toUpperCase()),
+      modulesOn: [...r.modulesOn].sort(),
+    }));
+}

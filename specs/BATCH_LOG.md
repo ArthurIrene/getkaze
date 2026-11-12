@@ -166,3 +166,12 @@ Entry format:
 - Tests: pgTAP `accept_invites.test.sql` (6 checks; 5 database test files and 158 checks in all). 74 unit tests (5 new). 41 Playwright tests (4 new: TOTP enrolment, including a wrong code, then the code required on a new session; a non-admin sent away; create a business with a reserved-slug refusal, draft modules, the "must publish" rule, a module switch logged as `platform_admin`, the owner invite email and membership, support session open and close; invite acceptance → membership active). The local CI run is green.
 - Page weight: no change for guests (JS 145.4 KB). `/` is 166.8 KB.
 - Deviations: the slug for a new business comes from its name when left empty. Admin wording RW drafts are in rw.json under `Admin` (also for the glossary). There is no "publish site" button yet; the editor (Batch 3) publishes, and the demo seed is published.
+
+## Batch 2, feature 6: owner "Your site" | 2026-11-12
+- Built: `/owner` (`/rw/owner`) shows one card per business the owner belongs to: name, a status pill (Live, Not live yet, Paused), the site address with "Open your site ↗" (core `siteBaseUrl`: `/s/<slug>` on getkaze.vercel.app until `PLATFORM_DOMAIN` is set), languages, modules switched on, and **our support visits** (when, reason, open or closed; ROLES.md §5), plus "Need a change? WhatsApp us" (`platform.supportWhatsApp`, a placeholder number). Everything is read through RLS as the owner, never the service role. With no active membership it shows "No active site for this account". An admin without a business is sent to `/admin`. Core `ownerSiteSummary` builds the cards.
+- Found while testing:
+  - The **service role could not evaluate the check constraints** (no USAGE on schema `app`), so any server-side service-role write to `site_settings`, `catalog_items` or `media` would have failed. New migration `20261112100600_service_role_checks.sql` grants only `is_localized` and `is_localized_or_null`, with a database test.
+  - The isolation and change-log fixtures touched every business in the database, so they are now scoped to their own rows. The database tests pass even with leftover data.
+- Tests: 159 database checks, 75 unit tests (1 new), and 43 Playwright tests (2 new: live site card with address, modules and a support visit while another business's data stays invisible, no sideways overflow at 360 px; draft card "Not live yet", "No support visits yet" and the `/rw/owner` wording). The local CI run is green.
+- Page weight: guests unchanged (JS 145.4 KB). `/` is 166.9 KB.
+- Deviations: none.

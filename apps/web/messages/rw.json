@@ -184,7 +184,18 @@
     "noSite": "Nta rubuga rukora kuri iyi konti."
   },
   "Owner": {
-    "title": "Urubuga rwawe"
+    "title": "Urubuga rwawe",
+    "live": "Rurakora",
+    "notLive": "Ntirurajya ahagaragara",
+    "paused": "Rwahagaritswe",
+    "open": "Fungura urubuga rwawe ↗",
+    "languages": "Indimi",
+    "modules": "Ibikora",
+    "support": "Gusurwa n'abafasha",
+    "noSupport": "Nta gusurwa n'abafasha kurabaho.",
+    "ongoing": "birakomeje",
+    "help": "Ukeneye impinduka? Twandikire kuri WhatsApp",
+    "helpMessage": "Muraho Kaze, nkeneye impinduka ku rubuga rwanjye."
   },
   "Admin": {
     "clients": "Abakiriya",

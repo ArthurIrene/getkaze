@@ -14,7 +14,7 @@ insert into public.businesses (id, slug, name, preset, style) values
 insert into public.memberships (business_id, user_id, roles, status) values
   ('00000000-0000-0000-0000-00000000000a', '00000000-0000-0000-0000-0000000000a1', array['owner'], 'active');
 insert into public.platform_admins (user_id) values ('00000000-0000-0000-0000-0000000000ad');
-update public.businesses set name = name || ' (edited)';  -- more log rows for both
+update public.businesses set name = name || ' (edited)' where slug in ('log-a', 'log-b');  -- more log rows for both
 
 select ok((select count(*) from public.content_changes where business_id = '00000000-0000-0000-0000-00000000000a') >= 2, 'business A has change-log rows');
 create temp table b_rows_before on commit drop as
