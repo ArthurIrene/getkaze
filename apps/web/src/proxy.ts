@@ -3,6 +3,7 @@ import createMiddleware from "next-intl/middleware";
 import { fallbackSlug, isPlatformPath, parseHost, servesPlatformScreens, siteKey, splitLocale } from "@getkaze/core";
 import { routing } from "./i18n/routing";
 import { hostSettings } from "./lib/hosts";
+import { supabaseConfigured } from "./lib/supabase/env";
 import { refreshSession } from "./lib/supabase/refresh";
 
 const intl = createMiddleware(routing);
@@ -13,7 +14,8 @@ const NO_SITE = "~";
 /**
  * Business by host (specs/business-by-host.md, D-062). No database call here:
  * - platform screens (login, auth links, owner, admin) only on platform hosts,
- *   with the Supabase session refresh (guest pages never set cookies);
+ *   with the Supabase session refresh (guest pages never set cookies), or a
+ *   "not configured yet" page while Supabase settings are missing;
  * - every guest path is rewritten to the internal route /<locale>/site/<key>/…,
  *   where the key comes from the subdomain, the /s/<slug> fallback, the demo
  *   (bare platform host) or a custom domain. The internal route itself is never
@@ -38,6 +40,12 @@ export default async function proxy(request: NextRequest) {
 
   if (isPlatformPath(path)) {
     if (!servesPlatformScreens(host, settings)) return toSite(inner.locale, NO_SITE, "/");
+    // Supabase not configured (demo only): every platform path shows "not configured yet".
+    if (!supabaseConfigured()) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${inner.locale}/not-configured`;
+      return NextResponse.rewrite(url, { status: 503 });
+    }
     const response = intl(request);
     await refreshSession(request, response);
     return response;

@@ -27,7 +27,7 @@ The port is ignored and the host lowercased. `/rw` language prefixes work in eve
 - **`siteBaseUrl(business, config)`:** `https://<slug>.<PLATFORM_DOMAIN>` when it is set, otherwise `https://getkaze.vercel.app/s/<slug>`. The demo lodge's canonical becomes `https://getkaze.vercel.app/s/kinigi-hills`, and the bare host stays the demo with that canonical (no duplicate indexed copies; noindex stays anyway).
 - **Sitemap, robots and manifest** are per host (they read the site for that host). The platform host's sitemap lists the demo only.
 
-**Build-time settings:** guest pages are static, so `PLATFORM_DOMAIN` (and with it every canonical, sitemap and Open Graph address) is fixed when the site is built. Changing it in Vercel takes effect on the next deployment (Vercel redeploys on env changes when asked; trigger a redeploy after setting it). Routing itself (`parseHost` in the proxy) reads the settings on every request.
+**Settings:** routing (`parseHost` in the proxy) and the guest pages read `PLATFORM_DOMAIN` when a page is rendered. Pages render on their first visit and stay cached up to 5 minutes (demo-lodge-database.md), so a change shows within that window once Vercel runs the new deployment (Vercel applies env changes on the next deployment).
 
 ## Data
 `businesses.slug` and `businesses.custom_domain`, read through `get_published_site(p_slug, p_host)` (row-level-security.md).

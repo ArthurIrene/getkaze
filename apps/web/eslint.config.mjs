@@ -4,14 +4,17 @@ import nextTs from "eslint-config-next/typescript";
 
 const serviceRole = { name: "@/lib/supabase/admin", message: "Service role: only the platform-admin invite action may use it." };
 const serviceRolePattern = { group: ["**/supabase/admin"], message: serviceRole.message };
-const demoFile = { name: "@/data/demo-lodge", message: "The app reads the database; demo-lodge.ts only feeds the seed." };
+const demoFile = { name: "@/data/demo-lodge", message: "The app reads the database; demo-lodge.ts only feeds the seed (and the not-configured fallback in get-site.ts)." };
 const demoPattern = { group: ["**/data/demo-lodge"], message: demoFile.message };
 const ADMIN_ACTIONS = "src/app/**/(platform)/admin/actions.ts";
+// get-site.ts serves the bundled demo while Supabase is not configured (until G2).
+const GET_SITE = "src/data/get-site.ts";
 
 function restrictedImports() {
   const rule = (paths, patterns) => ({ "no-restricted-imports": ["error", { paths, patterns }] });
   return [
-    { files: ["src/**/*.{ts,tsx}"], ignores: [ADMIN_ACTIONS, "src/lib/supabase/admin.ts"], rules: rule([serviceRole, demoFile], [serviceRolePattern, demoPattern]) },
+    { files: ["src/**/*.{ts,tsx}"], ignores: [ADMIN_ACTIONS, GET_SITE, "src/lib/supabase/admin.ts"], rules: rule([serviceRole, demoFile], [serviceRolePattern, demoPattern]) },
+    { files: [GET_SITE], rules: rule([serviceRole], [serviceRolePattern]) },
     { files: [ADMIN_ACTIONS], rules: rule([demoFile], [demoPattern]) },
   ];
 }

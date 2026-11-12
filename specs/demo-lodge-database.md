@@ -14,15 +14,19 @@ Goal: The demo lodge is a real row set in the database, so every guest page now 
 ## getSite() from the database
 - `getSite({ slug } | { host })` in `apps/web/src/data/get-site.ts` calls `get_published_site` with a **server-only, cookie-less** anon client (`@supabase/supabase-js`, no session, `fetch` with Next caching tags `site:<slug>`). It maps the JSON with core `rowToSiteData` and returns `SiteData | null`.
 - Supabase code runs **only on the server** (server components, route handlers). No client component imports it, and a build check (`scripts/check-client-bundle.mjs`) fails if `@supabase` appears in any client chunk.
-- `demo-lodge.ts` stays as the **source for the seed** and as a unit-test fixture. The app no longer imports it at runtime.
+- `demo-lodge.ts` stays as the **source for the seed** and as a unit-test fixture. The app imports it in one place only: the not-configured fallback below (`get-site.ts`; an ESLint rule blocks every other import).
 
-## Static with revalidation
-- Guest pages (home, rooms, contact, privacy) stay **static**:
-  - `generateStaticParams` lists `list_published_slugs()` × locales.
-  - `export const revalidate = 300` (5 minutes) for now.
-  - Batch 3's editor will call `revalidateTag("site:<slug>")` after a save, so changes show at once.
+## Cached, and rendered on demand (the build never reads the database)
+- Guest pages (home, rooms, contact, privacy) are **rendered on their first visit, then cached**:
+  - `generateStaticParams` returns no sites once Supabase is configured, so the build never calls the database. A missing function, a missing seed or an unreachable project cannot fail a build.
+  - `export const revalidate = 300` (5 minutes), and each read is tagged `site:<slug|host>`. Batch 3's editor will call `revalidateTag("site:<slug>")` after a save, so changes show at once.
 - `/book` stays rendered per request (its date `min`, as in Batch 1). `/book/send` reads the site in the same cookie-less way.
-- **Build without database env** (for example a fork): the build fails with a clear message naming the missing variables. There is no silent fallback to the file, so there is never a second source of truth.
+
+## Build without a database (final fixes, Batch 2)
+- **Settings missing** (`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` both unset, e.g. a Vercel project before setup, or a fork): `getSite()` returns the bundled demo lodge for the demo slug (`DEMO_SITE_SLUG`) only; every other site is the clean 404. The demo is pre-rendered. The server logs **one** warning ("Supabase is not configured …"). Every platform path (login, auth links, owner, admin) shows **"Not configured yet"** (status 503) instead of crashing.
+- **Settings present**: the fallback never applies. A database error (unreachable, function missing, broken row) is a real error (status 500), never hidden behind the demo. Only one of the two settings set is a broken setup and also an error.
+- **At G2** this fallback is removed, or kept to the demo slug only (decided at G2; BATCH_LOG lists it).
+- Checked by `pnpm check:build` (`scripts/check-build-independence.mjs`, in CI): two production builds, one without settings and one with an unreachable database, each started and requested.
 
 ## Guest pages: no JS growth
 - The weight check must still pass (≤ 300 KB) with **JS within ±1 KB of Batch 1 (145.4 KB)**; it is flagged in BATCH_LOG otherwise.
@@ -33,7 +37,8 @@ Goal: The demo lodge is a real row set in the database, so every guest page now 
 2. Given `seed.sql` edited by hand or `demo-lodge.ts` changed without regenerating, when CI runs, then the seed-freshness check fails.
 3. Given a guest page build, when the client chunks are scanned, then no `@supabase` code is in them, and JS per page is 145.4 KB ± 1 KB.
 4. Given the demo business set to `paused` in the database, when its pages are requested after revalidation, then they return the clean 404.
-5. Given the build without `NEXT_PUBLIC_SUPABASE_URL`, when it runs, then it stops with a message naming the variable.
+5. Given the build without the Supabase settings, when it runs and is started, then the build passes, `/` and `/s/kinigi-hills` show the demo lodge, another slug is a 404, `/login` says "Not configured yet", and the server warns once.
+6. Given the settings set but the database unreachable (or its functions or seed missing), when the app is built and a guest page is requested, then the build passes and the page is an error (500), not the demo.
 
 ## Out of scope
 On-demand revalidation from the editor (Batch 3), real photos in Storage (Batch 3), more demo businesses (prospect demos, after Batch 3).

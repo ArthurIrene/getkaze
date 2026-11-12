@@ -10,7 +10,7 @@ Users: owners (invited by the platform admin) and platform admins. Guests never 
 ## Screens (platform style: plain, the GetKaze/"Kaze" name from `platform`, phone first; EN at `/…`, RW at `/rw/…`)
 - **`/login`:** email, password, "Sign in", "Forgot password?". On success: platform admins go to `/admin` (which asks for TOTP, platform-admin.md), owners go to `/owner`. One generic error ("Email or password is wrong"), whether the account exists or not.
 - **`/auth/reset`:** an email field, then "If that email has an account, we sent a link." The same answer always (no account probing).
-- **`/auth/callback`** (route): exchanges the email link code for a session (PKCE), then redirects to `next` (allow-listed: `/auth/update-password`, `/owner`, `/admin`).
+- **`/auth/confirm`** (route; built in place of the planned `/auth/callback`, see BATCH_LOG): verifies the email link's token hash on the server, sets the session in HttpOnly cookies, then redirects to a fixed page per link type (invite → `/auth/accept`, recovery → `/auth/update-password`; no `next` parameter, so no open redirect).
 - **`/auth/update-password`:** a new password typed twice (min 10 characters, not all digits; core rule), then "Saved, you are signed in."
 - **`/auth/accept`:** where invite links land. Set a first password (the same rules), then `/owner`.
 - **Sign out:** a POST form button on the owner and admin pages, then `/login`.

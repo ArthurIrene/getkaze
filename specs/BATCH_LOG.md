@@ -205,3 +205,70 @@ Entry format:
 - Tests: 87 unit tests (3 new: mapping, ordering and handles, refusing a broken site); 159 database checks; 52 Playwright tests (3 new: the demo exists in the database; a new active, published business shows at `/s/<slug>` without a rebuild, with its own canonical; draft, unpublished and paused businesses give a clean 404 with no business data). **All Batch 1 guest tests pass unchanged against the database.** Bundle guard: no Supabase code in any browser file.
 - Page weight: **JS 145.4 KB on every guest page, unchanged** (within ±1 KB of Batch 1); every page is under 300 KB (`/` 167.2 KB).
 - Deviations: pages stay cached for up to 5 minutes after a change (including a pause) until the Batch 3 editor revalidates on save. Room and dish photos are `media` rows; other photos (hero, moments, dining, host) stay in `site_settings` JSON until the editor's photo upload (Batch 3).
+
+## Batch 2, final fixes | 2026-11-12
+- Built:
+  - **Reserved names:** `www`, `send`, `resend`, `zmail`, `mail`, `webmail`, `email`, `smtp`, `mx`, `autodiscover` are reserved in core and in the database. The new additive migration `20261112100800_reserved_mail_names.sql` uses `on conflict do nothing`. Names starting with `_` stay invalid by the slug format. The migration guard now reads every `reserved_slugs` insert, and core and SQL match (33 names).
+  - **The build never reads the database:**
+    - `generateStaticParams` returns no sites once Supabase is configured. Pages render on their first visit, then are cached (5 minutes, tag `site:<slug|host>`).
+    - **Settings missing** (both `NEXT_PUBLIC_SUPABASE_*` unset): `getSite()` serves the bundled demo for the demo slug only, pre-rendered, with one server warning. Every other site is a 404, and every platform path shows "Not configured yet" (503, EN and RW). The proxy skips the session refresh, and `/auth/confirm` and `/auth/signout` never call Supabase.
+    - **Settings present:** a database error is a 500, never the demo. Only one of the two set is also an error.
+    - Settings are read when used, not inlined at build time. ESLint allows the demo import in `src/data/get-site.ts` only.
+  - **db-deploy:** when all three `supabase-staging` settings are missing, it ends green with the notice "staging not configured" and every later step is skipped. When only some are missing, it fails and names them.
+  - **No deploy order:** Vercel and the migrations can happen in any order (spec and PR comment updated).
+  - Spec fixes: the staging redirect URLs and the local `additional_redirect_urls` are now `/auth/confirm`, the route actually built in feature 4. auth.md now says the same.
+- Tests:
+  - 162 database checks (3 new: `resend`, `zmail` and `_mail` refused).
+  - 88 unit tests (the reserved-names and underscore tests extended).
+  - **`pnpm check:build`** (`scripts/check-build-independence.mjs`, a new CI step) runs two production builds and starts each one:
+    - **Settings missing:** the build passes; `/`, `/s/kinigi-hills/rooms` and `/s/kinigi-hills/rw` show the demo; another slug is a 404; `/login`, `/admin`, `/owner`, `/rw/login`, `/auth/reset` and `/auth/confirm` answer "Not configured yet" (503); exactly one warning; no server error.
+    - **Database unreachable:** the build passes; `/` and `/s/kinigi-hills` are a 500, not the demo; no not-configured warning.
+  - The db-deploy check step was run locally in all three cases (none set → skip, some set → fail, all set → run).
+- Page weight: see the final CI run (guest JS unchanged, no new client code).
+- Deviations and choices:
+  - Guest pages are no longer pre-rendered once configured, so the first visit after a deploy or after 5 minutes renders on the server.
+  - Platform paths answer 503 while not configured, so nothing caches the notice as a real page.
+  - **At G2: remove the demo fallback, or keep it to the demo slug only.**
+
+## Next session starts here
+**Done (Batch 2, PR #6, ready for review):**
+- Core data, RLS and the isolation test.
+- Database tests and the staging deploy workflow.
+- Login, admin with TOTP 2FA, owner "Your site".
+- Business by host, and the demo lodge in the database.
+- The controlled change-log deletion.
+- The locked `get_published_site` fields.
+- Reserved mail names.
+- Builds that don't depend on the database.
+
+**Manual steps pending, in order** (you do these; none touch the repository):
+1. **GitHub** → Settings → Environments → `supabase-staging`: secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`, variable `SUPABASE_PROJECT_REF`. Optionally add yourself as a required reviewer, and allow deployments from `staging` only. Until then, db-deploy skips with a notice.
+2. **Vercel** → Environment Variables:
+   - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Production and Preview).
+   - `SUPABASE_SERVICE_ROLE_KEY` (Production only, Sensitive).
+   - `DEMO_SITE_SLUG=kinigi-hills`.
+   - Leave `PLATFORM_DOMAIN` and `APP_HOST` unset until DNS points here.
+
+   Until then the site shows the bundled demo and login says "Not configured yet".
+3. **Supabase staging** → Authentication:
+   - Email on, sign-ups off.
+   - TOTP on.
+   - Site URL `https://getkaze.vercel.app`.
+   - Redirect URLs `…/auth/confirm` (db-testing-and-migrations.md).
+   - Paste the **Invite** and **Reset password** templates from `supabase/templates/`.
+4. **Merge PR #6 into `staging`.** CI runs, then db-deploy applies the migrations (after your approval, if set).
+5. **Actions → DB deploy (staging) → Run workflow** on `staging`, with `seed_demo` ticked (the fake demo lodge, idempotent).
+6. **First platform admin:** invite or create your user in the Supabase dashboard (Authentication → Users), then run in the staging SQL editor:
+   `insert into public.platform_admins (user_id) select id from auth.users where email = 'YOUR-EMAIL' on conflict do nothing;`
+7. Sign in at `https://getkaze.vercel.app/login` and enrol TOTP at `/admin/mfa/enroll`.
+
+No special order between steps 1–3 and 4: the build never reads the database.
+
+**Open:**
+- Altavision's existing subdomains, to add as reserved names (additive), when you send them.
+- Kinyarwanda checks of the platform wording, marked draft in the glossary.
+- The cache window (5 minutes) until Batch 3's editor revalidates on save.
+- Where screenshots go (CI artifacts or the PR, never the repository).
+- At G2: the demo fallback (remove, or keep to the demo slug), noindex per business, the custom email sender, and a check of icons on Cloudflare.
+
+**Next batch:** Batch 3 (editor, revalidation on save, photos in Storage), after the review of PR #6.

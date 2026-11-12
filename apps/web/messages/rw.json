@@ -161,7 +161,9 @@
     "privacyDescription": "Uko {name} ifata amakuru yawe bwite."
   },
   "Platform": {
-    "language": "Ururimi"
+    "language": "Ururimi",
+    "notConfiguredTitle": "Ntibiratunganywa",
+    "notConfigured": "Kwinjira n'ibice by'ubuyobozi ntibiratunganywa kuri iyi seriveri. Urubuga rw'icyitegererezo rurakora."
   },
   "Auth": {
     "signIn": "Injira",

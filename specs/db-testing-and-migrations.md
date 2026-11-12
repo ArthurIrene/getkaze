@@ -8,7 +8,7 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
 ## Local Supabase in CI (pinned)
 - `supabase/config.toml` (from `supabase init`), with `project_id = "getkaze"` and `[db] major_version = 17` (the CLI default; to be confirmed against staging, overview point 4).
 - **Local CLI:** the official release tarball for 2.122.0, verified with `sha256sum -c` against the release's `checksums.txt` before it runs (`scripts/supabase-cli.sh` downloads, verifies and caches it in `.tools/`, which git ignores).
-  - `[auth] enable_signup = false`, `site_url = "http://127.0.0.1:3200"`, and `additional_redirect_urls` for `/auth/callback`.
+  - `[auth] enable_signup = false`, `site_url = "http://127.0.0.1:3200"`, and `additional_redirect_urls` for `/auth/confirm`.
   - `[auth.mfa.totp] enroll_enabled = true, verify_enabled = true`.
   - Mailpit (the bundled inbox) on. Studio, realtime, storage, edge runtime, analytics and the pooler stay off with `supabase start -x …`.
 - CI workflow, new job `db` (before `ci` needs it, or merged into one job; one job keeps one Next build):
@@ -31,6 +31,7 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
 - New workflow `.github/workflows/db-deploy.yml`. It runs **only after CI passes on a push to `staging`** (a merge): `on: workflow_run` of CI with `conclusion == 'success'`, `event == 'push'` and `head_branch == 'staging'`. **Never on pull requests.** Plus `workflow_dispatch` restricted to the `staging` branch for a manual re-run.
 - It uses the GitHub **Environment `supabase-staging`**. You can add yourself as a required reviewer, so every migration waits for your click.
 - Steps:
+  0. **Check settings.** All three settings missing (the environment is not set up yet): the run ends green with the notice "staging not configured", and every later step is skipped. Only some missing: the run fails, naming them.
   1. setup-cli (pinned as above).
   2. `supabase link --project-ref "$SUPABASE_PROJECT_REF"`.
   3. `node scripts/check-migrations.mjs`.
@@ -61,7 +62,10 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
 **Supabase staging dashboard** → Authentication (account settings outside the repo, so you do these; I don't):
 - Sign In / Providers → Email: enabled; **Allow new users to sign up: off**.
 - Multi-Factor → TOTP: enabled.
-- URL Configuration → Site URL `https://getkaze.vercel.app`; Redirect URLs `https://getkaze.vercel.app/auth/callback` and `https://*-irenearthurs-projects.vercel.app/auth/callback` (previews).
+- URL Configuration → Site URL `https://getkaze.vercel.app`; Redirect URLs `https://getkaze.vercel.app/auth/confirm` and `https://*-irenearthurs-projects.vercel.app/auth/confirm` (previews). Email links use `/auth/confirm` (auth.md).
+- Email Templates → **Invite user** and **Reset password**: paste `supabase/templates/invite.html` and `recovery.html` (they link to `/auth/confirm` with a token hash).
+
+**Order:** none needed. The build never reads the database, so Vercel can build before or after the migrations reach staging; pages read the database on their first visit. Until the Vercel settings are set, the site shows the bundled demo and platform screens say "Not configured yet". Until the GitHub settings are set, `db-deploy` skips with a notice.
 - SMTP: leave the built-in sender (testing only, D-059). A custom sender comes before G2.
 
 Nothing goes in the repository except `.env.example` names (no values).
@@ -71,6 +75,7 @@ Nothing goes in the repository except `.env.example` names (no values).
 2. Given a migration with `DROP COLUMN`, when CI runs, then the check fails before anything is applied.
 3. Given a merge to `staging` with a new migration, when CI passes, then `db-deploy` (after your approval, if set) applies only that migration to the staging project, and the log shows the dry run first.
 4. Given the repository, when searched, then no Supabase key, password or project ref is in it.
+5. Given the `supabase-staging` settings all missing, when `db-deploy` runs, then it ends green with the notice "staging not configured" and applies nothing; given only some missing, it fails naming them.
 
 ## Out of scope
 Live (production) deploys, backups and restore tests (Batch 3), branching (Supabase preview branches; paid).

@@ -174,7 +174,9 @@
     "privacyDescription": "How {name} handles your personal data."
   },
   "Platform": {
-    "language": "Language"
+    "language": "Language",
+    "notConfiguredTitle": "Not configured yet",
+    "notConfigured": "Sign-in and the admin screens are not configured yet on this server. The demo site still works."
   },
   "Auth": {
     "signIn": "Sign in",
