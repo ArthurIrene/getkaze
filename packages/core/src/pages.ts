@@ -24,5 +24,5 @@ export function sitePages(view: Pick<SiteView, "rooms">): PageId[] {
 
 /** Pages listed in the site menu, in order (privacy lives in the footer only). */
 export function menuPages(pages: readonly PageId[]): PageId[] {
-  return (["home", "rooms", "contact"] as const).filter((id) => pages.includes(id));
+  return (["rooms", "contact"] as const).filter((id) => pages.includes(id));
 }

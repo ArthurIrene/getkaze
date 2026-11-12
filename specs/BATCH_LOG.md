@@ -231,6 +231,25 @@ Entry format:
   - Platform paths answer 503 while not configured, so nothing caches the notice as a real page.
   - **At G2: remove the demo fallback, or keep it to the demo slug only.**
 
+## Nav polish (feature/nav-polish) | 2026-11-12
+- Built (CSS only, no JavaScript):
+  - **Sticky header** on every page: 56 px, solid paper background with a hairline, full width.
+    - On the home page it sits on the pinned hero with no background, as before. When the pin ends, a step on the hero's scroll timeline (longhands only) makes it solid and it stays at the top.
+    - Anchors land below it, and the contact map's sticky offset clears it.
+  - **No "Home" link:** the name links home, so the nav is Rooms and Contact (core `menuPages`).
+  - **One "Check availability" per screen:** the bottom bar on phones (it is left out of the header and menu), the header button on desktop (the bar is hidden). Room cards keep "Check dates".
+- Tests: 88 unit (`menuPages` updated) and 58 Playwright (6 new in `nav.spec.ts`):
+  - one "Check availability" on phone and on desktop;
+  - no Home link;
+  - room cards keep "Check dates";
+  - sticky solid header on /rooms, /contact, /book and /privacy, and full width on desktop;
+  - home header transparent over the pinned hero, then stuck and solid;
+  - 360×640: at least 70% of the screen for content (about 507 of 640 px), no sideways scroll.
+
+  The hero tests are unchanged and pass. `check:build` passes.
+- Page weight: every guest page passes, with JS at 145.4 KB (unchanged); `/` is 167.1 KB.
+- Deviations: none. The unused `Nav.home` wording stays (no rename or removal needed).
+
 ## Next session starts here
 **Done (Batch 2, PR #6, ready for review):**
 - Core data, RLS and the isolation test.

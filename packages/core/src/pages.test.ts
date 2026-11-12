@@ -7,9 +7,9 @@ describe("sitePages", () => {
     expect(sitePages({ rooms: [{} as never] })).toEqual(["home", "rooms", "contact", "book", "privacy"]);
   });
 
-  it("lists menu pages in order, without privacy or book", () => {
-    expect(menuPages(["home", "rooms", "contact", "book", "privacy"])).toEqual(["home", "rooms", "contact"]);
-    expect(menuPages(["privacy", "contact", "home"])).toEqual(["home", "contact"]);
+  it("lists menu pages in order, without home (the name links home), privacy or book", () => {
+    expect(menuPages(["home", "rooms", "contact", "book", "privacy"])).toEqual(["rooms", "contact"]);
+    expect(menuPages(["privacy", "contact", "home"])).toEqual(["contact"]);
   });
 
   it("has a path for every page", () => {
