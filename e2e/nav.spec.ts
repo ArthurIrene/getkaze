@@ -14,6 +14,17 @@ test("phone menu opens with the site pages and Check availability", async ({ pag
   const panel = await openMenu(page);
   await expect(panel.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
   await expect(panel.getByRole("link", { name: "Check availability" })).toBeVisible();
+  await panel.getByRole("link", { name: "Rooms" }).click();
+  await expect(page).toHaveURL(/\/rooms$/);
+  await expect(page.locator("h1")).toHaveText("Rooms");
+});
+
+test("on /rooms the RW pill opens /rw/rooms and the menu marks Rooms", async ({ page }) => {
+  await page.goto("/rooms");
+  const panel = await openMenu(page);
+  await expect(panel.getByRole("link", { name: "Rooms" })).toHaveAttribute("aria-current", "page");
+  await page.locator('.fj-pills a[hreflang="rw"]').click();
+  await expect(page).toHaveURL(/\/rw\/rooms$/);
 });
 
 test("language pills keep the page; logo links home", async ({ page }) => {

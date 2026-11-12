@@ -42,5 +42,19 @@
     "contact": "Twandikire",
     "book": "Reba ibyumba bihari",
     "privacy": "Ubuzima bwite"
+  },
+  "Rooms": {
+    "title": "Ibyumba",
+    "allRooms": "Ibyumba byose →",
+    "perNight": "ku ijoro",
+    "breakfast": "ifunguro rya mu gitondo ririmo",
+    "number": "Nº {n}",
+    "more": "Ibindi +",
+    "less": "Bike −",
+    "checkDates": "Reba amatariki",
+    "datesMessage": "Muraho {name}, ndashaka kumenya amatariki ya {room}.",
+    "sleeps": "Icyumba cy'abantu {n}",
+    "stayInfo": "Kwinjira, abana no kwishyura",
+    "checkInOut": "Kwinjira guhera {in} · gusohoka bitarenze {out}"
   }
 }

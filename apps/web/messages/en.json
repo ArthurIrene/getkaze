@@ -42,5 +42,19 @@
     "contact": "Contact",
     "book": "Check availability",
     "privacy": "Privacy"
+  },
+  "Rooms": {
+    "title": "Rooms",
+    "allRooms": "All rooms →",
+    "perNight": "per night",
+    "breakfast": "breakfast incl.",
+    "number": "Nº {n}",
+    "more": "More +",
+    "less": "Less −",
+    "checkDates": "Check dates",
+    "datesMessage": "Hello {name}, I'd like to check dates for the {room}.",
+    "sleeps": "Sleeps {n}",
+    "stayInfo": "Check-in, children & payment",
+    "checkInOut": "Check-in from {in} · check-out by {out}"
   }
 }

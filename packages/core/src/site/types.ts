@@ -42,7 +42,12 @@ export type Fact = { id: string; value: LocalizedText; icon: IconKey; detail: Lo
 
 export type Moment = { id: string; caption: LocalizedText; icon: IconKey; photo: Photo };
 
-/** A room type (catalog item). Amenities and units arrive with the rooms page (part 2). */
+/** Amenity icons on the rooms page (T1-Rooms). */
+export type AmenityIcon = "bed" | "people" | "shower" | "wifi" | "view" | "fire" | "desk";
+
+export type Amenity = { icon: AmenityIcon; label: LocalizedText };
+
+/** A room type (catalog item). Units for availability arrive with the booking system. */
 export type Room = {
   id: string;
   name: LocalizedText;
@@ -50,6 +55,15 @@ export type Room = {
   price: Price;
   maxGuests: number;
   photos: Photo[];
+  amenities: Amenity[];
+};
+
+/** Check-in, check-out and stay notes (rooms page fold, structured data). Times as "HH:MM". */
+export type Stay = {
+  checkIn: string;
+  checkOut: string;
+  breakfastIncluded: boolean;
+  notes: LocalizedText[];
 };
 
 export type Dish = { id: string; name: LocalizedText; price: Price; icon: IconKey; photo: Photo };
@@ -100,6 +114,9 @@ export type SiteData = {
   facts: Fact[];
   moments: Moment[];
   rooms: Room[];
+  /** Handwritten line under "Rooms", e.g. "four rooms, one view". */
+  roomsLine?: LocalizedText;
+  stay: Stay;
   dining: { name: LocalizedText; photo: Photo; dishes: Dish[] };
   activities: Activity[];
   host: { name: string; greeting: LocalizedText; note: LocalizedText; photo: Photo };

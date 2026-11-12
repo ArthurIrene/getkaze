@@ -334,6 +334,61 @@
   display: flex; align-items: center; justify-content: center;
 }
 
+/* ---------- Pages without a hero: shared parts ---------- */
+.fj-page-head { padding: 18px 16px 4px; display: flex; flex-direction: column; gap: 10px; }
+.fj-page-head h1 { font: 900 44px/1 var(--f-display); letter-spacing: -0.02em; }
+.fj-page-line { font-size: 28px; line-height: 1; color: var(--accent); }
+.fj-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.fj-chip { font-size: 11px; border: 1px dashed var(--ink); border-radius: 999px; padding: 5px 10px; }
+.fj-muted { color: var(--muted); }
+.fj-btn {
+  height: 48px; padding: 0 16px; border-radius: 14px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 600; font-size: 15px; text-decoration: none; cursor: pointer;
+}
+.fj-btn-accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent) !important; }
+.fj-head-link { font-weight: 600; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.fj-room-link { display: contents; text-decoration: none; }
+
+/* ---------- Rooms page (T1-Rooms) ---------- */
+.fj-room-list { list-style: none; margin: 0; padding: 0; }
+.fj-room-block { padding-top: 30px; display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 8px; }
+.fj-gallery { position: relative; }
+.fj-gallery-row { gap: 10px; padding: 0 16px; }
+.fj-gallery-row > :first-child { margin-inline-start: 0; }
+.fj-gallery-row > :last-child { margin-inline-end: 0; }
+.fj-frame { flex: 0 0 min(310px, calc(100% - 50px)); }
+.fj-frame .fj-photo { height: 300px; border-radius: 22px; overflow: hidden; }
+.fj-no {
+  position: absolute; left: 28px; top: 12px; font-size: 11px; background: #fbf7f0; color: #2b2620;
+  padding: 4px 8px; border-radius: 8px; text-transform: none;
+}
+.fj-room-title { padding: 0 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.fj-room-title h2 { font: 900 26px/1.05 var(--f-display); letter-spacing: -0.01em; }
+.fj-room-price { font: 900 20px var(--f-display); white-space: nowrap; padding-top: 3px; }
+.fj-amen { padding: 0 16px; margin: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.fj-amen li { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fj-amen .fj-mono { font-size: 9.5px; color: var(--muted); }
+.fj-room-more { margin: 0 16px; display: flex; flex-direction: column; gap: 4px; }
+.fj-room-more .fj-hand { font-size: 22px; line-height: 1.25; }
+.fj-room-more .fj-muted { font-size: 13px; }
+/* "More +" shows the line (CSS only). Without :has() the line simply stays visible. */
+@supports selector(:has(*)) {
+  .fj-room-more { display: none; }
+  .fj-room-block:has(.fj-more[open]) .fj-room-more { display: flex; }
+}
+@supports not selector(:has(*)) { .fj-more { display: none; } }
+.fj-room-actions { padding: 0 16px; display: flex; gap: 10px; }
+.fj-room-actions .fj-btn-accent { flex: 1 1 0; }
+.fj-more summary {
+  list-style: none; cursor: pointer; height: 48px; padding: 0 16px; border-radius: 14px; border: 1.5px solid var(--ink);
+  display: flex; align-items: center; font-weight: 600; font-size: 15px; white-space: nowrap;
+}
+.fj-more summary::-webkit-details-marker { display: none; }
+.fj-more .fj-more-close, .fj-more[open] .fj-more-open { display: none; }
+.fj-more[open] .fj-more-close { display: inline; }
+.fj-stay { margin: 40px 16px 0; }
+
 /* ---------- Motion kit (D-041): CSS only, transform and opacity ---------- */
 .fj-draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: fj-draw 2.8s ease-out 0.3s forwards; }
 @keyframes fj-draw { to { stroke-dashoffset: 0; } }
@@ -358,6 +413,11 @@
   .fj-nav-inline { display: flex; align-items: center; gap: 20px; margin-inline-start: auto; }
   .fj-nav-inline ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
   .fj-nav-inline li a { font-weight: 600; font-size: 15px; text-decoration: none; }
+  .fj-page-head { padding: 32px 24px 4px; }
+  .fj-room-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; padding-inline: 8px; }
+  .fj-room-list > :only-child { grid-column: 1 / -1; max-width: 540px; justify-self: center; }
+  .fj-room-list .fj-gallery-row { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; }
+  .fj-stay { max-width: 720px; margin-inline: auto; }
   .fj-nav-check {
     height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--on-accent) !important;
     display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none;

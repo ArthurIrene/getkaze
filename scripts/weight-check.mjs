@@ -14,7 +14,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
 
-const PAGES = ["/", "/rw"];
+const PAGES = process.env.WEIGHT_PAGES ? process.env.WEIGHT_PAGES.split(",") : ["/", "/rw"];
 const BUDGET = 300 * 1024; // first view, all transferred bytes
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);

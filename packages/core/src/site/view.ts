@@ -2,7 +2,7 @@ import { pickText, type ContentLocale, type LocalizedText } from "../i18n";
 import { currencies, showPrice, type Currency, type Price } from "../money";
 import { telLink } from "../contact";
 import { visibleSections, type SectionId } from "../sections";
-import type { IconKey, Photo, PhotoPlace, SiteData } from "./types";
+import type { AmenityIcon, IconKey, Photo, PhotoPlace, SiteData } from "./types";
 
 /** A price in both currencies, already formatted, so a page can switch without a server trip. */
 export type PriceView = Record<Currency, string>;
@@ -27,7 +27,17 @@ export type SiteView = {
   hero: { title: string; line: string; photo: PhotoView };
   facts: { id: string; value: string; icon: IconKey; detail: string }[];
   moments: { id: string; caption: string; icon: IconKey; photo: PhotoView }[];
-  rooms: { id: string; name: string; line: string; price: PriceView; maxGuests: number; photos: PhotoView[] }[];
+  rooms: {
+    id: string;
+    name: string;
+    line: string;
+    price: PriceView;
+    maxGuests: number;
+    photos: PhotoView[];
+    amenities: { icon: AmenityIcon; label: string }[];
+  }[];
+  roomsLine: string;
+  stay: { checkIn: string; checkOut: string; breakfastIncluded: boolean; notes: string[] };
   dining: {
     name: string;
     photo: PhotoView;
@@ -83,7 +93,10 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       price: prices(r.price),
       maxGuests: r.maxGuests,
       photos: r.photos.map(photo),
+      amenities: r.amenities.map((a) => ({ icon: a.icon, label: t(a.label) })),
     })),
+    roomsLine: site.roomsLine ? t(site.roomsLine) : "",
+    stay: { ...site.stay, notes: site.stay.notes.map(t) },
     dining: {
       name: t(site.dining.name),
       photo: photo(site.dining.photo),
