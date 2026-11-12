@@ -16,7 +16,8 @@
     "e2e": "playwright test",
     "speed-check": "node scripts/speed-check.mjs",
     "db:check": "node scripts/check-migrations.mjs --self-test",
-    "db:test": "scripts/supabase-cli.sh test db"
+    "db:test": "scripts/supabase-cli.sh test db",
+    "check:bundle": "node scripts/check-client-bundle.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

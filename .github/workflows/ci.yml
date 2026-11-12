@@ -1,4 +1,5 @@
-# CI gate (D-058): build, lint, typecheck, unit tests, page weight, Playwright.
+# CI gate (D-058): local Supabase with migrations and the isolation test,
+# build, lint, typecheck, unit tests, client-bundle guard, page weight, Playwright.
 # Actions are pinned to full commit SHAs (release in the comment), each at
 # least 14 days old when pinned. No secrets.
 name: CI
@@ -37,6 +38,29 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Local Supabase at pinned versions (the CLI pins every image). Nothing here
+      # talks to a hosted project; the keys below are the CLI's public local defaults.
+      - uses: supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1
+        with:
+          version: 2.122.0
+
+      - name: Migration guard (additive only, reserved slugs match)
+        run: pnpm db:check
+
+      - name: Start local Supabase (migrations and seed)
+        run: supabase start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta
+
+      - name: Database tests (isolation test, schema checks)
+        run: supabase test db
+
+      - name: Local Supabase settings for the app
+        run: |
+          supabase status -o json | jq -r '
+            "NEXT_PUBLIC_SUPABASE_URL=\(.API_URL)",
+            "NEXT_PUBLIC_SUPABASE_ANON_KEY=\(.ANON_KEY)",
+            "SUPABASE_SERVICE_ROLE_KEY=\(.SERVICE_ROLE_KEY)",
+            "MAILPIT_URL=\(.MAILPIT_URL)"' >> "$GITHUB_ENV"
+
       - name: Build
         run: pnpm build
 
@@ -48,6 +72,9 @@ jobs:
 
       - name: Unit tests
         run: pnpm test
+
+      - name: Client bundle guard (no service role key, no Supabase code in the browser)
+        run: pnpm check:bundle
 
       - name: Install Chromium for Playwright
         run: pnpm exec playwright install --with-deps chromium

@@ -31,7 +31,7 @@ Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
 
 ## Folders
-apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase/migrations (planned)
+apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase (config, migrations, tests, seed)
 
 ## Commands
 Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run from the repo root:
@@ -49,7 +49,13 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
   - Install the browser for the pinned Playwright version first (as CI does), so local runs match CI: `pnpm exec playwright install chromium`. It downloads from `cdn.playwright.dev`, which the cloud environment must allow.
   - `PW_CHROMIUM_PATH` (another installed Chromium) is a fallback only: a different browser version can behave differently from CI.
 - CI (`.github/workflows/ci.yml`) runs all of the above on every pull request and on pushes to `staging` and `main`.
-- Migrate: not set up yet (arrives with Supabase, day 5).
+- Supabase CLI (pinned 2.122.0, verified against the release checksums, cached in `.tools/`): `scripts/supabase-cli.sh <command>`. Needs Docker; behind a registry block add `SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io`.
+  - Local stack: `scripts/supabase-cli.sh start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta` (stop: `… stop`).
+  - Apply migrations and seed from scratch: `scripts/supabase-cli.sh db reset`.
+  - Database tests, including the isolation test (run before any data change): `pnpm db:test`.
+  - Migration guard (additive only, reserved slugs match): `pnpm db:check`.
+  - Client bundle guard (after a build): `pnpm check:bundle`.
+- Migrate staging: never by hand. Merging into `staging` runs `.github/workflows/db-deploy.yml` after CI passes (GitHub environment `supabase-staging`). Nothing touches a live project.
 
 Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
 Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.

@@ -121,3 +121,12 @@ Entry format:
 - Found and fixed while writing the tests (before anything reached staging): the check constraints call `app.is_localized`, so `authenticated` needs EXECUTE on it; and a disabled member could read their own membership row, which is now hidden.
 - Page weight: no change.
 - Deviations: none.
+
+## Batch 2, feature 3: how tests run, and how migrations reach staging | 2026-11-12
+- Built:
+  - **CI** (`ci.yml`): `supabase/setup-cli@45a513f…` (v3.0.1) with CLI 2.122.0, then the migration guard (`pnpm db:check`), `supabase start` (unused services off), `supabase test db` (isolation and schema checks), and the local URL and keys (the CLI's public local defaults) written into the job env for the app. A new **client bundle guard** (`pnpm check:bundle`) runs after the build: it fails if any browser file contains the service role key value, its name, or Supabase client code. Checked that it fails on a planted file.
+  - **`db-deploy.yml`:** runs only after **CI succeeds on a push to `staging`** (`workflow_run`, `event == push`, `head_branch == staging`), or by manual dispatch on `staging`; **never on PRs**. GitHub environment `supabase-staging`, then guard, link, dry run and push. The demo seed is applied only by a manual run with `seed_demo`. It deploys the exact commit CI tested.
+  - `.env.example` (names only) and CLAUDE.md commands (CLI, stack, reset, `db:test`, `db:check`, `check:bundle`, the staging migrate rule).
+- Tests: the local CI run is green (build, lint, typecheck, 61 unit tests, weight check, 29 Playwright tests) plus 123 database checks. The remote CI run on this push is the first with Supabase in it.
+- Page weight: no change (no app code changed). JS 145.4 KB.
+- Deviations: none.
