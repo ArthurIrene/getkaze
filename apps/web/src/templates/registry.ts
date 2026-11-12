@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import type { PageId, TemplateId } from "@getkaze/core";
 import type { TemplateProps } from "./types";
+import FieldJournalBook from "./field-journal/book";
 import FieldJournalContact from "./field-journal/contact";
 import FieldJournalHome from "./field-journal/home";
 import FieldJournalRooms from "./field-journal/rooms";
@@ -19,5 +20,6 @@ export const templates: Record<TemplateId, TemplatePages> = {
     home: FieldJournalHome,
     rooms: FieldJournalRooms,
     contact: FieldJournalContact,
+    book: FieldJournalBook,
   },
 };

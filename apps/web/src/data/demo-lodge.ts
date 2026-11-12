@@ -52,6 +52,7 @@ export const demoLodge: SiteData = {
   },
   hours: [{ en: "Reception every day, 6:00 to 22:00", rw: "Kwakira abashyitsi buri munsi, 6:00 kugeza 22:00" }],
   payment: [{ en: "Cash (RWF, USD), MTN MoMo, Airtel Money", rw: "Amafaranga (RWF, USD), MTN MoMo, Airtel Money" }],
+  bookingPayments: ["lodge", "momo", "airtel", "bank"],
   sections: [
     { id: "hero", visible: true },
     { id: "facts", visible: true },

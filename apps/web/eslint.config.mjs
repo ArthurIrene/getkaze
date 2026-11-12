@@ -5,6 +5,8 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // Guest data must never reach logs (D-033, D-049): no console in server routes.
+  { files: ["src/app/**/route.ts"], rules: { "no-console": "error" } },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

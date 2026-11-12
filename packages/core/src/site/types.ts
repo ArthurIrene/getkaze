@@ -2,6 +2,7 @@ import type { ContentLocale, LocalizedText } from "../i18n";
 import type { Currency, Price } from "../money";
 import type { ModuleId } from "../modules";
 import type { SectionSetting } from "../sections";
+import type { PaymentMethod } from "../booking";
 
 /** Templates a business can use (D-039, D-040). Imigongo and Cinematic come later. */
 export const templateIds = ["field-journal"] as const;
@@ -111,6 +112,8 @@ export type SiteData = {
   };
   hours: LocalizedText[];
   payment: LocalizedText[];
+  /** Payment choices offered on the booking request (D-045). */
+  bookingPayments: PaymentMethod[];
   sections: SectionSetting[];
   hero: { title: LocalizedText; line: LocalizedText; photo: Photo };
   facts: Fact[];

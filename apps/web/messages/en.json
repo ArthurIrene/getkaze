@@ -70,5 +70,57 @@
     "gettingHere": "Getting here",
     "payment": "Payment",
     "allDetails": "All contact details →"
+  },
+  "Book": {
+    "title": "Check availability",
+    "line": "takes a minute",
+    "room": "1 · Room",
+    "sleeps": "Sleeps {n}",
+    "dates": "2 · Dates",
+    "checkIn": "Check-in",
+    "checkOut": "Check-out",
+    "guests": "3 · Guests",
+    "adults": "Adults",
+    "children": "Children",
+    "pay": "4 · How you'd like to pay",
+    "details": "5 · Your details",
+    "name": "Your name",
+    "note": "Note (optional)",
+    "notePlaceholder": "Late arrival? Permits? A driver?",
+    "send": "6 · Send your request",
+    "sendWhatsApp": "Send by WhatsApp",
+    "sendEmail": "Send by email",
+    "sendNote": "Goes straight to {name} from your own WhatsApp or email. Nothing to pay now; they reply with payment details.",
+    "privacy": "Privacy",
+    "method": {
+      "lodge": "At the lodge (cash or card)",
+      "momo": "MTN MoMo",
+      "airtel": "Airtel Money",
+      "bank": "Bank transfer"
+    },
+    "methodNote": {
+      "lodge": "You pay the lodge in person, at check-in.",
+      "momo": "A deposit may be asked to hold your room. The lodge sends its MoMo pay code with the confirmation.",
+      "airtel": "A deposit may be asked to hold your room. The lodge sends its Airtel Money details with the confirmation.",
+      "bank": "Good for paying from abroad. The lodge sends its bank details with the confirmation."
+    },
+    "error": {
+      "title": "Something to fix",
+      "dates": "Check-out must be after check-in, from today on, for at most 30 nights.",
+      "guests": "This room sleeps up to {n}.",
+      "missing": "Please pick a room, dates, how you'd like to pay and your name.",
+      "back": "Use your browser's back button to fix it; your answers are kept."
+    },
+    "msg": {
+      "hello": "Hello {business}! I would like to request:",
+      "room": "Room: {room}",
+      "dates": "Dates: {from} to {to} ({nights, plural, one {# night} other {# nights}})",
+      "guests": "Guests: {adults, plural, one {# adult} other {# adults}}{children, plural, =0 {} one {, # child} other {, # children}}",
+      "total": "Quoted total: {total} ({nights} × {price})",
+      "pay": "I would like to pay by: {method}",
+      "name": "Name: {name}",
+      "note": "Note: {note}",
+      "subject": "Booking request: {room}, {from} to {to}"
+    }
   }
 }

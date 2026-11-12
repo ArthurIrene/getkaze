@@ -16,6 +16,7 @@ const site: SiteData = {
   location: { mapUrl: "https://maps.example/test", area: { en: "Kinigi" }, directions: [{ en: "Turn left", rw: "Kata ibumoso" }] },
   hours: [{ en: "Every day", rw: "Buri munsi" }],
   payment: [{ en: "Cash" }],
+  bookingPayments: ["lodge"],
   sections: [
     { id: "hero", visible: true },
     { id: "rooms", visible: true },

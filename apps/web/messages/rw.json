@@ -70,5 +70,57 @@
     "gettingHere": "Uko wahagera",
     "payment": "Kwishyura",
     "allDetails": "Aho mwatubariza hose →"
+  },
+  "Book": {
+    "title": "Reba ibyumba bihari",
+    "line": "bifata umunota umwe",
+    "room": "1 · Icyumba",
+    "sleeps": "Icyumba cy'abantu {n}",
+    "dates": "2 · Amatariki",
+    "checkIn": "Kugera",
+    "checkOut": "Kugenda",
+    "guests": "3 · Abashyitsi",
+    "adults": "Abakuru",
+    "children": "Abana",
+    "pay": "4 · Uko wifuza kwishyura",
+    "details": "5 · Umwirondoro wawe",
+    "name": "Izina ryawe",
+    "note": "Icyo wongeraho (si ngombwa)",
+    "notePlaceholder": "Uzahagera utinze? Impushya? Umushoferi?",
+    "send": "6 · Ohereza icyifuzo cyawe",
+    "sendWhatsApp": "Ohereza kuri WhatsApp",
+    "sendEmail": "Ohereza kuri imeli",
+    "sendNote": "Bijya kuri {name} biturutse kuri WhatsApp cyangwa imeli yawe. Nta kwishyura ubu; bazagusubiza baguha uburyo bwo kwishyura.",
+    "privacy": "Ubuzima bwite",
+    "method": {
+      "lodge": "Kuri lodge (amafaranga cyangwa ikarita)",
+      "momo": "MTN MoMo",
+      "airtel": "Airtel Money",
+      "bank": "Kohereza muri banki"
+    },
+    "methodNote": {
+      "lodge": "Wishyura lodge imbonankubone, ugeze.",
+      "momo": "Bashobora kugusaba avansi kugira ngo bakubikire icyumba. Lodge izakoherereza kode ya MoMo hamwe n'iyemeza.",
+      "airtel": "Bashobora kugusaba avansi kugira ngo bakubikire icyumba. Lodge izakoherereza amakuru ya Airtel Money hamwe n'iyemeza.",
+      "bank": "Byoroshye niba wishyura uri mu mahanga. Lodge izakoherereza amakuru ya banki hamwe n'iyemeza."
+    },
+    "error": {
+      "title": "Hari icyo gukosora",
+      "dates": "Itariki yo kugenda igomba kuba nyuma y'iyo kugera, uhereye uyu munsi, amajoro atarenze 30.",
+      "guests": "Iki cyumba cyakira abantu bagera kuri {n}.",
+      "missing": "Hitamo icyumba, amatariki, uko wishyura n'izina ryawe.",
+      "back": "Kanda \"subira inyuma\" muri mushakisha yawe; ibyo wujuje biracyahari."
+    },
+    "msg": {
+      "hello": "Muraho {business}! Ndifuza:",
+      "room": "Icyumba: {room}",
+      "dates": "Amatariki: {from} kugeza {to} (amajoro {nights})",
+      "guests": "Abashyitsi: abakuru {adults}{children, plural, =0 {} other {, abana #}}",
+      "total": "Igiciro cyagereranyijwe: {total} ({nights} × {price})",
+      "pay": "Nifuza kwishyura binyuze kuri: {method}",
+      "name": "Izina: {name}",
+      "note": "Icyitonderwa: {note}",
+      "subject": "Icyifuzo cyo gufata icyumba: {room}, {from} kugeza {to}"
+    }
   }
 }

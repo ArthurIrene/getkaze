@@ -15,6 +15,9 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
   const n = await getTranslations("Nav");
   const links = menuPages(pages);
   const check = checkHref(site, locale, pages, t("checkMessage", { name: site.name }));
+  // On the booking request the currency radios belong to the form, so the quoted total uses the guest's choice.
+  const curForm = page === "book" ? "fj-book" : undefined;
+  const curName = page === "book" ? "cur" : "fj-cur";
   const items = links.map((id) => (
     <li key={id}>
       <a href={pageHref(id, locale)} aria-current={id === page ? "page" : undefined}>
@@ -49,9 +52,9 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
         </nav>
         <fieldset className="fj-pills fj-cur">
           <legend className="fj-sr">{t("currency")}</legend>
-          <input type="radio" name="fj-cur" id="fj-cur-rwf" value="rwf" defaultChecked={site.defaultCurrency === "rwf"} />
+          <input type="radio" name={curName} form={curForm} id="fj-cur-rwf" value="rwf" defaultChecked={site.defaultCurrency === "rwf"} />
           <label htmlFor="fj-cur-rwf">RWF</label>
-          <input type="radio" name="fj-cur" id="fj-cur-usd" value="usd" defaultChecked={site.defaultCurrency === "usd"} />
+          <input type="radio" name={curName} form={curForm} id="fj-cur-usd" value="usd" defaultChecked={site.defaultCurrency === "usd"} />
           <label htmlFor="fj-cur-usd">USD</label>
         </fieldset>
         <details className="fj-menu">

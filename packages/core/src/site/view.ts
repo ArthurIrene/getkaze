@@ -24,6 +24,7 @@ export type SiteView = {
   location: { mapUrl: string; area: string; distanceNote?: string; directions: string[] };
   hours: string[];
   payment: string[];
+  bookingPayments: SiteData["bookingPayments"];
   hero: { title: string; line: string; photo: PhotoView };
   facts: { id: string; value: string; icon: IconKey; detail: string }[];
   moments: { id: string; caption: string; icon: IconKey; photo: PhotoView }[];
@@ -84,6 +85,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
     },
     hours: site.hours.map(t),
     payment: site.payment.map(t),
+    bookingPayments: site.bookingPayments,
     hero: { title: t(site.hero.title), line: t(site.hero.line), photo: photo(site.hero.photo) },
     facts: site.facts.map((f) => ({ id: f.id, value: t(f.value), icon: f.icon, detail: t(f.detail) })),
     moments: site.moments.map((m) => ({ id: m.id, caption: t(m.caption), icon: m.icon, photo: photo(m.photo) })),

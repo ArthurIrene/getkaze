@@ -414,6 +414,43 @@
 .fj-contact-block ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.4; }
 .fj-contact-map { display: flex; flex-direction: column; gap: 10px; }
 
+/* ---------- Booking request form (T1-Booking, launch mode; no JavaScript) ---------- */
+.fj-book { padding: 8px 16px 0; display: flex; flex-direction: column; gap: 26px; }
+.fj-step { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.fj-step legend { padding: 0; margin-bottom: 10px; font-size: 12px; font-weight: 500; }
+.fj-choices { display: flex; flex-direction: column; gap: 8px; }
+.fj-choice {
+  position: relative; display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px;
+  border: 1.5px solid var(--line); border-radius: 14px; background: var(--card); cursor: pointer;
+}
+.fj-choice input { margin: 3px 0 0; accent-color: var(--accent); width: 18px; height: 18px; flex: none; }
+.fj-choice:has(input:checked) { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.fj-choice:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fj-choice-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.fj-choice-body b { font-size: 16px; }
+.fj-choice-meta { font-size: 13px; color: var(--muted); }
+.fj-choice-note { font-size: 13px; line-height: 1.35; }
+@supports selector(:has(*)) {
+  .fj-choice-note { display: none; }
+  .fj-choice:has(input:checked) .fj-choice-note { display: block; }
+}
+.fj-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.fj-field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; min-width: 0; }
+.fj-field input, .fj-field textarea {
+  font: inherit; font-weight: 400; font-size: 16px; color: var(--ink); background: var(--card);
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px; min-height: 48px; width: 100%; box-sizing: border-box;
+}
+.fj-field textarea { resize: vertical; min-height: 88px; }
+.fj-field input:focus-visible, .fj-field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.fj-send { display: flex; flex-direction: column; gap: 10px; }
+.fj-send .fj-btn { height: 52px; width: 100%; font: inherit; font-weight: 600; font-size: 16px; background: transparent; color: var(--ink); }
+.fj-send .fj-btn-accent { background: var(--accent); color: var(--on-accent); }
+.fj-send-note { font-size: 13px; line-height: 1.4; }
+.fj-send-note a { text-decoration: underline; }
+.fj-book-error { gap: 14px; }
+.fj-book-error p { font-size: 16px; line-height: 1.4; }
+.fj-book-error .fj-btn { align-self: flex-start; }
+
 /* ---------- Motion kit (D-041): CSS only, transform and opacity ---------- */
 .fj-draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: fj-draw 2.8s ease-out 0.3s forwards; }
 @keyframes fj-draw { to { stroke-dashoffset: 0; } }
@@ -447,6 +484,7 @@
   .fj-contact { padding: 32px 24px 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; align-items: start; }
   .fj-contact-map { position: sticky; top: 24px; }
   .fj-contact-map .fj-map { height: 320px; }
+  .fj-book { max-width: 640px; margin-inline: auto; padding-inline: 24px; }
   .fj-nav-check {
     height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--on-accent) !important;
     display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none;
