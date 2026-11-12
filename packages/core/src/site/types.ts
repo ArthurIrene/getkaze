@@ -4,6 +4,9 @@ import type { ModuleId } from "../modules";
 import type { SectionSetting } from "../sections";
 import type { PaymentMethod } from "../booking";
 
+/** Property style of a Hotel/Lodge business (D-043): sets wording and structured data type. */
+export type PropertyStyle = "lodge" | "townHotel" | "guesthouse";
+
 /** Templates a business can use (D-039, D-040). Imigongo and Cinematic come later. */
 export const templateIds = ["field-journal"] as const;
 export type TemplateId = (typeof templateIds)[number];
@@ -88,6 +91,9 @@ export type ReviewScore = { source: string; value: string };
 export type SiteData = {
   businessId: string;
   name: string;
+  /** Public address of the site, e.g. "https://kinigihills.rw" (no trailing slash). Canonical URLs and the sitemap use it. */
+  baseUrl: string;
+  propertyStyle: PropertyStyle;
   /** Shown in the footer copyright. */
   legalName: string;
   template: TemplateId;
@@ -109,6 +115,8 @@ export type SiteData = {
     distanceNote?: LocalizedText;
     /** "Getting here" lines on the contact page. */
     directions: LocalizedText[];
+    /** Structured address for search engines. Country as ISO code, e.g. "RW". */
+    address: { locality: string; region: string; country: string };
   };
   hours: LocalizedText[];
   payment: LocalizedText[];
@@ -119,6 +127,8 @@ export type SiteData = {
   facts: Fact[];
   moments: Moment[];
   rooms: Room[];
+  /** Owner's search description for the home page (optional; otherwise one is built). */
+  seoDescription?: LocalizedText;
   /** Handwritten line under "Rooms", e.g. "four rooms, one view". */
   roomsLine?: LocalizedText;
   stay: Stay;

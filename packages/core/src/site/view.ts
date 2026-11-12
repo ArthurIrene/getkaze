@@ -2,7 +2,7 @@ import { pickText, type ContentLocale, type LocalizedText } from "../i18n";
 import { currencies, showPrice, type Currency, type Price } from "../money";
 import { telLink } from "../contact";
 import { visibleSections, type SectionId } from "../sections";
-import type { AmenityIcon, IconKey, Photo, PhotoPlace, SiteData } from "./types";
+import type { AmenityIcon, IconKey, Photo, PhotoPlace, PropertyStyle, SiteData } from "./types";
 
 /** A price in both currencies, already formatted, so a page can switch without a server trip. */
 export type PriceView = Record<Currency, string>;
@@ -17,11 +17,22 @@ export type PhotoView = { id: string; place: PhotoPlace; alt: string; src?: stri
 export type SiteView = {
   businessId: string;
   name: string;
+  baseUrl: string;
+  propertyStyle: PropertyStyle;
+  /** Languages with owner content (D-029); only these get their own indexed pages. */
+  languages: ContentLocale[];
+  seoDescription: string;
   legalName: string;
   defaultCurrency: Currency;
   sections: SectionId[];
   contacts: { phone: string; whatsapp: string; email?: string; telHref: string };
-  location: { mapUrl: string; area: string; distanceNote?: string; directions: string[] };
+  location: {
+    mapUrl: string;
+    area: string;
+    distanceNote?: string;
+    directions: string[];
+    address: SiteData["location"]["address"];
+  };
   hours: string[];
   payment: string[];
   bookingPayments: SiteData["bookingPayments"];
@@ -33,6 +44,8 @@ export type SiteView = {
     name: string;
     line: string;
     price: PriceView;
+    /** The owner's numbers, for totals and price ranges. */
+    priceValue: Price;
     maxGuests: number;
     photos: PhotoView[];
     amenities: { icon: AmenityIcon; label: string }[];
@@ -73,6 +86,10 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
   return {
     businessId: site.businessId,
     name: site.name,
+    baseUrl: site.baseUrl.replace(/\/+$/, ""),
+    propertyStyle: site.propertyStyle,
+    languages: site.languages.includes("en") ? site.languages : ["en", ...site.languages],
+    seoDescription: site.seoDescription ? t(site.seoDescription) : "",
     legalName: site.legalName,
     defaultCurrency: site.defaultCurrency,
     sections: visibleSections(site.sections, site.modulesOn, (id) => hasContent[id]),
@@ -82,6 +99,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       area: t(site.location.area),
       distanceNote: site.location.distanceNote && t(site.location.distanceNote),
       directions: site.location.directions.map(t),
+      address: site.location.address,
     },
     hours: site.hours.map(t),
     payment: site.payment.map(t),
@@ -94,6 +112,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       name: t(r.name),
       line: t(r.line),
       price: prices(r.price),
+      priceValue: r.price,
       maxGuests: r.maxGuests,
       photos: r.photos.map(photo),
       amenities: r.amenities.map((a) => ({ icon: a.icon, label: t(a.label) })),

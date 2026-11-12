@@ -145,5 +145,19 @@
     "changes": {
       "title": "Impinduka"
     }
+  },
+  "Seo": {
+    "style": {
+      "lodge": "Lodge",
+      "townHotel": "Hoteli",
+      "guesthouse": "Inzu y'abashyitsi"
+    },
+    "homeTitle": "{name} | {style} i {locality}, {region}",
+    "pageTitle": "{page} | {name}",
+    "homeDescription": "{title}. {style} i {area}. Ibyumba guhera kuri {price}.",
+    "roomsDescription": "Ibyumba {count} guhera kuri {price}{breakfast, select, yes {, ifunguro rya mu gitondo ririmo} other {}}.",
+    "contactDescription": "Hamagara, andika kuri WhatsApp cyangwa usure {name} i {area}. {hours}.",
+    "bookDescription": "Oherereza {name} icyifuzo cyo gufata icyumba kuri WhatsApp cyangwa imeli.",
+    "privacyDescription": "Uko {name} ifata amakuru yawe bwite."
   }
 }

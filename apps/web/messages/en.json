@@ -158,5 +158,19 @@
       "title": "Changes",
       "body": "We will update this notice when the site starts to collect more, for example a booking inbox once it is authorised. The date at the top shows the latest version."
     }
+  },
+  "Seo": {
+    "style": {
+      "lodge": "Lodge",
+      "townHotel": "Hotel",
+      "guesthouse": "Guesthouse"
+    },
+    "homeTitle": "{name} | {style} in {locality}, {region}",
+    "pageTitle": "{page} | {name}",
+    "homeDescription": "{title}. {style} in {area}. Rooms from {price}.",
+    "roomsDescription": "{count, plural, one {# room} other {# rooms}} from {price}{breakfast, select, yes {, breakfast included} other {}}.",
+    "contactDescription": "Call, WhatsApp or find {name} in {area}. {hours}.",
+    "bookDescription": "Send {name} a booking request by WhatsApp or email.",
+    "privacyDescription": "How {name} handles your personal data."
   }
 }

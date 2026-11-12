@@ -29,6 +29,9 @@ const roomPhotos = (id: string, name: string): Photo[] => [
 export const demoLodge: SiteData = {
   businessId: "demo-kinigi-hills",
   name: "Kinigi Hills",
+  // The build-phase demo URL (D-053). Real businesses get their own domain or subdomain (Batch 2).
+  baseUrl: "https://getkaze.vercel.app",
+  propertyStyle: "lodge",
   legalName: "Kinigi Hills Lodge (demo)",
   template: "field-journal",
   defaultCurrency: "usd",
@@ -44,6 +47,7 @@ export const demoLodge: SiteData = {
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Kinigi%2C%20Musanze",
     area: { en: "Kinigi Sector, Musanze District", rw: "Umurenge wa Kinigi, Akarere ka Musanze" },
     distanceNote: { en: "Musanze 25'" },
+    address: { locality: "Kinigi", region: "Musanze", country: "RW" },
     directions: [
       { en: "From Musanze town: 25 minutes by car on the Kinigi road.", rw: "Uvuye mu mujyi wa Musanze: iminota 25 n'imodoka ku muhanda wa Kinigi." },
       { en: "From Kigali: about 2 hours 30 minutes.", rw: "Uvuye i Kigali: amasaha 2 n'iminota 30." },
