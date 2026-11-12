@@ -41,3 +41,8 @@ Visit and live setup, basic photos, Google Business Profile claim and verificati
 - Phase 1 ships **one template (Field Journal)** with home, rooms, menu display, find us, and the Check availability form in launch mode (D-040, D-044).
 - **Weeks 3–5 (new):** availability calendar, booking inbox, booking code and My booking, payment confirmations — demo-only until NCSA authorization (D-044, D-049).
 - Phase 2 adds Imigongo with the restaurant ordering slice; Cinematic comes with the first photo-shoot client.
+
+## Progress (2026-11-12)
+- Batch 0 (CI, weight check, Playwright): done.
+- Batch 1 (guest site: rooms, contact, navigation, privacy notice draft, SEO basics, booking request launch mode, PWA manifest, speed pass): built on demo data. See specs/BATCH_LOG.md.
+- Next: Batch 2 (data and access), starting with core data, RLS and the isolation test, then a checkpoint.
