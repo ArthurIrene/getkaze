@@ -16,6 +16,7 @@ Users: Guests and owners on Android, iOS and desktop.
 - **Placeholder icons:** accent background (`#3f5b3a`) with the business's initials (first letters of up to two words, "KH") in the paper colour, serif, as a rounded square. PNGs are rendered at build time with `ImageResponse` from `next/og`. That is part of Next.js, not a new dependency, and generated statically with `generateStaticParams`. It must be re-checked on Cloudflare Workers at G2 (overview, point 7). `/icon.svg` is a plain SVG string from a route handler (about 400 B).
 - **Head tags:** `<link rel="manifest">`; `apple-touch-icon` (180 px PNG); `icon` → `/icon.svg`, which **replaces the Next.js starter `favicon.ico`** (2.5 KB, today the only image in the first view); `theme-color` per scheme (`#f4eee3` light, `#1e1b17` dark) through the Next `viewport` export.
 - **No service worker** and no offline caching in this batch.
+- **G2 check (open, recorded 2026-11-12):** before production moves to Cloudflare (gate G2), confirm that `ImageResponse` (`next/og`, used by `apps/web/src/app/icons/[file]/route.tsx`) builds and serves on Cloudflare Workers through the chosen adapter. If it does not, serve the plain SVG icon (`/icons/icon.svg`) plus pre-rendered PNGs. Also tracked in specs/BATCH_LOG.md.
 
 ## Data
 Read: business name, template id, home description. Icon initials are built in `packages/core` (`initials(name)`, unit tested). No new fields.

@@ -38,3 +38,4 @@ export * from "./pages";
 export * from "./booking";
 export * from "./privacy";
 export * from "./seo";
+export * from "./brand";

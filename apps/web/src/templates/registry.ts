@@ -6,6 +6,7 @@ import FieldJournalContact from "./field-journal/contact";
 import FieldJournalHome from "./field-journal/home";
 import FieldJournalPrivacy from "./field-journal/privacy";
 import FieldJournalRooms from "./field-journal/rooms";
+import { fieldJournalTheme } from "./field-journal/theme";
 
 /** A template's pages. Home is required; other pages are added as the template gets them. */
 export type TemplatePages = { home: ComponentType<TemplateProps> } & Partial<
@@ -24,4 +25,11 @@ export const templates: Record<TemplateId, TemplatePages> = {
     book: FieldJournalBook,
     privacy: FieldJournalPrivacy,
   },
+};
+
+/** Colours per template for the manifest, theme-color and placeholder icons (pwa-manifest.md). */
+export type TemplateTheme = { paper: string; paperDark: string; accent: string };
+
+export const templateThemes: Record<TemplateId, TemplateTheme> = {
+  "field-journal": fieldJournalTheme,
 };
