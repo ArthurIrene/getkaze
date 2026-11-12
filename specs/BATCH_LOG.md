@@ -221,10 +221,11 @@ Entry format:
   - 162 database checks (3 new: `resend`, `zmail` and `_mail` refused).
   - 88 unit tests (the reserved-names and underscore tests extended).
   - **`pnpm check:build`** (`scripts/check-build-independence.mjs`, a new CI step) runs two production builds and starts each one:
-    - **Settings missing:** the build passes; `/`, `/s/kinigi-hills/rooms` and `/s/kinigi-hills/rw` show the demo; another slug is a 404; `/login`, `/admin`, `/owner`, `/rw/login`, `/auth/reset` and `/auth/confirm` answer "Not configured yet" (503); exactly one warning; no server error.
+    - **Settings missing:** the build passes; `/`, `/s/kinigi-hills/rooms`, `/s/kinigi-hills/rw` and `/book` show the demo; another slug is a 404; `/login`, `/admin`, `/owner`, `/rw/login`, `/auth/reset` and `/auth/confirm` answer "Not configured yet" (503); exactly one warning; no server error.
     - **Database unreachable:** the build passes; `/` and `/s/kinigi-hills` are a 500, not the demo; no not-configured warning.
   - The db-deploy check step was run locally in all three cases (none set → skip, some set → fail, all set → run).
-- Page weight: see the final CI run (guest JS unchanged, no new client code).
+- Found while testing: with no sites pre-rendered, `/book` and `/book/error` (which read `?room=` and `?reason=`) were treated as cached pages and failed with `DYNAMIC_SERVER_USAGE`. They are now marked `force-dynamic`, so they are rendered per request as before. The full Playwright suite caught it (52 tests pass now), and `check:build` covers `/book` too.
+- Page weight: unchanged. Every guest page has 145.4 KB of JS; `/` is 167.1 KB and `/book` 163.1 KB.
 - Deviations and choices:
   - Guest pages are no longer pre-rendered once configured, so the first visit after a deploy or after 5 minutes renders on the server.
   - Platform paths answer 503 while not configured, so nothing caches the notice as a real page.

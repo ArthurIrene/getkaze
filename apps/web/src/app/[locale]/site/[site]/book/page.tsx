@@ -8,6 +8,8 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/site/[si
 }
 
 /** Rendered per request: the date inputs' "min" is today in Kigali, and ?room= preselects a room. */
+export const dynamic = "force-dynamic";
+
 export default async function BookPage({ params, searchParams }: PageProps<"/[locale]/site/[site]/book">) {
   const { locale, site } = await params;
   const room = (await searchParams).room;

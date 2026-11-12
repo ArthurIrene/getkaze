@@ -88,6 +88,8 @@ const get = async (path) => {
     check(rooms.status === 200 && rooms.body.includes("Garden"), `settings missing: /s/kinigi-hills/rooms shows the demo rooms (${rooms.status})`);
     const rw = await get("/s/kinigi-hills/rw");
     check(rw.status === 200 && rw.body.includes("Kinigi Hills"), `settings missing: /s/kinigi-hills/rw shows the demo (${rw.status})`);
+    const book = await get("/book?room=garden-double");
+    check(book.status === 200 && book.body.includes("garden-double"), `settings missing: /book (per request) works (${book.status})`);
     const other = await get("/s/some-other-lodge");
     check(other.status === 404 && !other.body.includes("Kinigi Hills"), `settings missing: another slug is a clean 404 (${other.status})`);
     for (const path of ["/login", "/admin", "/owner", "/rw/login", "/auth/reset"]) {

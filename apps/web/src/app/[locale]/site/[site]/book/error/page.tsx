@@ -2,6 +2,9 @@ import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/metadata";
 import { renderPage } from "@/lib/render-page";
 
+/** Rendered per request (reads ?reason=). */
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: PageProps<"/[locale]/site/[site]/book/error">) {
   const { locale, site } = await params;
   return pageMetadata("book", locale as Locale, site);
