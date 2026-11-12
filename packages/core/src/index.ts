@@ -42,3 +42,4 @@ export * from "./brand";
 export * from "./slugs";
 export * from "./presets";
 export * from "./access";
+export * from "./admin";

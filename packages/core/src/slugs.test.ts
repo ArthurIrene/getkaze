@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { presetDefaults, styleFitsPreset } from "./presets";
+import { presetDefaults, presetOfStyle, styleFitsPreset } from "./presets";
 import { normalizeSlug, reservedSlugs, slugProblems } from "./slugs";
 
 describe("slugs", () => {
@@ -41,5 +41,8 @@ describe("presets", () => {
   it("checks that a style fits its preset", () => {
     expect(styleFitsPreset("hotel_lodge", "guesthouse")).toBe(true);
     expect(styleFitsPreset("restaurant_bar", "lodge")).toBe(false);
+    expect(presetOfStyle("guesthouse")).toBe("hotel_lodge");
+    expect(presetOfStyle("bar_first")).toBe("restaurant_bar");
+    expect(presetOfStyle("castle")).toBeNull();
   });
 });

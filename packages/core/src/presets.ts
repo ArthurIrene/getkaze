@@ -9,6 +9,14 @@ export const presets = {
 export type Preset = keyof typeof presets;
 export type BusinessStyle = (typeof presets)[Preset][number];
 
+/** The preset a style belongs to ("guesthouse" → hotel_lodge), or null for an unknown style. */
+export function presetOfStyle(style: string): Preset | null {
+  for (const preset of Object.keys(presets) as Preset[]) {
+    if ((presets[preset] as readonly string[]).includes(style)) return preset;
+  }
+  return null;
+}
+
 export function styleFitsPreset(preset: Preset, style: string): style is BusinessStyle {
   return (presets[preset] as readonly string[]).includes(style);
 }

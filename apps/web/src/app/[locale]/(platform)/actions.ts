@@ -44,6 +44,8 @@ export async function setPassword(form: FormData) {
   const supabase = await platformClient();
   const { error } = await supabase.auth.updateUser({ password });
   if (error) redirect(`${platformHref(back, locale)}?problem=${error.code === "same_password" ? "same" : "failed"}`);
+  // Accepting an invite: the person's own invited memberships become active.
+  if (back === "/auth/accept") await supabase.rpc("accept_my_invites");
   const facts = await sessionFacts(supabase);
   redirect(`${platformHref(landingFor(facts), locale)}?saved=1`);
 }

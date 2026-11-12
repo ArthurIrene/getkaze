@@ -198,5 +198,97 @@
   },
   "Owner": {
     "title": "Your site"
+  },
+  "Admin": {
+    "clients": "Clients",
+    "newBusiness": "New business",
+    "search": "Search by name",
+    "status": "Status",
+    "all": "All",
+    "filter": "Filter",
+    "noClients": "No businesses yet.",
+    "modulesOn": "Modules on",
+    "owner": "Owner",
+    "ownerStatus": {
+      "active": "active",
+      "invited": "invited",
+      "none": "none"
+    },
+    "statusName": {
+      "draft": "Draft",
+      "active": "Active",
+      "paused": "Paused"
+    },
+    "presetName": {
+      "hotel_lodge": "Hotel/Lodge",
+      "restaurant_bar": "Restaurant & Bar"
+    },
+    "styleName": {
+      "lodge": "Lodge",
+      "town_hotel": "Town hotel",
+      "guesthouse": "Guesthouse",
+      "restaurant_first": "Restaurant first",
+      "bar_first": "Bar first"
+    },
+    "name": "Business name",
+    "slug": "Subdomain (slug)",
+    "slugHint": "made from the name if empty",
+    "presetAndStyle": "Type and style",
+    "currency": "Default currency",
+    "kinyarwandaOn": "Kinyarwanda on",
+    "create": "Create business",
+    "created": "Business created (draft).",
+    "saved": "Saved.",
+    "invited": "Invite sent.",
+    "failed": "That did not work. Please try again.",
+    "notPublished": "site not published yet",
+    "basics": "Basics",
+    "legalName": "Legal name",
+    "customDomain": "Own domain (used at G2)",
+    "save": "Save",
+    "modules": "Modules",
+    "on": "On",
+    "off": "Off",
+    "inviteEmail": "Owner's email",
+    "inviteOwner": "Invite owner",
+    "memberStatus": {
+      "invited": "invited",
+      "active": "active",
+      "disabled": "disabled"
+    },
+    "disable": "Disable",
+    "enable": "Enable",
+    "support": "Support session",
+    "reason": "Reason",
+    "openSupport": "Open support session",
+    "closeSupport": "Close support session",
+    "supportBanner": "Support session open: {reason}",
+    "open": "open",
+    "closed": "closed",
+    "recentChanges": "Recent changes",
+    "enrollTitle": "Set up two-factor login",
+    "enrollHelp": "Scan the code with an authenticator app (for example Google Authenticator or Aegis), then enter the 6-digit code it shows.",
+    "qrAlt": "QR code for your authenticator app",
+    "orKey": "Or type this key:",
+    "code": "6-digit code",
+    "verify": "Verify",
+    "wrongCode": "That code did not work. Try the newest one.",
+    "codeTitle": "Enter the 6-digit code",
+    "errors": {
+      "name": "Enter a business name.",
+      "slug_empty": "Enter a subdomain.",
+      "slug_too_short": "The subdomain needs at least 3 characters.",
+      "slug_too_long": "The subdomain can have at most 40 characters.",
+      "slug_format": "Use lowercase letters, numbers and single dashes.",
+      "slug_reserved": "That subdomain is reserved.",
+      "slug_taken": "That subdomain is already taken.",
+      "style": "Pick a type and style.",
+      "not_published": "Publish the site before making it active.",
+      "email": "Enter a valid email.",
+      "invite": "The invite could not be sent.",
+      "member": "The invite was sent but the membership could not be saved.",
+      "reason": "Write a reason (5 to 200 characters).",
+      "failed": "That did not work. Please try again."
+    }
   }
 }
