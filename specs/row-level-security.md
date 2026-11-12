@@ -40,6 +40,27 @@ Goal: The database itself guarantees that a business sees only its own data, own
 - `public.list_published_slugs() returns setof text`, also `security definer`, `stable` and anon-executable, lists active and published slugs only, for static generation and the sitemap.
 - Why: anonymous users never touch tables, so a missed policy cannot leak, the returned fields are explicit, and `getSite()` becomes one call.
 
+### Fields returned by `get_published_site` (exact; locked by `public_site_fields.test.sql`)
+Both public functions are `security definer` with `set search_path = ''`, and every name inside is schema-qualified (`public.…`). The test fails if any field below is added, removed or renamed.
+| Level | Fields |
+|---|---|
+| top | `business`, `settings`, `modulesOn`, `items`, `media` |
+| `business` | `id`, `slug`, `name`, `legalName`, `preset`, `style`, `template`, `defaultCurrency`, `languages` |
+| `settings` | `contacts`, `location`, `hours`, `payment`, `bookingPayments`, `stay`, `sections`, `hero`, `facts`, `moments`, `dining`, `host`, `reviews`, `roomsLine`, `seoDescription`, `publishedAt` |
+| `settings.contacts` | `phone`, `whatsapp`, `email`: the **business's** published contact details only. Any other key stored in `contacts` is dropped. |
+| `items[]` | `id`, `kind`, `position`, `name`, `line`, `priceRwf`, `priceUsd`, `maxGuests`, `amenities`, `icon`, `distance`, `arrange` (visible items only) |
+| `media[]` | `id`, `itemId`, `place`, `position`, `path`, `alt`, `width`, `height` (only for visible items, or not tied to an item) |
+| `modulesOn` | the ids of enabled modules |
+
+`custom_domain`, `status`, member, user, owner, log and support data are never returned. The test also checks that an owner's email and an unlisted contact key never appear anywhere in the output.
+
+### Deleting a business's change log (the one controlled path)
+- `public.admin_delete_change_log(p_business_id, p_reason)` exists for D-031 (deletion at day 90) and data-deletion rights (COMPLIANCE.md §4). It is `security definer`, `search_path = ''`.
+- **Platform admin with aal2 only**; anyone else, including an admin with aal1, gets `insufficient_privilege`. A reason of 5 or more characters is required.
+- It deletes every `content_changes` row of that business and returns the count, then **writes a `support_access` row** ("Change log deleted (N rows): reason", started and ended now). It never deletes `support_access`.
+- **Normal use stays append-only:** the guard trigger lets a delete through only inside this function (its owner as `current_user`, plus a transaction-local flag). Owners, admins, the service role and the database owner still cannot update or delete log rows directly; setting the flag by hand opens nothing.
+- Tests: `change_log.test.sql` (admin aal2 deletes A's rows only and B's stay; the support-access record exists; owner, admin aal1, anon and the service role are refused; direct edits and deletes are refused for everyone; logging continues afterwards).
+
 ## Isolation test (pgTAP, `supabase/tests/database/*.test.sql`, runs with `supabase test db`)
 Fixtures inside a transaction:
 - Business **A** (active, published) and business **B** (active, published), with a third business **C** (draft).

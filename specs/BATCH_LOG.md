@@ -130,3 +130,9 @@ Entry format:
 - Tests: the local CI run is green (build, lint, typecheck, 61 unit tests, weight check, 29 Playwright tests) plus 123 database checks. The remote CI run on this push is the first with Supabase in it.
 - Page weight: no change (no app code changed). JS 145.4 KB.
 - Deviations: none.
+
+## Batch 2, checkpoint notes applied | 2026-11-12
+- The checkpoint was approved. Staging Postgres is 17.11.0.018, so `major_version = 17` is right. Altavision's subdomains will be added to the reserved names when you send them (a new migration plus `reservedSlugs`; the guard keeps them equal).
+- **Change-log deletion path** (migration `20261112100400_change_log_deletion.sql`): `admin_delete_change_log(business, reason)` is admin with aal2 only, deletes that business's log rows, and records the deletion in `support_access`. The append-only guard lets only this function through. Tests: `change_log.test.sql` (16 checks: the path works for admin aal2 and touches only that business; owner, admin aal1, anon, the service role and the database owner are refused direct edits and deletes; logging continues afterwards).
+- **Public fields locked:** `public_site_fields.test.sql` (11 checks) confirms both public functions are `security definer` with `search_path = ''`, compares the exact field names at every level (top, business, settings, contacts, items, media), and checks that an owner's email and an unlisted contact key never appear. The field list is in specs/row-level-security.md.
+- Database tests: 4 files, 152 checks, all pass locally.
