@@ -110,3 +110,14 @@ Entry format:
 - Tests: pgTAP `schema.test.sql` (19 checks: business_id everywhere and indexed, no guest columns, prices, English required, slugs and reserved names, publish completeness, change log, append-only, no moving rows, the media FK, role permissions). 61 unit tests (6 new). Run locally on Supabase 2.122.0: all pass.
 - Page weight: no change (no app code changed).
 - Deviations: `rowToSiteData` (core-data.md) moves to feature 8, where `getSite()` first uses it; the public JSON shape is fixed in feature 2. Supabase's slug and reserved checks raise `23514`.
+
+## Batch 2, feature 2: row-level security and the isolation test | 2026-11-12
+- Built: migration `20261112100200_rls.sql`.
+  - Private helpers `app.is_platform_admin()` (needs `aal2` **and** a `platform_admins` row), `app.is_member()` and `app.has_permission()` (memberships × `role_permissions` by preset): `security definer`, `search_path = ''`.
+  - All table privileges revoked from `anon` and `authenticated`, and default privileges revoked for future tables.
+  - RLS **enabled and forced** on every table, with per-table grants and policies as specced. Owners edit content only; switches, memberships, status and slug belong to the admin; the change log is read-only; support access is written by admins and read by owners. Disabled members see nothing, not even their own row.
+  - Migration `20261112100300_public_site.sql`: `get_published_site(p_slug, p_host)` and `list_published_slugs()`, the only door for `anon`: active and published businesses only, explicit fields, no personal data.
+- Tests: pgTAP `isolation.test.sql` has 104 checks in the 9 groups of the spec. It loops over every table with `business_id` and every table for anon, so new tables are covered. **Checked that it catches a leak:** with one policy widened to `using (true)` on the local database, 4 checks failed; after a reset, all passed. Both test files together: 123 checks pass.
+- Found and fixed while writing the tests (before anything reached staging): the check constraints call `app.is_localized`, so `authenticated` needs EXECUTE on it; and a disabled member could read their own membership row, which is now hidden.
+- Page weight: no change.
+- Deviations: none.
