@@ -52,6 +52,9 @@ select throws_ok($$ insert into public.catalog_items (business_id, kind, name) v
 -- Slugs: format and reserved names (D-062).
 select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('Bad Slug', 'X', 'hotel_lodge', 'lodge') $$, '23514', null, 'slug format is enforced');
 select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('www', 'X', 'hotel_lodge', 'lodge') $$, '23514', null, 'reserved slug www is refused');
+select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('resend', 'X', 'hotel_lodge', 'lodge') $$, '23514', null, 'reserved slug resend is refused');
+select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('zmail', 'X', 'hotel_lodge', 'lodge') $$, '23514', null, 'reserved slug zmail is refused');
+select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('_mail', 'X', 'hotel_lodge', 'lodge') $$, '23514', null, 'a slug starting with an underscore is refused');
 select throws_ok($$ update public.businesses set slug = 'admin' where id = '00000000-0000-0000-0000-0000000000f1' $$, '23514', null, 'renaming to a reserved slug is refused');
 select throws_ok($$ insert into public.businesses (slug, name, preset, style) values ('mixed-up', 'X', 'restaurant_bar', 'lodge') $$, '23514', null, 'a style must fit its preset');
 

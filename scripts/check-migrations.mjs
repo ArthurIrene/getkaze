@@ -37,8 +37,9 @@ export function problems(sql) {
 }
 
 function reservedFromSql(sql) {
-  const block = sql.match(/insert into public\.reserved_slugs[^;]*;/i)?.[0] ?? "";
-  return [...block.matchAll(/\('([^']+)',/g)].map((m) => m[1]).sort();
+  return [...sql.matchAll(/insert into public\.reserved_slugs[^;]*;/gi)]
+    .flatMap((block) => [...block[0].matchAll(/\('([^']+)',/g)].map((m) => m[1]))
+    .sort();
 }
 
 function reservedFromCore() {

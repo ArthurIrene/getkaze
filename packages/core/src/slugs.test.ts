@@ -19,8 +19,16 @@ describe("slugs", () => {
     expect(slugProblems("www")).toEqual(["reserved"]);
   });
 
-  it("reserves the D-062 names", () => {
-    for (const name of ["www", "mail", "admin", "app", "api", "kaze"]) expect(reservedSlugs).toContain(name);
+  it("reserves the D-062 names and the mail subdomains", () => {
+    for (const name of ["www", "mail", "admin", "app", "api", "kaze", "send", "resend", "zmail", "webmail", "email", "smtp", "mx", "autodiscover"]) {
+      expect(reservedSlugs).toContain(name);
+      expect(slugProblems(name)).toContain("reserved");
+    }
+  });
+
+  it("never accepts a name starting with an underscore", () => {
+    expect(slugProblems("_dmarc")).toContain("format");
+    expect(slugProblems("_mail")).toContain("format");
   });
 
   it("suggests a slug from a name", () => {

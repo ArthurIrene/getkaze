@@ -12,6 +12,7 @@ export const reservedSlugs = [
   "cdn", "assets", "smtp", "imap", "pop", "webmail",
   "ftp", "ns1", "ns2", "autodiscover", "autoconfig", "_dmarc",
   "status", "support", "help", "docs", "blog",
+  "send", "resend", "zmail", "email", "mx",
 ] as const;
 
 export const slugLimits = { min: 3, max: 40 } as const;
