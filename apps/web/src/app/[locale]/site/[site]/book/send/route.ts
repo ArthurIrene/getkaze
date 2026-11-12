@@ -9,6 +9,7 @@ import {
   type BookingLabels,
   type PaymentMethod,
 } from "@getkaze/core";
+import { parseSiteKey } from "@getkaze/core";
 import { getSite } from "@/data/get-site";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
@@ -28,11 +29,13 @@ function seeOther(location: string): Response {
   return new Response(null, { status: 303, headers: { Location: location, "Cache-Control": "no-store", "Referrer-Policy": "no-referrer" } });
 }
 
-export async function POST(request: Request, { params }: RouteContext<"/[locale]/book/send">) {
-  const { locale: requested } = await params;
+export async function POST(request: Request, { params }: RouteContext<"/[locale]/site/[site]/book/send">) {
+  const { locale: requested, site: siteKey } = await params;
+  const key = parseSiteKey(siteKey);
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
+  const base = key?.base ?? "";
   const errorPath = (reason: string, max?: number) =>
-    `${getPathname({ href: "/book/error", locale })}?reason=${reason}${max ? `&max=${max}` : ""}`;
+    `${base}${getPathname({ href: "/book/error", locale })}?reason=${reason}${max ? `&max=${max}` : ""}`;
 
   let fields: BookingFields = {};
   try {
@@ -44,7 +47,8 @@ export async function POST(request: Request, { params }: RouteContext<"/[locale]
     fields = {};
   }
 
-  const site = await getSite();
+  const site = key ? await getSite(key) : null;
+  if (!site) return new Response("Not found", { status: 404 });
   const parsed = parseBookingRequest(fields, site, todayIn("Africa/Kigali"));
   if (!parsed.ok) return seeOther(errorPath(parsed.error, parsed.max));
 
@@ -67,8 +71,9 @@ export async function POST(request: Request, { params }: RouteContext<"/[locale]
 }
 
 /** Anything but POST goes back to the form. */
-export async function GET(_request: Request, { params }: RouteContext<"/[locale]/book/send">) {
-  const { locale: requested } = await params;
+export async function GET(_request: Request, { params }: RouteContext<"/[locale]/site/[site]/book/send">) {
+  const { locale: requested, site: siteKey } = await params;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
-  return seeOther(getPathname({ href: "/book", locale }));
+  const base = parseSiteKey(siteKey)?.base ?? "";
+  return seeOther(`${base}${getPathname({ href: "/book", locale })}`);
 }

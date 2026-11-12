@@ -288,5 +288,9 @@
       "reason": "Andika impamvu (inyuguti 5 kugeza 200).",
       "failed": "Ntibyakunze. Ongera ugerageze."
     }
+  },
+  "NotFound": {
+    "title": "Uru rubuga ntiruboneka",
+    "body": "Reba aderesi, cyangwa usabe ubucuruzi umurongo wabwo."
   }
 }

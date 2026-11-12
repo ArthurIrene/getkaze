@@ -6,6 +6,8 @@ import { defineConfig, devices } from "@playwright/test";
  * installed instead of the one `playwright install chromium` downloads.
  */
 const port = Number(process.env.E2E_PORT ?? 3200);
+/** Second server, with PLATFORM_DOMAIN=altavision.test, for subdomain routing tests. */
+export const subdomainPort = Number(process.env.E2E_SUBDOMAIN_PORT ?? 3201);
 
 export default defineConfig({
   testDir: "e2e",
@@ -25,10 +27,20 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"], viewport: { width: 360, height: 800 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 },
     },
   ],
-  webServer: {
-    command: `pnpm --filter @getkaze/web exec next start -p ${port}`,
-    url: `http://127.0.0.1:${port}/`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-  },
+  webServer: [
+    {
+      command: `pnpm --filter @getkaze/web exec next start -p ${port}`,
+      url: `http://127.0.0.1:${port}/`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 60_000,
+    },
+    // Same build with a platform domain set, for subdomain routing (e2e/hosts.spec.ts, D-062).
+    {
+      command: `pnpm --filter @getkaze/web exec next start -p ${subdomainPort}`,
+      url: `http://127.0.0.1:${subdomainPort}/`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 60_000,
+      env: { ...(process.env as Record<string, string>), PLATFORM_DOMAIN: "altavision.test", APP_HOST: "kaze.altavision.test" },
+    },
+  ],
 });

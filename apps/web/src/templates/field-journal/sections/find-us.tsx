@@ -14,7 +14,7 @@ export async function FindUs({ site, locale, pages }: TemplateProps) {
       <div className="fj-find-head">
         <h2 id="fj-find">{t("findUs")}</h2>
         {pages.includes("contact") ? (
-          <a className="fj-head-link" href={pageHref("contact", locale)}>
+          <a className="fj-head-link" href={pageHref("contact", locale, site.linkBase)}>
             {c("allDetails")}
           </a>
         ) : null}

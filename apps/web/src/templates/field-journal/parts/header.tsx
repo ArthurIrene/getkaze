@@ -20,14 +20,14 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
   const curName = page === "book" ? "cur" : "fj-cur";
   const items = links.map((id) => (
     <li key={id}>
-      <a href={pageHref(id, locale)} aria-current={id === page ? "page" : undefined}>
+      <a href={pageHref(id, locale, site.linkBase)} aria-current={id === page ? "page" : undefined}>
         {n(id)}
       </a>
     </li>
   ));
   return (
     <header className="fj-header">
-      <a className="fj-logo" href={pageHref("home", locale)}>
+      <a className="fj-logo" href={pageHref("home", locale, site.linkBase)}>
         {site.name}
       </a>
       <nav aria-label={n("site")} className="fj-nav-inline">
@@ -41,7 +41,7 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
           {routing.locales.map((code) => (
             <a
               key={code}
-              href={pageHref(page, code)}
+              href={pageHref(page, code, site.linkBase)}
               hrefLang={code}
               lang={code}
               aria-current={code === locale ? "page" : undefined}

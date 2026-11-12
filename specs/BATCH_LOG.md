@@ -175,3 +175,21 @@ Entry format:
 - Tests: 159 database checks, 75 unit tests (1 new), and 43 Playwright tests (2 new: live site card with address, modules and a support visit while another business's data stays invisible, no sideways overflow at 360 px; draft card "Not live yet", "No support visits yet" and the `/rw/owner` wording). The local CI run is green.
 - Page weight: guests unchanged (JS 145.4 KB). `/` is 166.9 KB.
 - Deviations: none.
+
+## Batch 2, feature 7: business by host | 2026-11-12
+- Built:
+  - **Core `hosts.ts`:** `parseHost` (subdomain of `PLATFORM_DOMAIN`, app host, bare/www domain → demo, platform hosts with the `/s/<slug>` fallback or the demo, any other valid host → custom domain, junk/IP/reserved/nested → unknown), `servesPlatformScreens`, `splitLocale`, `siteKey`/`parseSiteKey` (a slug, `p~<slug>` for the fallback, or a custom host with dots), `normalizeHost` and `fallbackSlug`.
+  - **The proxy** has no database call. Platform screens are served only on platform hosts or `APP_HOST`, with the session refresh; on a business host they 404. Every guest path is rewritten to the internal route `/<locale>/site/<key>/…`, and **the internal route itself is a 404 from outside**.
+  - **Guest pages** moved to `app/[locale]/site/[site]/…`. They are static with `revalidate = 300`; demo keys are pre-rendered, and `/book` stays per request.
+  - **Links keep the prefix:** `pageHref` takes the site's `linkBase` (`""` or `/s/<slug>`), and so does the booking form's action and error path.
+  - **Root files per host:** `sitemap.xml`, `robots.txt`, `manifest.webmanifest` and `/icons/*` read the site for the request's host. Icons are rendered per request and cached for a day.
+  - **Clean 404 page** (`app/[locale]/not-found.tsx`): "This site is not available", no business data, noindex.
+  - Settings: `PLATFORM_DOMAIN`, `APP_HOST`, `PLATFORM_HOSTS`, `DEMO_SITE_SLUG`, `FALLBACK_HOST`.
+- Tests: 84 unit tests (9 new) and 49 Playwright tests (6 new, `e2e/hosts.spec.ts`):
+  - every link on `/s/kinigi-hills/rooms` keeps the prefix; the booking form posts and errors within it;
+  - the bare host shows the demo; unknown slugs, reserved slugs and the internal route give a 404 with noindex;
+  - with a second server on `PLATFORM_DOMAIN=altavision.test` and Chromium mapping `*.altavision.test` to this machine: `kinigi-hills.altavision.test/rw/contact` works with prefix-free links; unknown, reserved and nested subdomains and `/login` and `/admin` on a business host give a 404; `kaze.altavision.test/login` works.
+
+  The SEO test's base moved to the demo's own address, as the spec says (canonical = the demo's `siteBaseUrl`); its assertions are unchanged.
+- Page weight: every page passes; JS is 145.4 KB (unchanged); `/` is 167.2 KB.
+- Deviations: `PLATFORM_DOMAIN` is a **build-time** setting for canonical and sitemap addresses (static pages), so it needs a redeploy after a change; routing reads it per request. Noted in the spec. `/en/...` paths are now a 404 instead of a redirect to `/...`. The layout's theme colour is the template's (one template for now).

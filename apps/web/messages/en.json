@@ -301,5 +301,9 @@
       "reason": "Write a reason (5 to 200 characters).",
       "failed": "That did not work. Please try again."
     }
+  },
+  "NotFound": {
+    "title": "This site is not available",
+    "body": "Check the address, or ask the business for its link."
   }
 }

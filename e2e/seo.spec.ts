@@ -2,7 +2,9 @@ import { expect, test } from "@playwright/test";
 
 /** SEO basics (specs/seo-basics.md). noindex stays on every page until G2 (D-054). */
 const pages = ["/", "/rw", "/rooms", "/rw/rooms", "/contact", "/rw/contact", "/book", "/rw/book", "/privacy", "/rw/privacy"];
-const base = "https://getkaze.vercel.app";
+/** The demo's own address (siteBaseUrl): the /s/<slug> fallback until PLATFORM_DOMAIN is set (business-by-host.md). */
+const base = "https://getkaze.vercel.app/s/kinigi-hills";
+const hostRoot = "https://getkaze.vercel.app";
 /** Next writes the home URL without its trailing slash; both forms are the same address. */
 const norm = (url: string | null) => (url ? new URL(url).href : url);
 
@@ -63,6 +65,6 @@ test("sitemap lists every page in both languages; robots allows all and points t
   const text = await robots.text();
   expect(text).toContain("Allow: /");
   expect(text).not.toMatch(/Disallow/i);
-  expect(text).toContain(`Sitemap: ${base}/sitemap.xml`);
+  expect(text).toContain(`Sitemap: ${hostRoot}/sitemap.xml`);
   expect(robots.headers()["x-robots-tag"]).toBe("noindex, nofollow");
 });
