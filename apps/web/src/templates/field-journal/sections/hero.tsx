@@ -6,43 +6,50 @@ import { Glyph } from "../parts/icons";
 /**
  * Hero: a background layer (the owner's photo, or a drawn grey placeholder
  * until there is one), title, handwritten line, rotating stamp and a scroll
- * cue. As the first section it fills the screen and shrinks to a card as the
- * guest scrolls (CSS only, see "Hero" in field-journal.css).
+ * cue. As the first section it is pinned full screen and shrinks in place to
+ * the card as the guest scrolls, then scrolls away (CSS only, see "Hero" in
+ * field-journal.css). The wrapper gives the pinned phase its scroll distance.
  */
 export async function Hero({ site }: TemplateProps) {
   const t = await getTranslations("FieldJournal");
   const { photo } = site.hero;
   return (
-    <section className="fj-hero" aria-label={photo.alt}>
-      <div className="fj-hero-bg">
-        {photo.src ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035) */}
-            <img src={photo.src} alt="" fetchPriority="high" decoding="async" className="fj-hero-img" />
-            <span className="fj-hero-scrim" />
-          </>
-        ) : (
-          <HeroDrawing />
-        )}
-      </div>
-      <h1 className="fj-hero-title">
-        {site.hero.title} <span className="fj-hand">{site.hero.line}</span>
-      </h1>
-      <a className="fj-stamp" href={whatsAppLink(site.contacts.whatsapp)} aria-label={t("stampLabel")}>
-        <svg viewBox="0 0 112 112" className="fj-spin" aria-hidden="true">
-          <defs>
-            <path id="fj-stamp-ring" d="M56 56 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0" />
-          </defs>
-          <text className="fj-stamp-text">
-            <textPath href="#fj-stamp-ring">{t("stamp")}</textPath>
-          </text>
-        </svg>
-        <span className="fj-stamp-dot">
-          <Glyph name="chat" />
-        </span>
-      </a>
-      <span className="fj-cue" aria-hidden="true" />
-    </section>
+    <div className="fj-hero-pin">
+      <section className="fj-hero" aria-label={photo.alt}>
+        <div className="fj-hero-bg">
+          <div className="fj-hero-frame">
+            <div className="fj-hero-media">
+              {photo.src ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035) */}
+                  <img src={photo.src} alt="" fetchPriority="high" decoding="async" className="fj-hero-img" />
+                  <span className="fj-hero-scrim" />
+                </>
+              ) : (
+                <HeroDrawing />
+              )}
+            </div>
+          </div>
+        </div>
+        <h1 className="fj-hero-title">
+          {site.hero.title} <span className="fj-hand">{site.hero.line}</span>
+        </h1>
+        <a className="fj-stamp" href={whatsAppLink(site.contacts.whatsapp)} aria-label={t("stampLabel")}>
+          <svg viewBox="0 0 112 112" className="fj-spin" aria-hidden="true">
+            <defs>
+              <path id="fj-stamp-ring" d="M56 56 m-40 0 a40 40 0 1 1 80 0 a40 40 0 1 1 -80 0" />
+            </defs>
+            <text className="fj-stamp-text">
+              <textPath href="#fj-stamp-ring">{t("stamp")}</textPath>
+            </text>
+          </svg>
+          <span className="fj-stamp-dot">
+            <Glyph name="chat" />
+          </span>
+        </a>
+        <span className="fj-cue" aria-hidden="true" />
+      </section>
+    </div>
   );
 }
 
