@@ -10,7 +10,7 @@ All data is fake. Photo spots are placeholders.
 ## Guest site, Template 1: Field Journal (launch template)
 | File | Screen | Key points |
 |---|---|---|
-| T1-Home | Home | Illustrated hero, rotating "Chat with us" stamp, facts (tap for detail), sliding scrapbook, rooms, at our table + fireside room, around us (flip cards), host, reviews, find us, sticky "Check availability". Night colors. |
+| T1-Home | Home | Illustrated hero (built version: full screen at the top, shrinks to the card on scroll, with a scroll cue; see specs/field-journal-template.md), rotating "Chat with us" stamp, facts (tap for detail), sliding scrapbook, rooms, at our table + fireside room, around us (flip cards), host, reviews, find us, sticky "Check availability". Night colors. |
 | T1-Rooms | Rooms | Swipe gallery per room, name, price, amenity icons, "More +", "Check dates", folded check-in/children/payment. |
 | T1-Booking | Check availability | Room cards, calendar with booked days, guests, total, payment choice, details, send. Tweak `launchMode`: own WhatsApp/email vs inbox. |
 | T1-Sent | Request sent | Stamp, booking code + QR, emailed link, timeline (pay the way you chose). After NCSA only. |
