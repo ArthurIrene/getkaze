@@ -99,16 +99,27 @@
 .fj:has(#fj-cur-usd:checked) .fj-cur-rwf, .fj:has(#fj-cur-rwf:checked) .fj-cur-usd { display: none; }
 @supports not selector(:has(*)) { .fj-cur { display: none; } }
 
-/* ---------- Hero ---------- */
-.fj-hero { position: relative; height: 440px; color: var(--ink); }
-.fj-hero-art { display: block; width: 100%; height: 100%; }
+/* ---------- Hero ----------
+ * Base (and fallback): a card, today's size. Its background layer
+ * (.fj-hero-bg) holds the photo or the drawn placeholder, so a photo only
+ * swaps that layer. The full-screen version is in "Hero: full screen" below. */
+.fj-hero {
+  --hero-h: 440px; --hero-r: 20px; --hero-m: 0px;
+  position: relative; height: var(--hero-h); margin-inline: 16px; color: var(--ink);
+}
+.fj-hero-bg { position: absolute; inset: 0; overflow: hidden; border-radius: var(--hero-r); background: var(--ph); }
+.fj-hero-art, .fj-hero-img { display: block; width: 100%; height: 100%; }
+.fj-hero-img { object-fit: cover; }
+/* With a photo: a soft paper wash at the top keeps the header and title readable. */
+.fj-hero-scrim { position: absolute; inset: 0 0 auto; height: 45%; background: linear-gradient(var(--bar), transparent); }
+.fj-cue { display: none; }
 .fj-hero-title {
-  position: absolute; left: 16px; top: 22px; right: 16px;
+  position: absolute; left: calc(var(--hero-m) + 14px); top: 22px; right: 8px;
   font: 900 38px/1 var(--f-display); letter-spacing: -0.02em;
 }
 .fj-hero-title .fj-hand { display: block; font-size: 50px; line-height: 1; color: var(--accent); letter-spacing: 0; }
 .fj-stamp {
-  position: absolute; right: 14px; bottom: -48px; width: 112px; height: 112px;
+  position: absolute; right: calc(var(--hero-m) + 14px); bottom: -48px; width: 112px; height: 112px;
   border-radius: 999px; background: var(--paper); border: 1.5px solid var(--ink); color: var(--ink);
 }
 .fj-stamp > svg { position: absolute; inset: -1.5px; width: 112px; height: 112px; }
@@ -301,10 +312,10 @@
 @media (min-width: 768px) {
   .fj > main, .fj-header { max-width: 1120px; margin-inline: auto; }
   .fj-header { padding-inline: 24px; }
-  .fj-hero { height: 520px; margin-inline: 24px; border-radius: 24px; overflow: hidden; }
-  .fj-hero-title { left: 40px; top: 40px; font-size: 56px; }
+  .fj-hero { --hero-h: 520px; --hero-r: 24px; margin-inline: 24px; }
+  .fj-hero-title { left: calc(var(--hero-m) + 40px); top: 40px; font-size: 56px; }
   .fj-hero-title .fj-hand { font-size: 72px; }
-  .fj-stamp { bottom: 24px; right: 32px; }
+  .fj-stamp { bottom: 24px; right: calc(var(--hero-m) + 32px); }
   .fj-facts { padding: 40px 24px 0; max-width: 720px; }
   .fj-head, .fj-find, .fj-host { padding-inline: 24px; }
   .fj-row { padding-inline: 24px; }
@@ -319,4 +330,62 @@
   .fj-footer { padding-inline: max(24px, calc((100vw - 1072px) / 2)); }
   .fj-bar { justify-content: flex-end; padding-inline: max(24px, calc((100vw - 1072px) / 2)); }
   .fj-bar-main { flex: 0 0 260px; }
+}
+
+/* ---------- Hero: full screen, shrinking to the card on scroll ----------
+ * Only for the first section, only where scroll-driven animation is
+ * supported, and never with reduced motion (otherwise the card above stays).
+ * The header and sticky bar sit on top. Motion is transform only (D-041):
+ * two paper-coloured edges, each with a rounded inner corner at top and
+ * bottom, slide in from the sides and turn the full-bleed picture into the
+ * card. --hero-m is the card's distance from the screen edge. */
+@supports (animation-timeline: scroll()) and selector(:has(*)) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fj:has(> main > .fj-hero:first-child) { container-type: inline-size; position: relative; }
+    .fj:has(> main > .fj-hero:first-child) > .fj-header { position: absolute; top: 0; inset-inline: 0; z-index: 1; }
+    .fj:has(> main > .fj-hero:first-child) .fj-pills { background: var(--bar); }
+    .fj-hero:first-child { --hero-m: 16px; height: 100vh; height: 100svh; margin-inline: 0; }
+    .fj-hero:first-child .fj-hero-bg { border-radius: 0; }
+    .fj-hero:first-child .fj-hero-title { top: 78px; }
+    .fj-hero:first-child .fj-stamp { bottom: 96px; }
+    .fj-hero:first-child .fj-hero-bg::before,
+    .fj-hero:first-child .fj-hero-bg::after {
+      content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--hero-m) + var(--hero-r));
+      background:
+        radial-gradient(circle at 100% 100%, transparent calc(var(--hero-r) - 0.5px), var(--paper) var(--hero-r))
+          var(--hero-m) 0 / var(--hero-r) var(--hero-r) no-repeat,
+        radial-gradient(circle at 100% 0, transparent calc(var(--hero-r) - 0.5px), var(--paper) var(--hero-r))
+          var(--hero-m) 100% / var(--hero-r) var(--hero-r) no-repeat,
+        linear-gradient(var(--paper), var(--paper)) 0 0 / var(--hero-m) 100% no-repeat;
+      animation: fj-hero-edge-l linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 60vh;
+    }
+    .fj-hero:first-child .fj-hero-bg::after { left: auto; right: 0; scale: -1 1; animation-name: fj-hero-edge-r; }
+    @keyframes fj-hero-edge-l { from { translate: -100% 0; } to { translate: 0 0; } }
+    @keyframes fj-hero-edge-r { from { translate: 100% 0; } to { translate: 0 0; } }
+
+    /* Scroll cue: a small chevron above the sticky bar; it bobs, then fades as the guest scrolls. */
+    .fj-hero:first-child .fj-cue {
+      display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; bottom: 92px;
+      width: 36px; height: 36px; margin-left: -18px; border-radius: 999px; background: var(--bar);
+      animation: fj-cue 2s ease-in-out infinite, fj-cue-out linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range: normal, 0 25vh;
+    }
+    .fj-cue::before {
+      content: ""; width: 9px; height: 9px; margin-top: -4px;
+      border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); rotate: 45deg;
+    }
+    @keyframes fj-cue { 50% { translate: 0 5px; } }
+    @keyframes fj-cue-out { to { opacity: 0; } }
+
+    @media (min-width: 768px) {
+      .fj-hero:first-child {
+        --hero-m: max(24px, calc((100cqw - 1120px) / 2 + 24px));
+        margin-inline: min(0px, calc((1120px - 100cqw) / 2));
+      }
+      .fj-hero:first-child .fj-hero-title { top: 96px; }
+    }
+  }
 }
