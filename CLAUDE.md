@@ -45,7 +45,9 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
 - Test (unit, Vitest in packages/core): `pnpm test`
 - Page weight (builds, starts the production server, measures the first view of every guest page; fails over 300 KB, flags JS over 160 KB): `pnpm weight-check` (`--skip-build` after a build)
 - Slow-3G timing (report only; build first): `pnpm speed-check`
-- End-to-end (Playwright, Chromium, against the production server; run `pnpm build` first): `pnpm e2e`. First time: `pnpm exec playwright install chromium`, or set `PW_CHROMIUM_PATH` to an installed Chromium.
+- End-to-end (Playwright, Chromium, against the production server; run `pnpm build` first): `pnpm e2e`.
+  - Install the browser for the pinned Playwright version first (as CI does), so local runs match CI: `pnpm exec playwright install chromium`. It downloads from `cdn.playwright.dev`, which the cloud environment must allow.
+  - `PW_CHROMIUM_PATH` (another installed Chromium) is a fallback only: a different browser version can behave differently from CI.
 - CI (`.github/workflows/ci.yml`) runs all of the above on every pull request and on pushes to `staging` and `main`.
 - Migrate: not set up yet (arrives with Supabase, day 5).
 
