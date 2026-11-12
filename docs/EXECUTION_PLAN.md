@@ -9,7 +9,7 @@ Status: v1.0 (7 Nov 2026). About 5+ hours per day. Days 15 to 17 are buffer.
 Rule: scaffold output is exported into `apps/web` as plain components. It never touches the database or logic.
 
 ## What Claude Code builds
-Monorepo, Supabase schema and row-level security, isolation tests, login, module switches, domain and subdomain routing, wiring screens to data, editor logic, photo compression, languages with fallback, click stats, WhatsApp links, SEO, speed, backups. One feature per session, tested on the demo client, committed after each working step.
+Monorepo, Supabase schema and row-level security, isolation tests, login, module switches, domain and subdomain routing, wiring screens to data, editor logic, photo compression, languages with fallback, click stats, WhatsApp links, SEO, speed, backups. Built in batches (D-052): several features per session, specs approved once, CI green after each feature (D-058), tested on the demo client, committed after each working step.
 
 ## Day by day
 | Day | Work | Done when |
@@ -39,3 +39,13 @@ Monorepo, Supabase schema and row-level security, isolation tests, login, module
 - Days 2–3 (mockups): done in Chat 2. See docs/MOCKUPS.md.
 - Day 8: Field Journal home wired to data. Day 11 changes: instead of templates 2 and 3, build Field Journal rooms, menu display and the Check availability form (launch mode).
 - Weeks 3–5: booking system behind the compliance gate, tested on the demo lodge only.
+
+## Batch order (2026-11-12, D-052)
+Replaces the day-by-day order above from day 5 on. Days stay as a rough guide for time.
+| Batch | Work | Done when |
+|---|---|---|
+| 0 | Automatic checks: CI (build, lint, typecheck, unit tests, page weight, Playwright), page-weight script, Playwright happy path and hero checks | CI green on the batch PR (done 2026-11-12) |
+| 1 | Guest site: rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages | Demo lodge complete on a phone; every page within budget |
+| 2 | Data and access: core data and RLS with isolation test, **then a checkpoint**; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database | Isolation test passes; demo lodge served from the database on its subdomain |
+| 3 | Editor, click stats, security checklist, backups with restore test | Full site editable from a phone; restore works |
+| Then | Personalized demos for prospects on subdomains + one-page audits | Demos ready to show |

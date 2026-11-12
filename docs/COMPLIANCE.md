@@ -15,6 +15,9 @@ Status: v1.0 (7 Nov 2026). Law No. 058/2021 on the protection of personal data a
 5. When the registration number arrives: apply for authorization to store outside Rwanda.
 6. Short lawyer consult: consent clause, client agreement, privacy notice, data roles.
 
+### Hosting countries
+- Supabase staging: Frankfurt, Germany (eu-central-1)
+
 ## 3. Storage authorization: what the form asks
 - Organization details, registration number(s), data protection officer.
 - Categories of people, personal data per category, reasons for storing outside Rwanda, number of people concerned.
