@@ -345,3 +345,45 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Replaces:** "Musanze Business Platform" as the working name; [PLATFORM NAME] placeholder in mockups.
 - **Reason:** Short, warm ("welcome"), easy for owners; the "Get" prefix makes the domain and search ownable since plain "Kaze" is used by other Rwandan businesses (real estate, crafts, a tour operator named Ikaze).
 - **Status:** Confirmed as working name. Before final: check getkaze.rw / getkaze.com, RDB trademark search (software, class 42), social handles. Company remains Altavision; temporary hosting under altavision.rw until the domain is bought.
+
+## D-052 | 2026-11-12
+- **Decision:** Batch mode. A batch is several features in one session. All specs are written first and approved once; then the build runs without stopping. One commit group per feature, CI green after each feature, and `specs/BATCH_LOG.md` updated after each feature (built, tests, page weight, deviations) so a new session can resume from it. Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, or anything touching the live Supabase project. Data and security work (row-level security, isolation test) ends with a checkpoint before anything is built on it.
+- **Replaces:** "one feature per session" (PROJECT.md section 10) and per-feature plan approval (BUILD_GUIDE.md section 1).
+- **Reason:** Fewer stops per session; CI (D-058) and the batch log keep each feature checked and resumable.
+- **Status:** Confirmed
+
+## D-053 | 2026-11-12
+- **Decision:** During the build, `staging` is the GitHub default branch and Vercel's production branch, so getkaze.vercel.app shows the latest staging. `main` stays untouched until gate G2.
+- **Replaces:** none (refines BUILD_GUIDE.md section 4 for the build phase)
+- **Reason:** One always-current demo URL without merging unfinished work to `main`.
+- **Status:** Confirmed
+
+## D-054 | 2026-11-12
+- **Decision:** Every page sends noindex (robots meta and `X-Robots-Tag: noindex, nofollow`; no robots.txt Disallow, so crawlers can see the noindex) until gate G2. At G2 it is removed per business with real content.
+- **Replaces:** none
+- **Reason:** Demo and fake data must not be indexed.
+- **Status:** Confirmed
+
+## D-055 | 2026-11-12
+- **Decision:** The RWF/USD switch is CSS only (both prices in the HTML, radio buttons with `:has()`, no JavaScript). `defaultCurrency` is a data setting per business; the demo lodge uses USD.
+- **Replaces:** none (applies D-023 and D-041)
+- **Reason:** No JavaScript on guest pages for a basic switch; the owner picks what guests see first.
+- **Status:** Confirmed
+
+## D-056 | 2026-11-12
+- **Decision:** Field Journal hero: full screen at the start, pinned while it shrinks to the card (shrink distance `--fj-hero-shrink`, default `60svh`), then it scrolls away together with the header. Transform and opacity only (D-041). The plain card (16 px margins, 20 px corners) is the fallback without scroll-driven animation, with reduced motion, and when the hero is not the first section. Card rows wrap and center.
+- **Replaces:** none (extends D-041 for the Field Journal template)
+- **Reason:** A strong first view that stays within the motion kit and falls back cleanly.
+- **Status:** Confirmed
+
+## D-057 | 2026-11-12
+- **Decision:** Vercel runs Node 22.x to match `.nvmrc`.
+- **Replaces:** none
+- **Reason:** Same runtime for local, CI and previews.
+- **Status:** Confirmed
+
+## D-058 | 2026-11-12
+- **Decision:** CI (build, lint, typecheck, unit tests, page weight, Playwright) runs on every pull request and on pushes to `staging` and `main`, and is the gate in batch mode (D-052). Page weight fails over 300 KB transferred for the first view of a page; JS is reported but not enforced until the JS budget is set.
+- **Replaces:** none
+- **Reason:** Automatic checks replace per-feature manual approval.
+- **Status:** Confirmed

@@ -2,17 +2,27 @@
 
 Status: v1.0 (7 Nov 2026). Applies from the first Claude Code session to the last. If this guide and a chat disagree, this guide wins until DECISIONS.md changes it.
 
-## 1. The feature loop (every feature, every time)
-1. **Pick:** take the next item from ROADMAP.md. Only one feature at a time.
-2. **Spec:** write `/specs/<feature>.md` using the template in section 6. No spec, no build.
-3. **Mockup check:** confirm the screens exist in the Chat 2 mockups. If not, sketch them first.
-4. **Build (Claude Code session):** start each session with "Read CLAUDE.md and /specs/<feature>.md, then give me a plan before writing code." Approve the plan, then build in small steps.
-5. **Test:** automatic tests plus manual test on the demo client (section 3).
-6. **Done check:** the Definition of Done in section 2, all boxes ticked.
-7. **Ship:** merge to `staging`, check on staging, then merge to `main` (live). Feature arrives switched off for existing clients.
-8. **Record:** update FEATURES.md status, ROADMAP.md, and DECISIONS.md if anything changed.
+## 1. The feature loop (batch mode, D-052)
+Features are built in **batches**: several features in one Claude Code session.
+1. **Pick:** take the next batch from EXECUTION_PLAN.md (order below). New ideas go to `/specs/backlog.md`, never into the current batch.
+2. **Spec:** write `/specs/<feature>.md` for every feature in the batch, using the template in section 6. No spec, no build.
+3. **Mockup check:** confirm the screens exist in the Chat 2 mockups. If not, sketch them in the spec.
+4. **One approval:** start the session with "Read CLAUDE.md and the batch specs." Claude writes all specs first; the owner approves them once. Then Claude builds without stopping.
+5. **Build:** one commit group per feature, on one batch branch (`feature/batch-<n>-<name>`). CI (D-058) must be green after each feature.
+6. **Log:** after each feature, update `specs/BATCH_LOG.md`: built, tests, page weight, deviations. A new session resumes from it.
+7. **Stop and ask only for:** a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, or anything touching the live Supabase project.
+8. **Checkpoint:** data and security work (row-level security, isolation test) ends with a checkpoint before anything is built on it.
+9. **Ship:** one pull request per batch into `staging`; check on staging (getkaze.vercel.app, D-053). `main` stays untouched until gate G2. Features arrive switched off for existing clients.
+10. **Record:** update FEATURES.md status, ROADMAP.md, and DECISIONS.md if anything changed.
 
-Rule: a feature that runs more than 2 sessions over its plan gets cut down, not stretched. New ideas go to `/specs/backlog.md`, never into the current feature.
+Batch order:
+- **Batch 0, automatic checks:** CI, page-weight check, Playwright (done 2026-11-12).
+- **Batch 1, guest site:** rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages.
+- **Batch 2, data and access:** core data and RLS with isolation test, then a checkpoint; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database.
+- **Batch 3:** editor, click stats, security checklist, backups with restore test.
+- **Then:** the prospect demos.
+
+Rule: a batch that runs more than 2 sessions over its plan gets cut down, not stretched.
 
 ## 2. Definition of Done (copy into every spec)
 - [ ] Acceptance criteria in the spec all pass.
@@ -32,9 +42,9 @@ Rule: a feature that runs more than 2 sessions over its plan gets cut down, not 
 |---|---|---|
 | Database tests | Row-level security: Business A cannot read or change Business B; role permissions | Every feature touching data |
 | Unit tests | Rules in `packages/core` (prices, fallback language, module checks, WhatsApp message building) | Every feature with logic |
-| End-to-end (Playwright) | One happy path per feature on a phone-sized screen | Every feature with screens |
+| End-to-end (Playwright) | One happy path per feature on a phone-sized screen (360x800), Chromium, against the production server (`pnpm e2e`) | Every feature with screens; in CI |
 | Manual check | Demo client on a real cheap Android phone, mobile data or throttled to 3G | Before merging to `main` |
-| Speed check | Page size and load time of guest pages | Every change to guest pages |
+| Speed check | First-view weight of guest pages (`pnpm weight-check`, fails over 300 KB) and load time | Every change to guest pages; weight in CI |
 
 Keep tests small. One clear test per rule beats many fragile ones.
 
@@ -43,7 +53,8 @@ Keep tests small. One clear test per rule beats many fragile ones.
 - Never push straight to `main`. Flow: feature branch → `staging` → check → `main`.
 - Commit after each working step with a clear message.
 - Two Supabase projects (staging, live). Live data never used for testing.
-- Build phase: Vercel previews on every push. Production: Cloudflare from gate G2.
+- Build phase: Vercel previews on every push. `staging` is the GitHub default branch and Vercel's production branch (D-053); `main` stays untouched until G2. Production: Cloudflare from gate G2.
+- CI on every pull request and on pushes to `staging` and `main`: build, lint, typecheck, unit tests, page weight, Playwright (D-058).
 
 ## 4b. Claude connectors (MCP)
 - **Supabase:** connect Claude Code to the **staging** project for schema, migrations, logs, and queries. Live project: read-only at most, ideally not connected.

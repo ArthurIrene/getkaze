@@ -93,9 +93,10 @@ Owner, manager, receptionist, housekeeping, waiter, kitchen, bar, plus our platf
 - v0 optional for UI scaffolding only; Claude Code builds all logic.
 
 ## 10. Build approach
-- Spec first, then small slices, one feature per session, tested on the demo client, committed after each working step.
+- Spec first, then small slices, built in batches (D-052): several features per session, all specs approved once, one commit group per feature, CI green after each (D-058), progress in `specs/BATCH_LOG.md`. Tested on the demo client, committed after each working step.
+- Batch order: Batch 0 automatic checks (done) → Batch 1 guest site (rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages) → Batch 2 data and access (core data and RLS with isolation test, then a checkpoint; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database) → Batch 3 (editor, click stats, security checklist, backups with restore test) → the prospect demos.
 - Chat 1 (done): master plan and documents. Chat 2: mockups. Then scaffold and Claude Code.
-- Build order: compliance tasks → hotel website kit with editor → menu + WhatsApp orders → booking requests and QR table requests → manager orders page → the rest when clients pay; native staff app when time allows.
+- Build order (by product): compliance tasks → hotel website kit with editor → menu + WhatsApp orders → booking requests and QR table requests → manager orders page → the rest when clients pay; native staff app when time allows.
 - First sellable milestone: hotel website kit with editor and demo client, about 2 to 2.5 weeks at 5+ hours a day.
 - Full execution plan: EXECUTION_PLAN.md, ROADMAP.md, and BUILD_GUIDE.md. Compliance steps: COMPLIANCE.md.
 
