@@ -6,7 +6,7 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Guest data must never reach logs (D-033, D-049): no console in server routes.
-  { files: ["src/app/**/route.ts"], rules: { "no-console": "error" } },
+  { files: ["src/app/**/route.ts", "src/app/**/(platform)/**", "src/lib/auth/**", "src/lib/supabase/**"], rules: { "no-console": "error" } },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

@@ -172,5 +172,31 @@
     "contactDescription": "Call, WhatsApp or find {name} in {area}. {hours}.",
     "bookDescription": "Send {name} a booking request by WhatsApp or email.",
     "privacyDescription": "How {name} handles your personal data."
+  },
+  "Platform": {
+    "language": "Language"
+  },
+  "Auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot password?",
+    "wrong": "Email or password is wrong.",
+    "sendLink": "Send me a link",
+    "resetSent": "If that email has an account, we sent a link.",
+    "newPassword": "New password",
+    "repeat": "Type it again",
+    "rules": "At least 10 characters, not only numbers.",
+    "mismatch": "The two passwords are not the same.",
+    "same": "Choose a password you have not used before.",
+    "failed": "That did not work. Please try again.",
+    "save": "Save",
+    "saved": "Saved. You are signed in.",
+    "welcome": "Welcome! Choose your password",
+    "noSite": "No active site for this account."
+  },
+  "Owner": {
+    "title": "Your site"
   }
 }

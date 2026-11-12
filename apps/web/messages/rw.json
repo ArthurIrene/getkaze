@@ -159,5 +159,31 @@
     "contactDescription": "Hamagara, andika kuri WhatsApp cyangwa usure {name} i {area}. {hours}.",
     "bookDescription": "Oherereza {name} icyifuzo cyo gufata icyumba kuri WhatsApp cyangwa imeli.",
     "privacyDescription": "Uko {name} ifata amakuru yawe bwite."
+  },
+  "Platform": {
+    "language": "Ururimi"
+  },
+  "Auth": {
+    "signIn": "Injira",
+    "signOut": "Sohoka",
+    "email": "Imeli",
+    "password": "Ijambo ry'ibanga",
+    "forgot": "Wibagiwe ijambo ry'ibanga?",
+    "wrong": "Imeli cyangwa ijambo ry'ibanga si byo.",
+    "sendLink": "Nyoherereza umurongo",
+    "resetSent": "Niba iyo meli ifite konti, twohereje umurongo.",
+    "newPassword": "Ijambo ry'ibanga rishya",
+    "repeat": "Ryandike nanone",
+    "rules": "Nibura inyuguti 10, si imibare gusa.",
+    "mismatch": "Amagambo y'ibanga yombi ntabwo ari amwe.",
+    "same": "Hitamo ijambo ry'ibanga utakoresheje mbere.",
+    "failed": "Ntibyakunze. Ongera ugerageze.",
+    "save": "Bika",
+    "saved": "Byabitswe. Winjiye.",
+    "welcome": "Murakaza neza! Hitamo ijambo ry'ibanga",
+    "noSite": "Nta rubuga rukora kuri iyi konti."
+  },
+  "Owner": {
+    "title": "Urubuga rwawe"
   }
 }

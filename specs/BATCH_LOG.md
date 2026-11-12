@@ -136,3 +136,22 @@ Entry format:
 - **Change-log deletion path** (migration `20261112100400_change_log_deletion.sql`): `admin_delete_change_log(business, reason)` is admin with aal2 only, deletes that business's log rows, and records the deletion in `support_access`. The append-only guard lets only this function through. Tests: `change_log.test.sql` (16 checks: the path works for admin aal2 and touches only that business; owner, admin aal1, anon, the service role and the database owner are refused direct edits and deletes; logging continues afterwards).
 - **Public fields locked:** `public_site_fields.test.sql` (11 checks) confirms both public functions are `security definer` with `search_path = ''`, compares the exact field names at every level (top, business, settings, contacts, items, media), and checks that an owner's email and an unlisted contact key never appear. The field list is in specs/row-level-security.md.
 - Database tests: 4 files, 152 checks, all pass locally.
+
+## Batch 2, CI fix: local Supabase ports | 2026-11-12
+- Failure on `4e62b4d`: `supabase start` could not bind `0.0.0.0:54322` ("address already in use") on the runner. **Root cause:** the CLI's default ports (54321–54329) are inside Linux's ephemeral port range (32768–60999), so an outgoing connection on the runner can hold one. **Fix:** all local Supabase ports moved to 25320–25329 (`supabase/config.toml`), below that range. Tests are unchanged. The previous green run had simply not collided.
+
+## Batch 2, feature 4: owner and admin login | 2026-11-12
+- Built:
+  - **Packages:** `@supabase/supabase-js` 2.118.0 and `@supabase/ssr` 0.12.7 (exact, approved), server only.
+  - **Supabase code:** `lib/supabase/{env,server,refresh}.ts`. Cookies are forced **HttpOnly** and **SameSite=Lax**, and Secure over HTTPS; there is no browser Supabase client. The proxy refreshes the session **only on platform paths** (core `isPlatformPath`), so guest pages still set no cookies.
+  - **Screens and routes:** `/login`, `/auth/reset`, `/auth/confirm` (verifies the email link's token hash on the server; fixed target per link type), `/auth/accept` (invite → first password), `/auth/update-password`, `/auth/signout` (POST), and a first `/owner` page. All are plain forms with server actions (they work without JS), EN + RW.
+  - **Rules in core:** `canEnter`, `landingFor`, `safeNext`, `passwordProblems`, `confirmTarget`, `isPlatformPath`.
+  - **Email templates** (`supabase/templates/invite.html`, `recovery.html`) link to `/auth/confirm?token_hash=…&type=…`. **Staging needs the same templates** pasted in Dashboard → Authentication → Emails (invite and reset password).
+  - The ESLint `no-console` rule now also covers the platform routes and the auth and Supabase helpers.
+- Found while testing:
+  - In the CLI config, `[auth.email] enable_signup = false` disables email login entirely, so it is back to `true`. Public sign-up stays off through `[auth] enable_signup = false`, and the test proves sign-up is refused.
+  - The local email limit was 2 per hour, so it is raised to 200 locally only.
+  - Redirects now use the request's own host, so cookies follow the visitor.
+- Tests: 69 unit tests (7 new) and 37 Playwright tests (8 new, against the local Supabase): the invite → accept → `/owner` flow, password rules, the same answer for a wrong password and an unknown email, reset by email → new password → sign out → sign in, the same reset answer for unknown emails, sign-up refused, bad email links → login, no guest-page cookie for a signed-in owner (whose cookies are HttpOnly), and a disabled owner seeing "No active site". 152 database checks.
+- Page weight: guest pages are +0.8 KB of CSS (the shared Tailwind file now includes the platform classes); JS is **145.4 KB, unchanged**. `/` is 166.4 KB.
+- Deviations: invites and resets use token-hash links to `/auth/confirm` instead of a `/auth/callback` code exchange, because admin-API invites carry no PKCE code. `/owner` is a first version; feature 6 completes it.
