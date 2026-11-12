@@ -48,7 +48,7 @@ Both public functions are `security definer` with `set search_path = ''`, and ev
 | `business` | `id`, `slug`, `name`, `legalName`, `preset`, `style`, `template`, `defaultCurrency`, `languages` |
 | `settings` | `contacts`, `location`, `hours`, `payment`, `bookingPayments`, `stay`, `sections`, `hero`, `facts`, `moments`, `dining`, `host`, `reviews`, `roomsLine`, `seoDescription`, `publishedAt` |
 | `settings.contacts` | `phone`, `whatsapp`, `email`: the **business's** published contact details only. Any other key stored in `contacts` is dropped. |
-| `items[]` | `id`, `kind`, `position`, `name`, `line`, `priceRwf`, `priceUsd`, `maxGuests`, `amenities`, `icon`, `distance`, `arrange` (visible items only) |
+| `items[]` | `id`, `handle` (readable id for guest URLs; added in feature 8), `kind`, `position`, `name`, `line`, `priceRwf`, `priceUsd`, `maxGuests`, `amenities`, `icon`, `distance`, `arrange` (visible items only) |
 | `media[]` | `id`, `itemId`, `place`, `position`, `path`, `alt`, `width`, `height` (only for visible items, or not tied to an item) |
 | `modulesOn` | the ids of enabled modules |
 

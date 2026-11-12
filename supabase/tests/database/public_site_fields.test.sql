@@ -53,7 +53,7 @@ select is(
 );
 select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'items' -> 0) k),
-  array['amenities', 'arrange', 'distance', 'icon', 'id', 'kind', 'line', 'maxGuests', 'name', 'position', 'priceRwf', 'priceUsd'],
+  array['amenities', 'arrange', 'distance', 'handle', 'icon', 'id', 'kind', 'line', 'maxGuests', 'name', 'position', 'priceRwf', 'priceUsd'],
   'item fields'
 );
 select is(

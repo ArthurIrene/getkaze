@@ -2,19 +2,28 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
+const serviceRole = { name: "@/lib/supabase/admin", message: "Service role: only the platform-admin invite action may use it." };
+const serviceRolePattern = { group: ["**/supabase/admin"], message: serviceRole.message };
+const demoFile = { name: "@/data/demo-lodge", message: "The app reads the database; demo-lodge.ts only feeds the seed." };
+const demoPattern = { group: ["**/data/demo-lodge"], message: demoFile.message };
+const ADMIN_ACTIONS = "src/app/**/(platform)/admin/actions.ts";
+
+function restrictedImports() {
+  const rule = (paths, patterns) => ({ "no-restricted-imports": ["error", { paths, patterns }] });
+  return [
+    { files: ["src/**/*.{ts,tsx}"], ignores: [ADMIN_ACTIONS, "src/lib/supabase/admin.ts"], rules: rule([serviceRole, demoFile], [serviceRolePattern, demoPattern]) },
+    { files: [ADMIN_ACTIONS], rules: rule([demoFile], [demoPattern]) },
+  ];
+}
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   // Guest data must never reach logs (D-033, D-049): no console in server routes.
   { files: ["src/app/**/route.ts", "src/app/**/(platform)/**", "src/lib/auth/**", "src/lib/supabase/**"], rules: { "no-console": "error" } },
-  // The service-role client may only be imported by the platform-admin actions (owner invites).
-  {
-    files: ["src/**/*.{ts,tsx}"],
-    ignores: ["src/app/**/(platform)/admin/actions.ts", "src/lib/supabase/admin.ts"],
-    rules: {
-      "no-restricted-imports": ["error", { paths: [{ name: "@/lib/supabase/admin", message: "Service role: only the platform-admin invite action may use it." }], patterns: [{ group: ["**/supabase/admin"], message: "Service role: only the platform-admin invite action may use it." }] }],
-    },
-  },
+  // Restricted imports (one rule, so it is configured per file group; later blocks would replace earlier ones):
+  // the service-role client only in the platform-admin actions; demo-lodge.ts only feeds the seed.
+  ...restrictedImports(),
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

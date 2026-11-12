@@ -15,9 +15,10 @@
     "weight-check": "node scripts/weight-check.mjs",
     "e2e": "playwright test",
     "speed-check": "node scripts/speed-check.mjs",
-    "db:check": "node scripts/check-migrations.mjs --self-test",
+    "db:check": "node scripts/check-migrations.mjs --self-test && node --no-warnings scripts/gen-demo-seed.mjs --check",
     "db:test": "scripts/supabase-cli.sh test db",
-    "check:bundle": "node scripts/check-client-bundle.mjs"
+    "check:bundle": "node scripts/check-client-bundle.mjs",
+    "db:seed:gen": "node --no-warnings scripts/gen-demo-seed.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

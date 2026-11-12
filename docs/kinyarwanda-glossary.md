@@ -44,3 +44,18 @@ Rules:
 | Owner (platform screens, Batch 2) | Nyir'ubucuruzi | owner screens | draft |
 | Sign in / Sign out (Batch 2) | Injira / Sohoka | login screens | draft |
 | Password (Batch 2) | Ijambo ry'ibanga | login screens | draft |
+
+## Platform screens (Batch 2, all draft)
+| English | Kinyarwanda (draft) | Used in | Status |
+|---|---|---|---|
+| Your site | Urubuga rwawe | Owner.title | draft |
+| Live / Not live yet / Paused | Rurakora / Ntirurajya ahagaragara / Rwahagaritswe | Owner.* | draft |
+| Clients | Abakiriya | Admin.clients | draft |
+| New business | Ubucuruzi bushya | Admin.newBusiness | draft |
+| Modules / On / Off | Ibice / Birakora / Ntibikora | Admin.modules, Admin.on, Admin.off | draft |
+| Invite owner | Tumira nyir'ubucuruzi | Admin.inviteOwner | draft |
+| Support session / Support visits | Igihe cy'ubufasha / Gusurwa n'abafasha | Admin.support, Owner.support | draft |
+| Reason | Impamvu | Admin.reason | draft |
+| Draft / Active / Paused (business status) | Igitekerezo / Gikora / Cyahagaritswe | Admin.statusName.* | draft |
+| Two-factor login / 6-digit code / Verify | Kwinjira mu ntambwe ebyiri / Imibare 6 / Emeza | Admin.enrollTitle, Admin.code, Admin.verify | draft |
+| This site is not available | Uru rubuga ntiruboneka | NotFound.title | draft |

@@ -193,3 +193,15 @@ Entry format:
   The SEO test's base moved to the demo's own address, as the spec says (canonical = the demo's `siteBaseUrl`); its assertions are unchanged.
 - Page weight: every page passes; JS is 145.4 KB (unchanged); `/` is 167.2 KB.
 - Deviations: `PLATFORM_DOMAIN` is a **build-time** setting for canonical and sitemap addresses (static pages), so it needs a redeploy after a change; routing reads it per request. Noted in the spec. `/en/...` paths are now a 404 instead of a redirect to `/...`. The layout's theme colour is the template's (one template for now).
+
+## Batch 2, feature 8: demo lodge in the database, getSite() from the database | 2026-11-12
+- Built:
+  - **Seed:** `supabase/seed.sql` is **generated** from `apps/web/src/data/demo-lodge.ts` by `scripts/gen-demo-seed.mjs` (`pnpm db:seed:gen`): fixed name-based ids, upserts, marked DEMO DATA — FAKE. Checked idempotent by applying it twice (same counts). `pnpm db:check` (in CI) now also fails when the seed is out of date.
+  - **New migration** `20261112100700_item_handles.sql`: `catalog_items.handle` (readable ids for `#room-…` and `?room=…`, unique per business and kind), now also returned by `get_published_site`. The locked field list and its test are updated with exactly this one field.
+  - **Core `rowToSiteData`** maps the public JSON to `SiteData` with plain checks (template, style, currency, name, contacts, map link, English hero title, both prices); a broken published site raises an error instead of rendering half empty.
+  - **`getSite()`** (server-only) calls `get_published_site` with a cookie-less anonymous client and Next caching (`revalidate` 300 s, tag `site:<slug|host>`). `publishedSlugs()` feeds static generation. The app no longer imports `demo-lodge.ts` (an ESLint rule enforces it; it only feeds the seed). The restricted-import rules are regrouped so the two restrictions don't override each other.
+  - **Build without database settings** stops with "Missing NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY", so there is no silent fallback to the file.
+  - Glossary: platform-screen terms added (all draft).
+- Tests: 87 unit tests (3 new: mapping, ordering and handles, refusing a broken site); 159 database checks; 52 Playwright tests (3 new: the demo exists in the database; a new active, published business shows at `/s/<slug>` without a rebuild, with its own canonical; draft, unpublished and paused businesses give a clean 404 with no business data). **All Batch 1 guest tests pass unchanged against the database.** Bundle guard: no Supabase code in any browser file.
+- Page weight: **JS 145.4 KB on every guest page, unchanged** (within ±1 KB of Batch 1); every page is under 300 KB (`/` 167.2 KB).
+- Deviations: pages stay cached for up to 5 minutes after a change (including a pause) until the Batch 3 editor revalidates on save. Room and dish photos are `media` rows; other photos (hero, moments, dining, host) stay in `site_settings` JSON until the editor's photo upload (Batch 3).
