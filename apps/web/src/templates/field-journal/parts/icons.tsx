@@ -32,6 +32,8 @@ const glyphs = {
   pin: "M12 21 s-7 -6.5 -7 -11.5 a7 7 0 0 1 14 0 c0 5 -7 11.5 -7 11.5 Z M12 12.5 a2.5 2.5 0 1 0 0 -5 a2.5 2.5 0 1 0 0 5",
   call: "M5 4 h4 l2 5 l-2.5 1.5 a11 11 0 0 0 5 5 L15 13 l5 2 v4 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 6 a2 2 0 0 1 2 -2",
   chat: "M4 20 L5.5 15.5 A8 8 0 1 1 8.5 18.5 Z",
+  mail: "M3 6 H21 V18 H3 Z M3 6 L12 13 L21 6",
+  out: "M14 4 H20 V10 M20 4 L11 13 M18 14 V20 H4 V6 H10",
 } as const;
 
 export function Glyph({ name, size = 22 }: { name: keyof typeof glyphs; size?: number }) {

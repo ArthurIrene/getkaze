@@ -11,7 +11,7 @@ Users: Guests (no login) see the site. The owner changes the content later in th
 | Part | Pages | Status |
 |---|---|---|
 | **Part 1** | Business data type and rules in `packages/core`, demo lodge data, **home page** (phone 360 px first, then desktop), language switch | This branch |
-| **Part 2** | **Rooms** page, **Contact** page, links from home to both | Later branch |
+| **Part 2** | **Rooms** page, **Contact** page, links from home to both | Batch 1 (specs/rooms-page.md, specs/contact-page.md, specs/site-navigation.md) |
 
 ## Screens
 - **Home (part 1):** `mockups/canvas/T1-Home.dc.html`; motion: `mockups/motion-previews/field-journal-motion-preview.html`.
@@ -32,7 +32,7 @@ Users: Guests (no login) see the site. The owner changes the content later in th
   - Footer: name, "murakaza neza" line, copyright.
   - Sticky bar: "Check availability" and Call.
 - **Rooms (part 2):** `mockups/canvas/T1-Rooms.dc.html`: swipe gallery per room, name, price, amenity icons, "More +", "Check dates", folded check-in / children / payment.
-- **Contact (part 2):** no mockup yet. Must be designed before part 2 starts; until then the home "Find us" section covers contact.
+- **Contact (part 2):** no mockup; designed in specs/contact-page.md (text wireframe, Batch 1).
 - **Not designed yet (MOCKUPS.md, "Still to design"):** desktop views, the open menu (burger) and the language list. Part 1 uses a simple desktop layout from the phone design and shows EN / RW as two links instead of a menu.
 
 ## Data (DATA.md, read only)

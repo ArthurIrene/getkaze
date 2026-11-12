@@ -1,20 +1,47 @@
 import { getTranslations } from "next-intl/server";
-import type { SiteView } from "@getkaze/core";
-import { getPathname } from "@/i18n/navigation";
+import { menuPages, type PageId, type SiteView } from "@getkaze/core";
 import { routing, type Locale } from "@/i18n/routing";
+import { checkHref, pageHref } from "./links";
 
-/** Name, language links (plain links, no JavaScript) and the CSS-only RWF/USD switch. */
-export async function Header({ site, locale }: { site: SiteView; locale: Locale }) {
+type HeaderProps = { site: SiteView; locale: Locale; page: PageId; pages: PageId[] };
+
+/**
+ * Name (links home), language links to the same page (plain links), the
+ * CSS-only RWF/USD switch, and the site menu: a <details> on phones, inline
+ * links on desktop. No JavaScript.
+ */
+export async function Header({ site, locale, page, pages }: HeaderProps) {
   const t = await getTranslations("FieldJournal");
+  const n = await getTranslations("Nav");
+  const links = menuPages(pages);
+  const check = checkHref(site, locale, pages, t("checkMessage", { name: site.name }));
+  // On the booking request the currency radios belong to the form, so the quoted total uses the guest's choice.
+  const curForm = page === "book" ? "fj-book" : undefined;
+  const curName = page === "book" ? "cur" : "fj-cur";
+  const items = links.map((id) => (
+    <li key={id}>
+      <a href={pageHref(id, locale)} aria-current={id === page ? "page" : undefined}>
+        {n(id)}
+      </a>
+    </li>
+  ));
   return (
     <header className="fj-header">
-      <span className="fj-logo">{site.name}</span>
+      <a className="fj-logo" href={pageHref("home", locale)}>
+        {site.name}
+      </a>
+      <nav aria-label={n("site")} className="fj-nav-inline">
+        <ul>{items}</ul>
+        <a className="fj-nav-check" href={check}>
+          {t("check")}
+        </a>
+      </nav>
       <div className="fj-header-tools">
         <nav aria-label={t("language")} className="fj-pills">
           {routing.locales.map((code) => (
             <a
               key={code}
-              href={getPathname({ href: "/", locale: code })}
+              href={pageHref(page, code)}
               hrefLang={code}
               lang={code}
               aria-current={code === locale ? "page" : undefined}
@@ -25,11 +52,23 @@ export async function Header({ site, locale }: { site: SiteView; locale: Locale 
         </nav>
         <fieldset className="fj-pills fj-cur">
           <legend className="fj-sr">{t("currency")}</legend>
-          <input type="radio" name="fj-cur" id="fj-cur-rwf" defaultChecked={site.defaultCurrency === "rwf"} />
+          <input type="radio" name={curName} form={curForm} id="fj-cur-rwf" value="rwf" defaultChecked={site.defaultCurrency === "rwf"} />
           <label htmlFor="fj-cur-rwf">RWF</label>
-          <input type="radio" name="fj-cur" id="fj-cur-usd" defaultChecked={site.defaultCurrency === "usd"} />
+          <input type="radio" name={curName} form={curForm} id="fj-cur-usd" value="usd" defaultChecked={site.defaultCurrency === "usd"} />
           <label htmlFor="fj-cur-usd">USD</label>
         </fieldset>
+        <details className="fj-menu">
+          <summary aria-label={n("menu")}>
+            <span className="fj-burger" aria-hidden="true" />
+          </summary>
+          <nav aria-label={n("site")} className="fj-menu-panel fj-fade">
+            <ul>{items}</ul>
+            <a className="fj-menu-check" href={check}>
+              {t("check")}
+            </a>
+            <span className="fj-hand fj-menu-welcome">{t("welcome")}</span>
+          </nav>
+        </details>
       </div>
     </header>
   );

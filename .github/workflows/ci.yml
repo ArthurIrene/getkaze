@@ -52,8 +52,22 @@ jobs:
       - name: Install Chromium for Playwright
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Page weight (first view of / and /rw, 300 KB budget)
-        run: pnpm weight-check --skip-build
+      - name: Page weight (first view of every guest page, 300 KB budget)
+        run: pnpm weight-check --skip-build --json weight.json
+
+      - name: Slow-3G timing (report only)
+        run: pnpm speed-check --json speed.json
 
       - name: Playwright (production server)
         run: pnpm e2e
+
+      - name: Keep the weight and timing reports
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: speed-reports
+          path: |
+            weight.json
+            speed.json
+          if-no-files-found: ignore
+          retention-days: 30

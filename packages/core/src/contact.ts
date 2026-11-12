@@ -16,3 +16,15 @@ export function whatsAppLink(phone: string, message?: string): string {
   const base = `https://wa.me/${digits(phone)}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
+
+/**
+ * A `mailto:` link, optionally with subject and body. Encoded with
+ * encodeURIComponent so spaces become %20 (mail apps do not read "+").
+ */
+export function mailLink(email: string, subject?: string, body?: string): string {
+  const params = [
+    subject ? `subject=${encodeURIComponent(subject)}` : "",
+    body ? `body=${encodeURIComponent(body)}` : "",
+  ].filter(Boolean);
+  return `mailto:${email.trim()}${params.length ? `?${params.join("&")}` : ""}`;
+}

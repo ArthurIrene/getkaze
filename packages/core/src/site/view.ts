@@ -2,7 +2,7 @@ import { pickText, type ContentLocale, type LocalizedText } from "../i18n";
 import { currencies, showPrice, type Currency, type Price } from "../money";
 import { telLink } from "../contact";
 import { visibleSections, type SectionId } from "../sections";
-import type { IconKey, Photo, PhotoPlace, SiteData } from "./types";
+import type { AmenityIcon, IconKey, Photo, PhotoPlace, PropertyStyle, SiteData } from "./types";
 
 /** A price in both currencies, already formatted, so a page can switch without a server trip. */
 export type PriceView = Record<Currency, string>;
@@ -17,17 +17,41 @@ export type PhotoView = { id: string; place: PhotoPlace; alt: string; src?: stri
 export type SiteView = {
   businessId: string;
   name: string;
+  baseUrl: string;
+  propertyStyle: PropertyStyle;
+  /** Languages with owner content (D-029); only these get their own indexed pages. */
+  languages: ContentLocale[];
+  seoDescription: string;
   legalName: string;
   defaultCurrency: Currency;
   sections: SectionId[];
   contacts: { phone: string; whatsapp: string; email?: string; telHref: string };
-  location: { mapUrl: string; area: string; distanceNote?: string };
+  location: {
+    mapUrl: string;
+    area: string;
+    distanceNote?: string;
+    directions: string[];
+    address: SiteData["location"]["address"];
+  };
   hours: string[];
   payment: string[];
+  bookingPayments: SiteData["bookingPayments"];
   hero: { title: string; line: string; photo: PhotoView };
   facts: { id: string; value: string; icon: IconKey; detail: string }[];
   moments: { id: string; caption: string; icon: IconKey; photo: PhotoView }[];
-  rooms: { id: string; name: string; line: string; price: PriceView; maxGuests: number; photos: PhotoView[] }[];
+  rooms: {
+    id: string;
+    name: string;
+    line: string;
+    price: PriceView;
+    /** The owner's numbers, for totals and price ranges. */
+    priceValue: Price;
+    maxGuests: number;
+    photos: PhotoView[];
+    amenities: { icon: AmenityIcon; label: string }[];
+  }[];
+  roomsLine: string;
+  stay: { checkIn: string; checkOut: string; breakfastIncluded: boolean; notes: string[] };
   dining: {
     name: string;
     photo: PhotoView;
@@ -62,6 +86,10 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
   return {
     businessId: site.businessId,
     name: site.name,
+    baseUrl: site.baseUrl.replace(/\/+$/, ""),
+    propertyStyle: site.propertyStyle,
+    languages: site.languages.includes("en") ? site.languages : ["en", ...site.languages],
+    seoDescription: site.seoDescription ? t(site.seoDescription) : "",
     legalName: site.legalName,
     defaultCurrency: site.defaultCurrency,
     sections: visibleSections(site.sections, site.modulesOn, (id) => hasContent[id]),
@@ -70,9 +98,12 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       mapUrl: site.location.mapUrl,
       area: t(site.location.area),
       distanceNote: site.location.distanceNote && t(site.location.distanceNote),
+      directions: site.location.directions.map(t),
+      address: site.location.address,
     },
     hours: site.hours.map(t),
     payment: site.payment.map(t),
+    bookingPayments: site.bookingPayments,
     hero: { title: t(site.hero.title), line: t(site.hero.line), photo: photo(site.hero.photo) },
     facts: site.facts.map((f) => ({ id: f.id, value: t(f.value), icon: f.icon, detail: t(f.detail) })),
     moments: site.moments.map((m) => ({ id: m.id, caption: t(m.caption), icon: m.icon, photo: photo(m.photo) })),
@@ -81,9 +112,13 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       name: t(r.name),
       line: t(r.line),
       price: prices(r.price),
+      priceValue: r.price,
       maxGuests: r.maxGuests,
       photos: r.photos.map(photo),
+      amenities: r.amenities.map((a) => ({ icon: a.icon, label: t(a.label) })),
     })),
+    roomsLine: site.roomsLine ? t(site.roomsLine) : "",
+    stay: { ...site.stay, notes: site.stay.notes.map(t) },
     dining: {
       name: t(site.dining.name),
       photo: photo(site.dining.photo),

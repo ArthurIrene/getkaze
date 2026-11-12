@@ -9,7 +9,7 @@
  * Some Kinyarwanda texts are left out on purpose, so /rw shows the English
  * fallback (D-029).
  */
-import type { Photo, SiteData } from "@getkaze/core";
+import type { Amenity, Photo, SiteData } from "@getkaze/core";
 
 const photo = (id: string, place: Photo["place"], en: string, rw?: string): Photo => ({
   id,
@@ -17,9 +17,21 @@ const photo = (id: string, place: Photo["place"], en: string, rw?: string): Phot
   alt: rw ? { en, rw } : { en },
 });
 
+const a = (icon: Amenity["icon"], en: string, rw?: string): Amenity => ({ icon, label: rw ? { en, rw } : { en } });
+
+/** Three placeholder photos per room (bed, view, bathroom), as in the rooms mockup. */
+const roomPhotos = (id: string, name: string): Photo[] => [
+  photo(`${id}-1`, "room", `${name}: the bed`),
+  photo(`${id}-2`, "room", `${name}: the view`),
+  photo(`${id}-3`, "room", `${name}: the bathroom`),
+];
+
 export const demoLodge: SiteData = {
   businessId: "demo-kinigi-hills",
   name: "Kinigi Hills",
+  // The build-phase demo URL (D-053). Real businesses get their own domain or subdomain (Batch 2).
+  baseUrl: "https://getkaze.vercel.app",
+  propertyStyle: "lodge",
   legalName: "Kinigi Hills Lodge (demo)",
   template: "field-journal",
   defaultCurrency: "usd",
@@ -28,14 +40,23 @@ export const demoLodge: SiteData = {
   contacts: {
     phone: "+250 700 000 000",
     whatsapp: "+250 700 000 000",
+    // example.com is reserved for examples: this address never reaches anyone.
+    email: "hello@example.com",
   },
   location: {
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Kinigi%2C%20Musanze",
     area: { en: "Kinigi Sector, Musanze District", rw: "Umurenge wa Kinigi, Akarere ka Musanze" },
     distanceNote: { en: "Musanze 25'" },
+    address: { locality: "Kinigi", region: "Musanze", country: "RW" },
+    directions: [
+      { en: "From Musanze town: 25 minutes by car on the Kinigi road.", rw: "Uvuye mu mujyi wa Musanze: iminota 25 n'imodoka ku muhanda wa Kinigi." },
+      { en: "From Kigali: about 2 hours 30 minutes.", rw: "Uvuye i Kigali: amasaha 2 n'iminota 30." },
+      { en: "Ask us for a driver from Kigali or Musanze." },
+    ],
   },
   hours: [{ en: "Reception every day, 6:00 to 22:00", rw: "Kwakira abashyitsi buri munsi, 6:00 kugeza 22:00" }],
   payment: [{ en: "Cash (RWF, USD), MTN MoMo, Airtel Money", rw: "Amafaranga (RWF, USD), MTN MoMo, Airtel Money" }],
+  bookingPayments: ["lodge", "momo", "airtel", "bank"],
   sections: [
     { id: "hero", visible: true },
     { id: "facts", visible: true },
@@ -85,7 +106,8 @@ export const demoLodge: SiteData = {
       line: { en: "Quiet, facing the garden. Made for solo trekkers who want an early night." },
       price: { rwf: 45000, usd: 35 },
       maxGuests: 1,
-      photos: [photo("r-garden-single", "room", "Garden Single room")],
+      photos: roomPhotos("r-garden-single", "Garden Single"),
+      amenities: [a("bed", "1 bed", "uburiri 1"), a("people", "1 guest", "umuntu 1"), a("shower", "Shower", "Douche"), a("wifi", "Wi-Fi")],
     },
     {
       id: "garden-double",
@@ -93,7 +115,8 @@ export const demoLodge: SiteData = {
       line: { en: "Queen bed, a writing desk and morning sun on the garden." },
       price: { rwf: 60000, usd: 45 },
       maxGuests: 2,
-      photos: [photo("r-garden-double", "room", "Garden Double room")],
+      photos: roomPhotos("r-garden-double", "Garden Double"),
+      amenities: [a("bed", "Queen", "Uburiri bunini"), a("people", "2 guests", "abantu 2"), a("desk", "Desk", "Ameza yo kwandikiraho"), a("wifi", "Wi-Fi")],
     },
     {
       id: "volcano-view-double",
@@ -101,7 +124,8 @@ export const demoLodge: SiteData = {
       line: { en: "Our favourite. A private balcony facing Sabyinyo and Bisoke at sunrise." },
       price: { rwf: 80000, usd: 60 },
       maxGuests: 2,
-      photos: [photo("r-volcano-view", "room", "Volcano View Double room")],
+      photos: roomPhotos("r-volcano-view", "Volcano View Double"),
+      amenities: [a("bed", "Queen", "Uburiri bunini"), a("people", "2 guests", "abantu 2"), a("view", "View", "Ahantu heza ho kureba"), a("wifi", "Wi-Fi")],
     },
     {
       id: "family-cottage",
@@ -109,9 +133,20 @@ export const demoLodge: SiteData = {
       line: { en: "Two bedrooms around a fireplace, for families or a small trekking group." },
       price: { rwf: 100000, usd: 75 },
       maxGuests: 4,
-      photos: [photo("r-family-cottage", "room", "Family Cottage")],
+      photos: roomPhotos("r-family-cottage", "Family Cottage"),
+      amenities: [a("bed", "2 rooms", "Ibyumba 2"), a("people", "4 guests", "abantu 4"), a("fire", "Fireplace", "Iziko"), a("wifi", "Wi-Fi")],
     },
   ],
+  roomsLine: { en: "four rooms, one view", rw: "ibyumba bine, ahantu hamwe ho kureba" },
+  stay: {
+    checkIn: "14:00",
+    checkOut: "10:00",
+    breakfastIncluded: true,
+    notes: [
+      { en: "Early check-in for trekkers on request", rw: "Abajya gusura ingagi bashobora kwinjira kare babisabye" },
+      { en: "Children under 5 stay free", rw: "Abana bari munsi y'imyaka 5 ntibishyura" },
+    ],
+  },
   dining: {
     name: { en: "the fireside room" },
     photo: photo("dining", "dining", "The fireside dining room"),

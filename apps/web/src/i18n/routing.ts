@@ -12,6 +12,8 @@ export const routing = defineRouting({
   defaultLocale: "en",
   localePrefix: "as-needed",
   localeDetection: false,
+  // No NEXT_LOCALE cookie: the language comes from the URL only, so guest sites set no cookies (privacy-notice.md).
+  localeCookie: false,
 });
 
 export type Locale = (typeof routing.locales)[number];

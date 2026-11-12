@@ -32,5 +32,132 @@
   "Languages": {
     "en": "Icyongereza",
     "rw": "Ikinyarwanda"
+  },
+  "Nav": {
+    "site": "Urubuga",
+    "menu": "Ibikubiyemo",
+    "close": "Funga",
+    "home": "Ahabanza",
+    "rooms": "Ibyumba",
+    "contact": "Twandikire",
+    "book": "Reba ibyumba bihari",
+    "privacy": "Ubuzima bwite"
+  },
+  "Rooms": {
+    "title": "Ibyumba",
+    "allRooms": "Ibyumba byose →",
+    "perNight": "ku ijoro",
+    "breakfast": "ifunguro rya mu gitondo ririmo",
+    "number": "Nº {n}",
+    "more": "Ibindi +",
+    "less": "Bike −",
+    "checkDates": "Reba amatariki",
+    "datesMessage": "Muraho {name}, ndashaka kumenya amatariki ya {room}.",
+    "sleeps": "Icyumba cy'abantu {n}",
+    "stayInfo": "Kwinjira, abana no kwishyura",
+    "checkInOut": "Kwinjira guhera {in} · gusohoka bitarenze {out}"
+  },
+  "Contact": {
+    "title": "Twandikire",
+    "line": "twishimiye kukwakira",
+    "callUs": "Duhamagare",
+    "whatsappUs": "Twandikire kuri WhatsApp",
+    "emailUs": "Twandikire kuri imeli",
+    "helloMessage": "Muraho {name}, mfite ikibazo.",
+    "openMaps": "Fungura muri Google Maps",
+    "address": "Aderesi",
+    "hours": "Amasaha",
+    "gettingHere": "Uko wahagera",
+    "payment": "Kwishyura",
+    "allDetails": "Aho mwatubariza hose →"
+  },
+  "Book": {
+    "title": "Reba ibyumba bihari",
+    "line": "bifata umunota umwe",
+    "room": "1 · Icyumba",
+    "sleeps": "Icyumba cy'abantu {n}",
+    "dates": "2 · Amatariki",
+    "checkIn": "Kugera",
+    "checkOut": "Kugenda",
+    "guests": "3 · Abashyitsi",
+    "adults": "Abakuru",
+    "children": "Abana",
+    "pay": "4 · Uko wifuza kwishyura",
+    "details": "5 · Umwirondoro wawe",
+    "name": "Izina ryawe",
+    "note": "Icyo wongeraho (si ngombwa)",
+    "notePlaceholder": "Uzahagera utinze? Impushya? Umushoferi?",
+    "send": "6 · Ohereza icyifuzo cyawe",
+    "sendWhatsApp": "Ohereza kuri WhatsApp",
+    "sendEmail": "Ohereza kuri imeli",
+    "sendNote": "Bijya kuri {name} biturutse kuri WhatsApp cyangwa imeli yawe. Nta kwishyura ubu; bazagusubiza baguha uburyo bwo kwishyura.",
+    "privacy": "Ubuzima bwite",
+    "method": {
+      "lodge": "Kuri lodge (amafaranga cyangwa ikarita)",
+      "momo": "MTN MoMo",
+      "airtel": "Airtel Money",
+      "bank": "Kohereza muri banki"
+    },
+    "methodNote": {
+      "lodge": "Wishyura lodge imbonankubone, ugeze.",
+      "momo": "Bashobora kugusaba avansi kugira ngo bakubikire icyumba. Lodge izakoherereza kode ya MoMo hamwe n'iyemeza.",
+      "airtel": "Bashobora kugusaba avansi kugira ngo bakubikire icyumba. Lodge izakoherereza amakuru ya Airtel Money hamwe n'iyemeza.",
+      "bank": "Byoroshye niba wishyura uri mu mahanga. Lodge izakoherereza amakuru ya banki hamwe n'iyemeza."
+    },
+    "error": {
+      "title": "Hari icyo gukosora",
+      "dates": "Itariki yo kugenda igomba kuba nyuma y'iyo kugera, uhereye uyu munsi, amajoro atarenze 30.",
+      "guests": "Iki cyumba cyakira abantu bagera kuri {n}.",
+      "missing": "Hitamo icyumba, amatariki, uko wishyura n'izina ryawe.",
+      "back": "Kanda \"subira inyuma\" muri mushakisha yawe; ibyo wujuje biracyahari."
+    },
+    "msg": {
+      "hello": "Muraho {business}! Ndifuza:",
+      "room": "Icyumba: {room}",
+      "dates": "Amatariki: {from} kugeza {to} (amajoro {nights})",
+      "guests": "Abashyitsi: abakuru {adults}{children, plural, =0 {} other {, abana #}}",
+      "total": "Igiciro cyagereranyijwe: {total} ({nights} × {price})",
+      "pay": "Nifuza kwishyura binyuze kuri: {method}",
+      "name": "Izina: {name}",
+      "note": "Icyitonderwa: {note}",
+      "subject": "Icyifuzo cyo gufata icyumba: {room}, {from} kugeza {to}"
+    }
+  },
+  "Privacy": {
+    "title": "Itangazo ryerekeye ubuzima bwite",
+    "draft": "Inyandiko y'agateganyo, itegereje isuzuma ry'umunyamategeko",
+    "updated": "Byavuguruwe ku wa {date}",
+    "who": {
+      "title": "Abo turi bo"
+    },
+    "collect": {
+      "title": "Ibyo uru rubuga rukusanya"
+    },
+    "booking": {
+      "title": "Ibyifuzo byo gufata icyumba"
+    },
+    "where": {
+      "title": "Aho amakuru abikwa"
+    },
+    "rights": {
+      "title": "Uburenganzira bwawe"
+    },
+    "changes": {
+      "title": "Impinduka"
+    }
+  },
+  "Seo": {
+    "style": {
+      "lodge": "Lodge",
+      "townHotel": "Hoteli",
+      "guesthouse": "Inzu y'abashyitsi"
+    },
+    "homeTitle": "{name} | {style} i {locality}, {region}",
+    "pageTitle": "{page} | {name}",
+    "homeDescription": "{title}. {style} i {area}. Ibyumba guhera kuri {price}.",
+    "roomsDescription": "Ibyumba {count} guhera kuri {price}{breakfast, select, yes {, ifunguro rya mu gitondo ririmo} other {}}.",
+    "contactDescription": "Hamagara, andika kuri WhatsApp cyangwa usure {name} i {area}. {hours}.",
+    "bookDescription": "Oherereza {name} icyifuzo cyo gufata icyumba kuri WhatsApp cyangwa imeli.",
+    "privacyDescription": "Uko {name} ifata amakuru yawe bwite."
   }
 }

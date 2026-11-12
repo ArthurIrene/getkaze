@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-/** Happy path on a 360x800 phone: home, language link, currency switch, WhatsApp booking link. */
-test("home happy path: RW link, RWF/USD switch, Check availability on WhatsApp", async ({ page }) => {
+/** Happy path on a 360x800 phone: home, language link, currency switch, booking request link. */
+test("home happy path: RW link, RWF/USD switch, Check availability opens the request form", async ({ page }) => {
   const res = await page.goto("/");
   expect(res?.status()).toBe(200);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -23,14 +23,10 @@ test("home happy path: RW link, RWF/USD switch, Check availability on WhatsApp",
   expect(rwfText).toMatch(/^RWF /);
   expect(rwfText).not.toBe(usdText);
 
-  // "Check availability" opens WhatsApp with a prefilled message.
-  const check = page.getByRole("link", { name: "Check availability" });
+  // "Check availability" opens the request form (D-044); e2e/book.spec.ts follows it to WhatsApp.
+  const check = page.locator(".fj-bar").getByRole("link", { name: "Check availability" });
   await expect(check).toBeVisible();
-  const href = (await check.getAttribute("href")) ?? "";
-  const url = new URL(href);
-  expect(url.origin).toBe("https://wa.me");
-  expect(url.pathname).toMatch(/^\/\d{9,15}$/);
-  expect(url.searchParams.get("text") ?? "").toMatch(/check availability/i);
+  await expect(check).toHaveAttribute("href", "/book");
 
   // The RW link goes to /rw.
   await page.evaluate(() => window.scrollTo(0, 0));

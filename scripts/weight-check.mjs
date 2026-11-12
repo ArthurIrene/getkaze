@@ -8,14 +8,19 @@
  * Fails when the first view of any page is over the budget. JavaScript is
  * reported but not enforced yet (JS budget still open).
  *
+ * JavaScript above 160 KB on a page prints a FLAG line (the run still passes).
+ *
  *   node scripts/weight-check.mjs [--skip-build] [--port 3100] [--json out.json]
+ *   WEIGHT_PAGES=/,/rooms node scripts/weight-check.mjs   (measure only these pages)
  */
 import { spawn, spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
 
-const PAGES = ["/", "/rw"];
-const BUDGET = 300 * 1024; // first view, all transferred bytes
+const ALL_PAGES = ["/", "/rw", "/rooms", "/rw/rooms", "/contact", "/rw/contact", "/book", "/rw/book", "/privacy"];
+const PAGES = process.env.WEIGHT_PAGES ? process.env.WEIGHT_PAGES.split(",") : ALL_PAGES;
+const BUDGET = 300 * 1024; // first view, all transferred bytes: fails above this
+const JS_FLAG = Number(process.env.WEIGHT_JS_FLAG_KB ?? 160) * 1024; // JS budget still open: flagged above this, never fails
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
 const opt = (name, fallback) => {
@@ -126,37 +131,52 @@ try {
 }
 
 const order = ["HTML", "CSS", "JS", "Images", "Fonts", "Other"];
-console.log("\nFirst view, 360x800, empty cache. transferred = body bytes on the wire (compressed, no headers); raw = decoded. 1 KB = 1024 B.\n");
-console.log(pad("type", 8) + results.map((r) => pad(`${r.path} transferred`, 18) + pad(`${r.path} raw`, 14)).join(""));
-for (const k of order) {
-  if (!results.some((r) => r.totals[k])) continue;
+const used = order.filter((k) => results.some((r) => r.totals[k]));
+console.log("\nFirst view, 360x800, empty cache. transferred = body bytes on the wire (compressed, no headers). 1 KB = 1024 B.\n");
+console.log(pad("page", 14) + used.map((k) => pad(k, 13)).join("") + pad("total", 11) + "raw total");
+for (const r of results) {
   console.log(
-    pad(k, 8) +
-      results
-        .map((r) => {
-          const t = r.totals[k] ?? { body: 0, raw: 0, count: 0 };
-          return pad(kb(t.body) + ` (${t.count})`, 18) + pad(kb(t.raw), 14);
-        })
-        .join(""),
+    pad(r.path, 14) +
+      used.map((k) => pad(`${kb(r.totals[k]?.body ?? 0).trim()} (${r.totals[k]?.count ?? 0})`, 13)).join("") +
+      pad(kb(r.total.body).trim(), 11) +
+      kb(r.total.raw).trim(),
   );
 }
-console.log(pad("Total", 8) + results.map((r) => pad(kb(r.total.body), 18) + pad(kb(r.total.raw), 14)).join(""));
 
+const jsSets = new Map();
 for (const r of results) {
-  console.log(`\nJS files on ${r.path} (transferred / raw, encoding):`);
-  for (const f of r.rows.filter((x) => x.kind === "JS").sort((a, b) => b.body - a.body)) {
+  const files = r.rows.filter((x) => x.kind === "JS").sort((a, b) => b.body - a.body);
+  const key = files.map((f) => new URL(f.url).pathname).join(",");
+  if (!jsSets.has(key)) jsSets.set(key, { pages: [], files });
+  jsSets.get(key).pages.push(r.path);
+}
+for (const { pages, files } of jsSets.values()) {
+  console.log(`\nJS files on ${pages.join(", ")} (transferred / raw, encoding):`);
+  for (const f of files) {
     console.log(`  ${kb(f.body)} ${String(f.body).padStart(8)} B  ${kb(f.raw)}  ${pad(f.encoding, 6)} ${new URL(f.url).pathname}`);
   }
 }
 
-console.log(`\nBudget: ${kb(BUDGET).trim()} per first view (JS reported only, budget still open).`);
+console.log(`\nBudget: ${kb(BUDGET).trim()} per first view. JS is reported, and flagged over ${kb(JS_FLAG).trim()} (JS budget still open).`);
 for (const r of results) {
   const ok = r.total.body <= BUDGET;
   if (!ok) failed = true;
-  console.log(`${ok ? "PASS" : "FAIL"}  ${r.path}  ${kb(r.total.body).trim()}  (JS ${kb(r.totals.JS?.body ?? 0).trim()})`);
+  const js = r.totals.JS?.body ?? 0;
+  console.log(`${ok ? "PASS" : "FAIL"}  ${pad(r.path, 12)} ${kb(r.total.body).trim().padStart(9)}  (JS ${kb(js).trim()})`);
+  if (js > JS_FLAG) console.log(`FLAG  ${pad(r.path, 12)} JS ${kb(js).trim()} is over ${kb(JS_FLAG).trim()}`);
 }
 
 const jsonOut = opt("--json");
-if (jsonOut) writeFileSync(jsonOut, JSON.stringify(results.map(({ path, totals, total, rows }) => ({ path, totals, total, files: rows.map(({ url, kind, body, raw, encoding }) => ({ url, kind, body, raw, encoding })) })), null, 2));
+if (jsonOut) {
+  const report = results.map(({ path, totals, total, rows }) => ({
+    path,
+    totals,
+    total,
+    pass: total.body <= BUDGET,
+    jsFlag: (totals.JS?.body ?? 0) > JS_FLAG,
+    files: rows.map(({ url, kind, body, raw, encoding }) => ({ url: new URL(url).pathname, kind, body, raw, encoding })),
+  }));
+  writeFileSync(jsonOut, JSON.stringify({ budget: BUDGET, jsFlag: JS_FLAG, pages: report }, null, 2));
+}
 
 process.exit(failed ? 1 : 0);

@@ -87,3 +87,9 @@ Order-ahead at launch: restaurant confirms by WhatsApp, guest pays on pickup.
 | Platform admin | Compliance gate; template neighbour check; discounts with 70% floor; overdue timeline (D-049) | P1 |
 | Owner app | Every row opens a form; photo upload auto-shrink and placement; locked modules with "Ask to switch on" (D-050) | P1 |
 | Backlog | Events module, rotating-badge scroll scene, 24-hour timeline, "Kitchen busy +15 min", channel sync | Later |
+
+## Build status (Batch 1, 2026-11-12, demo data only)
+- **Room list:** built (Field Journal rooms page: gallery, prices in RWF and USD, amenities, stay info).
+- **Booking requests:** launch mode built (`/book` form → the guest's own WhatsApp or email, nothing stored; D-044). Availability, booking code and inbox wait for NCSA (D-049).
+- **Privacy notice:** per client site built, **draft pending lawyer review**. Our own site's notice is not built yet.
+- **Website basics:** contact page, site menu, SEO basics (noindex until G2), PWA manifest (no service worker), speed pass with CI weight and slow-3G checks.

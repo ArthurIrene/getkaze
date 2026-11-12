@@ -13,7 +13,11 @@ Status: v1.0 (7 Nov 2026). Law No. 058/2021 on the protection of personal data a
 3. File registration as controller and processor (forms on the NCSA Data Protection Office website).
 4. While waiting: write the Data Protection Impact Assessment (DPIA) for hosting outside Rwanda (official guide and form on the DPO website); collect hosting agreements (Supabase and Cloudflare data processing agreements); list hosting countries for primary storage and backups.
 5. When the registration number arrives: apply for authorization to store outside Rwanda.
-6. Short lawyer consult: consent clause, client agreement, privacy notice, data roles.
+6. Short lawyer consult: consent clause, client agreement, privacy notice, data roles. Also ask (Batch 1, specs/privacy-notice.md):
+   - Is transient processing of booking-request details (name, dates, note) on a host outside Rwanda, never stored, allowed once registration is filed and before storage authorization?
+   - Wording of the controller and processor roles for Managed clients (section 6).
+   - Do server access logs at the hosting provider count as storage outside Rwanda here?
+   - Review the draft privacy notice text (`apps/web/messages/en.json`, `Privacy`); the Kinyarwanda body is translated from the approved English.
 
 ### Hosting countries
 - Supabase staging: Frankfurt, Germany (eu-central-1)
