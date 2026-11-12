@@ -6,7 +6,8 @@ Conflicts: the overview, points 2–5 (new CI pieces, sandbox permission, Postgr
 Goal: Every push proves the schema, RLS and isolation on a throwaway local Supabase, and only reviewed migrations reach staging, automatically and never the live project.
 
 ## Local Supabase in CI (pinned)
-- `supabase/config.toml` (from `supabase init`), with `project_id = "getkaze"` and `[db] major_version = <staging's major>` (17 expected; overview point 4).
+- `supabase/config.toml` (from `supabase init`), with `project_id = "getkaze"` and `[db] major_version = 17` (the CLI default; to be confirmed against staging, overview point 4).
+- **Local CLI:** the official release tarball for 2.122.0, verified with `sha256sum -c` against the release's `checksums.txt` before it runs (`scripts/supabase-cli.sh` downloads, verifies and caches it in `.tools/`, which git ignores).
   - `[auth] enable_signup = false`, `site_url = "http://127.0.0.1:3200"`, and `additional_redirect_urls` for `/auth/callback`.
   - `[auth.mfa.totp] enroll_enabled = true, verify_enabled = true`.
   - Mailpit (the bundled inbox) on. Studio, realtime, storage, edge runtime, analytics and the pooler stay off with `supabase start -x …`.
@@ -27,7 +28,7 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
 
 ## How migrations reach staging (proposal)
 **A GitHub Action, staging only. No Supabase connector, and no tool with write access to live.**
-- New workflow `.github/workflows/db-deploy.yml`. It runs `on: push: branches: [staging]` after CI passes (`workflow_run` on CI with `conclusion == success`, `head_branch == staging`), plus `workflow_dispatch` for a manual re-run.
+- New workflow `.github/workflows/db-deploy.yml`. It runs **only after CI passes on a push to `staging`** (a merge): `on: workflow_run` of CI with `conclusion == 'success'`, `event == 'push'` and `head_branch == 'staging'`. **Never on pull requests.** Plus `workflow_dispatch` restricted to the `staging` branch for a manual re-run.
 - It uses the GitHub **Environment `supabase-staging`**. You can add yourself as a required reviewer, so every migration waits for your click.
 - Steps:
   1. setup-cli (pinned as above).
@@ -47,13 +48,14 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
 | `SUPABASE_DB_PASSWORD` | Environment **secret** | The staging project's database password (Project Settings → Database; reset it there if unknown) |
 | `SUPABASE_PROJECT_REF` | Environment **variable** | The staging project ref (Project Settings → General, "Project ID", e.g. `abcd1234…`) |
 
-**Vercel** → Project getkaze → Settings → Environment Variables (environments **Production** (= the `staging` branch, D-053) and **Preview**):
+**Vercel** → Project getkaze → Settings → Environment Variables (environments **Production** (= the `staging` branch, D-053) and **Preview**, except where a row says otherwise):
 | Name | Sensitive | Value |
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | no | Staging Project Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | no | Staging → API → `anon` / publishable key |
-| `SUPABASE_SERVICE_ROLE_KEY` | **yes (Sensitive)** | Staging → API → `service_role` / secret key. Server only, never `NEXT_PUBLIC_` |
-| `APP_ROOT_DOMAIN` | no | Leave **unset** for now (no domain yet). Later e.g. `getkaze.rw` |
+| `SUPABASE_SERVICE_ROLE_KEY` | **yes (Sensitive)** | Staging → API → `service_role` / secret key. **Production environment only** (= `staging` branch), **not Preview**. Server only, never `NEXT_PUBLIC_`, used only by the invite route behind platform admin with 2FA. A CI check fails if it can reach client code. |
+| `PLATFORM_DOMAIN` | no | Leave **unset** until `*.altavision.rw` DNS points here; then `altavision.rw` (D-062) |
+| `APP_HOST` | no | Leave **unset** until `kaze.altavision.rw` points here; then `kaze.altavision.rw` |
 | `DEMO_SITE_SLUG` | no | `kinigi-hills` |
 
 **Supabase staging dashboard** → Authentication (account settings outside the repo, so you do these; I don't):

@@ -405,3 +405,9 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Replaces:** refines D-048 (admin "Translations" screen).
 - **Reason:** The owner can fix Kinyarwanda without a code change, and every fix still falls back safely.
 - **Status:** Confirmed
+
+## D-062 | 2026-11-12
+- **Decision:** Domains. The platform domain is **altavision.rw**. Each business is served at **`<slug>.altavision.rw`**; the base domain is a setting (`PLATFORM_DOMAIN`), not hard-coded. Our own screens (owner login, owner pages, platform admin) are on **`kaze.altavision.rw`**, also a setting (`APP_HOST`). Before the domain is set up, the fallback is `getkaze.vercel.app/s/<slug>/…`, and the bare `getkaze.vercel.app` keeps showing the demo lodge (D-053). **Reserved names** that can never be a business slug: `www`, `mail`, `admin`, `app`, `api`, `kaze`, plus every subdomain the company already uses (added to the list as they are named), plus the technical names the platform needs (`s`, `auth`, `login`, `owner`, `static`, `cdn`, `assets`, `smtp`, `imap`, `pop`, `webmail`, `ftp`, `ns1`, `ns2`, `autodiscover`, `autoconfig`, `_dmarc`, `status`, `support`, `help`, `docs`, `blog`). The list lives in the database (`reserved_slugs`, enforced by a trigger) and in `packages/core` (for form checks); a test keeps the two equal.
+- **Replaces:** the `<slug>.getkaze.rw` example in specs/business-by-host.md; refines D-051 ("temporary hosting under altavision.rw").
+- **Reason:** One company domain for every client site until clients bring their own (D-006); settings keep a later move cheap.
+- **Status:** Confirmed. Open: the list of subdomains Altavision already uses.

@@ -19,3 +19,4 @@ test-results/
 playwright-report/
 weight.json
 speed.json
+.tools/

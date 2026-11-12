@@ -14,7 +14,9 @@
     "test": "turbo run test",
     "weight-check": "node scripts/weight-check.mjs",
     "e2e": "playwright test",
-    "speed-check": "node scripts/speed-check.mjs"
+    "speed-check": "node scripts/speed-check.mjs",
+    "db:check": "node scripts/check-migrations.mjs --self-test",
+    "db:test": "scripts/supabase-cli.sh test db"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

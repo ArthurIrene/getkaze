@@ -1,0 +1,1 @@
+-- Demo lodge seed: generated in feature 8 (specs/demo-lodge-database.md).

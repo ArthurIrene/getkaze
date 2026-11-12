@@ -39,3 +39,5 @@ export * from "./booking";
 export * from "./privacy";
 export * from "./seo";
 export * from "./brand";
+export * from "./slugs";
+export * from "./presets";
