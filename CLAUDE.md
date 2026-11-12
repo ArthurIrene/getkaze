@@ -43,13 +43,24 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
 - Type check: `pnpm typecheck`
 - One package only: `pnpm --filter @getkaze/web <script>`
 - Test (unit, Vitest in packages/core): `pnpm test`
+- Page weight (builds, starts the production server, measures the first view of `/` and `/rw`; fails over 300 KB): `pnpm weight-check` (`--skip-build` after a build)
+- End-to-end (Playwright, Chromium, against the production server; run `pnpm build` first): `pnpm e2e`. First time: `pnpm exec playwright install chromium`, or set `PW_CHROMIUM_PATH` to an installed Chromium.
+- CI (`.github/workflows/ci.yml`) runs all of the above on every pull request and on pushes to `staging` and `main`.
 - Migrate: not set up yet (arrives with Supabase, day 5).
 
 Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
 Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.
 
 ## How to work
-Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan before writing code." One feature per branch (`feature/<name>`), commit after each working step, merge to `staging` before `main`.
+Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan before writing code." One feature per branch (`feature/<name>`), commit after each working step, merge to `staging` before `main`. A batch (below) uses one branch (`feature/batch-<n>-<name>`) and replaces the per-feature plan approval with one approval of all its specs.
+
+## Batch mode (D-052)
+- A batch is several features in one session.
+- Write all specs first, wait for one approval, then build without stopping.
+- One commit group per feature. CI must be green after each feature.
+- After each feature, update `specs/BATCH_LOG.md`: built, tests, page weight, deviations. A new session resumes from it.
+- Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, or anything touching the live Supabase project.
+- Data and security work (row-level security, isolation test) ends with a checkpoint before anything is built on it.
 
 ## Never do
 - Client-specific code or templates that write data.
@@ -60,4 +71,5 @@ Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan
 - Vercel-only features.
 - Connect tools to the live database with write access.
 - Store guest data while the compliance gate is locked.
+- Don't use the animation shorthand with scroll-driven timelines; Next's CSS minifier can break it. Use separate animation-* properties.
 - Remove the app-wide `noindex` (robots meta, X-Robots-Tag, robots.txt) before gate G2; remove it at G2, per business with real content.
