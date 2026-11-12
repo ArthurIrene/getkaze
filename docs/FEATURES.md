@@ -11,7 +11,7 @@ Status: v1.0 (7 Nov 2026). P1 = first milestone, P2 = after first paying client,
 | Platform admin (ours) | Create businesses, preset, module switches, subdomain and domain, billing record, discounts, grace period per client, overdue list with one-tap WhatsApp reminders, logged support access | P1 (billing and overdue list P1/P2) |
 | Module switches | On or off per business; locked modules shown as upgrades | P1 |
 | Click stats | Calls, WhatsApp taps, direction requests; monthly summary | P1 |
-| Languages | English required; Kinyarwanda and French optional; English fallback; a language gets its own indexed pages only when translated | P1 |
+| Languages | English required; Kinyarwanda and French optional; English fallback; a language gets its own indexed pages only when translated. Platform wording: Wording editor in platform admin (Batch 3): English beside Kinyarwanda per key, draft/checked status, database override → messages file → English (D-061) | P1 |
 | Privacy notice | Per client site and our own site | P1 |
 | Customers | Repeat guest list; message past guests | P2 |
 | Staff management | Add staff by name and phone, PIN, roles, instant disable, action log | P3 upsell (basic manager login comes with orders page) |

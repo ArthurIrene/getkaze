@@ -59,10 +59,12 @@ Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan
 
 ## Batch mode (D-052)
 - A batch is several features in one session.
+- Open a **draft PR** into `staging` at the start of each batch, so CI runs on every push.
 - Write all specs first, wait for one approval, then build without stopping.
 - One commit group per feature. CI must be green after each feature.
 - After each feature, update `specs/BATCH_LOG.md`: built, tests, page weight, deviations. A new session resumes from it.
-- Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, or anything touching the live Supabase project.
+- Screenshots go to CI artifacts or the PR, never committed to the repository.
+- Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, anything touching the live Supabase project, or changes to environment, network or account settings outside the repo (ask first).
 - Data and security work (row-level security, isolation test) ends with a checkpoint before anything is built on it.
 
 ## Never do

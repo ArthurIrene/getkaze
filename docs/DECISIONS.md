@@ -238,7 +238,7 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 
 ## Open / Postponed
 - **Platform name and domain** (day 1 of execution).
-- **Owner login method** (email + password suggested).
+- ~~**Owner login method**~~ settled by D-059.
 - **Owned maintenance plan price.**
 - **NCSA outcome** for Supabase and Cloudflare; fallback to a Rwanda host (Strettch or AOS quotes).
 - **Lawyer question:** does our storage authorization cover Managed clients, or does each business need its own?
@@ -386,4 +386,22 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Decision:** CI (build, lint, typecheck, unit tests, page weight, Playwright) runs on every pull request and on pushes to `staging` and `main`, and is the gate in batch mode (D-052). Page weight fails over 300 KB transferred for the first view of a page; JS is reported but not enforced until the JS budget is set.
 - **Replaces:** none
 - **Reason:** Automatic checks replace per-feature manual approval.
+- **Status:** Confirmed
+
+## D-059 | 2026-11-12
+- **Decision:** Owner login: email and password through Supabase Auth. Invite only (the platform admin invites an owner; no public sign-up). No SMS. Password reset by email. Supabase's built-in email sender is for testing only; a custom email sender (our own domain) is set up before G2.
+- **Replaces:** the open "owner login method" (DECISIONS.md "Open", PROJECT.md §12, ROLES.md §3).
+- **Reason:** No SMS cost, works on every phone, and nobody can create an account we did not invite.
+- **Status:** Confirmed
+
+## D-060 | 2026-11-12
+- **Decision:** Platform admin 2FA is a TOTP authenticator app (Supabase Auth MFA). Admin screens and admin data require it: the session must be at assurance level aal2, and row-level security on admin data checks aal2 too, not only the screens.
+- **Replaces:** refines D-034 ("platform admin 2FA").
+- **Reason:** Free, no SMS, and enforced by the database as well as the app.
+- **Status:** Confirmed
+
+## D-061 | 2026-11-12
+- **Decision:** Wording editor in platform admin (Batch 3). Each wording key shows English beside Kinyarwanda, with a status of draft or checked. A wording override is stored in the database. The app reads wording in this order: database override, then the messages file (`apps/web/messages/<locale>.json`), then English.
+- **Replaces:** refines D-048 (admin "Translations" screen).
+- **Reason:** The owner can fix Kinyarwanda without a code change, and every fix still falls back safely.
 - **Status:** Confirmed

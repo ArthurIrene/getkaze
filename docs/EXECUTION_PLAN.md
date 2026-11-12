@@ -46,6 +46,6 @@ Replaces the day-by-day order above from day 5 on. Days stay as a rough guide fo
 |---|---|---|
 | 0 | Automatic checks: CI (build, lint, typecheck, unit tests, page weight, Playwright), page-weight script, Playwright happy path and hero checks | CI green on the batch PR (done 2026-11-12) |
 | 1 | Guest site: rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages | Demo lodge complete on a phone; every page within budget |
-| 2 | Data and access: core data and RLS with isolation test, **then a checkpoint**; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database | Isolation test passes; demo lodge served from the database on its subdomain |
-| 3 | Editor, click stats, security checklist, backups with restore test | Full site editable from a phone; restore works |
+| 2 | Data and access: core data and RLS with isolation test, **then a checkpoint**; then owner login (email and password, invite only, D-059), platform admin with TOTP 2FA (D-060), module switches, a minimal owner "Your site" page, subdomain routing, demo lodge in the database, `getSite()` on the database | Isolation test passes; demo lodge served from the database on its subdomain |
+| 3 | Editor, owner dashboard, Wording editor (D-061), click stats, security checklist, backups with restore test | Full site editable from a phone; Kinyarwanda fixable without code; restore works |
 | Then | Personalized demos for prospects on subdomains + one-page audits | Demos ready to show |
