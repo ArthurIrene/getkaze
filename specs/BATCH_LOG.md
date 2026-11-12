@@ -19,3 +19,10 @@ Entry format:
 - Page weight: `/` 164.2 KB and `/rw` 164.3 KB transferred (budget 300 KB). JS 144.9 KB transferred in 7 files on both (reported, not enforced).
 - Deviations: no spec file (tooling and docs only). The JS number: earlier PRs reported 147.7 KB (browser counter, headers included) and 187.8 KB (every file in `.next/static/chunks` gzipped, including the 112 KB `noModule` polyfill file that modern browsers never download). The weight check counts only what the browser downloads, body bytes only.
 - Next: Batch 1, guest site (see EXECUTION_PLAN.md).
+
+## Batch 1, guest site: specs | 2026-11-12
+- Built: specs only. They are specs/batch-1-guest-site.md (overview, conflicts, Kinyarwanda list), rooms-page.md, contact-page.md, site-navigation.md, privacy-notice.md, seo-basics.md, booking-request.md, pwa-manifest.md and speed-pass.md. field-journal-template.md now points part 2 to them.
+- Tests: none yet.
+- Page weight: unchanged (Batch 0: 161.8 KB in CI).
+- Deviations: none yet. Conflicts and choices are listed at the top of batch-1-guest-site.md.
+- Next: wait for one approval, then build in the order 3 → 1 → 2 → 6 → 4 → 5 → 7 → 8.
