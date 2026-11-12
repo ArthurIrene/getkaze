@@ -94,3 +94,8 @@ Entry format:
 ## Batch 2, item 0: docs | 2026-11-12
 - Built: CLAUDE.md Batch mode now says a draft PR opens at the start of each batch, screenshots go to CI artifacts or the PR (never committed), and environment, network or account changes outside the repo need asking first. D-059 owner login (email and password, invite only, no sign-up, no SMS, custom sender before G2), D-060 admin TOTP 2FA (aal2 on admin screens and data) and D-061 Wording editor (Batch 3: database override, then the messages file, then English). ROLES §3, PROJECT §12 and the batch list, FEATURES (Languages row), EXECUTION_PLAN, ROADMAP and BUILD_GUIDE are updated (Batch 3 adds the Wording editor and owner dashboard). New docs/kinyarwanda-glossary.md (all draft; check-in and check-out have two words in use) and docs/how-to-edit-wording.md.
 - Note: Batch 1 committed `docs/screenshots/batch-1/` (about 1.5 MB) before this rule. It is left as is; say if it should be removed.
+
+## Batch 2, specs | 2026-11-12
+- Built: specs only. They are batch-2-data-access.md (overview with 13 conflicts and open questions), core-data.md, row-level-security.md, db-testing-and-migrations.md, auth.md, platform-admin.md, owner-your-site.md, business-by-host.md and demo-lodge-database.md.
+- Sandbox findings: Docker works; Docker Hub works; AWS ECR (Supabase's default image registry) is blocked; running the downloaded Supabase CLI was denied by the session's permission check (not worked around).
+- Next: wait for one approval. Then features 1–3, then the **checkpoint**.
