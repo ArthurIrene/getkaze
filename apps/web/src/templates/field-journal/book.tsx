@@ -24,7 +24,7 @@ export default async function FieldJournalBook(props: TemplateProps) {
   const last = addMonths(today, bookingLimits.monthsAhead);
   const picked = site.rooms.some((r) => r.id === query.room) ? query.room : undefined;
   const maxGuests = Math.max(...site.rooms.map((r) => r.maxGuests));
-  const action = `${pageHref("book", locale)}/send`;
+  const action = `${pageHref("book", locale, site.linkBase)}/send`;
 
   return (
     <FieldJournalPage {...props} className="fj-subpage">
@@ -119,7 +119,7 @@ export default async function FieldJournalBook(props: TemplateProps) {
           </div>
           <p className="fj-send-note fj-muted">
             {t("sendNote", { name: site.name })}{" "}
-            {props.pages.includes("privacy") ? <a href={pageHref("privacy", locale)}>{t("privacy")}</a> : null}
+            {props.pages.includes("privacy") ? <a href={pageHref("privacy", locale, site.linkBase)}>{t("privacy")}</a> : null}
           </p>
         </fieldset>
       </form>
@@ -129,7 +129,7 @@ export default async function FieldJournalBook(props: TemplateProps) {
 
 /** /book/error: what to fix. Its URL carries no guest details; the browser's back button keeps the answers. */
 async function BookError(props: TemplateProps) {
-  const { locale, query = {} } = props;
+  const { site, locale, query = {} } = props;
   const t = await getTranslations("Book");
   const reason = query.error === "dates" || query.error === "guests" ? query.error : "missing";
   const max = Number(query.max) || 0;
@@ -139,7 +139,7 @@ async function BookError(props: TemplateProps) {
         <h1>{t("error.title")}</h1>
         <p>{reason === "guests" ? t("error.guests", { n: max }) : t(`error.${reason}`)}</p>
         <p className="fj-muted">{t("error.back")}</p>
-        <a className="fj-btn" href={pageHref("book", locale)}>
+        <a className="fj-btn" href={pageHref("book", locale, site.linkBase)}>
           {t("title")}
         </a>
       </div>

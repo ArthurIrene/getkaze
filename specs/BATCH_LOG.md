@@ -90,3 +90,186 @@ Entry format:
 - Fix (approved): the tests route the form's `POST /book/send`, send it to the real server with `route.fetch({ maxRedirects: 0 })`, and keep status and `Location`. Every earlier assertion stays. Added: status is exactly 303, and `Location` is exactly `https://wa.me/250700000000?text=<full message>`, checked in English, Kinyarwanda and without JavaScript. A new test checks that "Send by email" gives exactly `mailto:hello@example.com?subject=…&body=…`. The direct `request.post` test is unchanged.
 - Local runs now use the pinned browser: `pnpm exec playwright install chromium` (CLAUDE.md, e2e commands). This needed `cdn.playwright.dev`, allowed in a new personal cloud environment "getkaze".
 - Tests: 29 Playwright tests (1 new), all passing locally on v1248.
+
+## Batch 2, item 0: docs | 2026-11-12
+- Built: CLAUDE.md Batch mode now says a draft PR opens at the start of each batch, screenshots go to CI artifacts or the PR (never committed), and environment, network or account changes outside the repo need asking first. D-059 owner login (email and password, invite only, no sign-up, no SMS, custom sender before G2), D-060 admin TOTP 2FA (aal2 on admin screens and data) and D-061 Wording editor (Batch 3: database override, then the messages file, then English). ROLES §3, PROJECT §12 and the batch list, FEATURES (Languages row), EXECUTION_PLAN, ROADMAP and BUILD_GUIDE are updated (Batch 3 adds the Wording editor and owner dashboard). New docs/kinyarwanda-glossary.md (all draft; check-in and check-out have two words in use) and docs/how-to-edit-wording.md.
+- Note: Batch 1 committed `docs/screenshots/batch-1/` (about 1.5 MB) before this rule. It is left as is; say if it should be removed.
+
+## Batch 2, specs | 2026-11-12
+- Built: specs only. They are batch-2-data-access.md (overview with 13 conflicts and open questions), core-data.md, row-level-security.md, db-testing-and-migrations.md, auth.md, platform-admin.md, owner-your-site.md, business-by-host.md and demo-lodge-database.md.
+- Sandbox findings: Docker works; Docker Hub works; AWS ECR (Supabase's default image registry) is blocked; running the downloaded Supabase CLI was denied by the session's permission check (not worked around).
+- Next: wait for one approval. Then features 1–3, then the **checkpoint**.
+
+## Batch 2, approval answers and my choices | 2026-11-12
+- **Approved:** `@supabase/supabase-js` 2.118.0 and `@supabase/ssr` 0.12.7 (both over 14 days old; installed when first used, in feature 4). `supabase/setup-cli` v3.0.1, the CLI 2.122.0, and `db-deploy.yml` (runs only after CI passes on a push to `staging`, never on PRs). Option (a): the local CLI is the official release, verified with `sha256sum -c` against the release's `checksums.txt` (`scripts/supabase-cli.sh`). The service role key goes in Vercel **Production only**, server only, used only by the invite route behind admin 2FA, with a CI check. `role_permissions` and the `/s/<slug>/` fallback are approved. **D-062** records the domains: `<slug>.altavision.rw` (`PLATFORM_DOMAIN`), our screens on `kaze.altavision.rw` (`APP_HOST`), and the reserved names. You run the first-admin SQL on staging yourself.
+- **My choices on the other overview points** (following the recommendations): built-in email sender for testing only, Mailpit locally and in CI (point 10). Platform screens EN + RW with drafts in the glossary (point 11). No guest tables, and `click_events` without IP or user agent (point 12). The staging demo seed comes only through the deploy workflow's manual `seed-demo` job (point 13). Supabase auth cookies only on platform paths (point 7). Images from Docker Hub (`SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io`), because AWS ECR is blocked here, so no network change was needed.
+- **Open, waiting for you:** the staging Postgres major version (`major_version = 17` is set for now), and the list of subdomains Altavision already uses (to add to the reserved names).
+
+## Batch 2, feature 1: core data | 2026-11-12
+- Built: `supabase/config.toml` (sign-up off, TOTP on, site URL `127.0.0.1:3200`, Postgres 17). Migration `20261112100000_core_schema.sql` creates `reserved_slugs`, `businesses`, `site_settings`, `modules`, `business_modules`, `role_permissions` (seeded from ROLES.md), `memberships`, `platform_admins`, `catalog_items`, `media` (a composite FK keeps photos in their own business), `click_events` (no IP or user agent), `content_changes` and `support_access`. Checks cover LocalizedText (English required, known languages), both prices or neither, a complete room type, the slug format, styles fitting their preset, and a published site needing its key texts. Migration `20261112100100_change_log.sql` adds the change-log triggers (changed fields only, actor and kind), the append-only guard, the keep-`business_id` guard and the module-switch stamp. Core gains `slugProblems`, `normalizeSlug`, `reservedSlugs`, `presetDefaults` and `styleFitsPreset`. `scripts/check-migrations.mjs` is the additive-only guard plus the reserved-list match, with a self-test. `scripts/supabase-cli.sh` provides the verified pinned CLI.
+- Tests: pgTAP `schema.test.sql` (19 checks: business_id everywhere and indexed, no guest columns, prices, English required, slugs and reserved names, publish completeness, change log, append-only, no moving rows, the media FK, role permissions). 61 unit tests (6 new). Run locally on Supabase 2.122.0: all pass.
+- Page weight: no change (no app code changed).
+- Deviations: `rowToSiteData` (core-data.md) moves to feature 8, where `getSite()` first uses it; the public JSON shape is fixed in feature 2. Supabase's slug and reserved checks raise `23514`.
+
+## Batch 2, feature 2: row-level security and the isolation test | 2026-11-12
+- Built: migration `20261112100200_rls.sql`.
+  - Private helpers `app.is_platform_admin()` (needs `aal2` **and** a `platform_admins` row), `app.is_member()` and `app.has_permission()` (memberships × `role_permissions` by preset): `security definer`, `search_path = ''`.
+  - All table privileges revoked from `anon` and `authenticated`, and default privileges revoked for future tables.
+  - RLS **enabled and forced** on every table, with per-table grants and policies as specced. Owners edit content only; switches, memberships, status and slug belong to the admin; the change log is read-only; support access is written by admins and read by owners. Disabled members see nothing, not even their own row.
+  - Migration `20261112100300_public_site.sql`: `get_published_site(p_slug, p_host)` and `list_published_slugs()`, the only door for `anon`: active and published businesses only, explicit fields, no personal data.
+- Tests: pgTAP `isolation.test.sql` has 104 checks in the 9 groups of the spec. It loops over every table with `business_id` and every table for anon, so new tables are covered. **Checked that it catches a leak:** with one policy widened to `using (true)` on the local database, 4 checks failed; after a reset, all passed. Both test files together: 123 checks pass.
+- Found and fixed while writing the tests (before anything reached staging): the check constraints call `app.is_localized`, so `authenticated` needs EXECUTE on it; and a disabled member could read their own membership row, which is now hidden.
+- Page weight: no change.
+- Deviations: none.
+
+## Batch 2, feature 3: how tests run, and how migrations reach staging | 2026-11-12
+- Built:
+  - **CI** (`ci.yml`): `supabase/setup-cli@45a513f…` (v3.0.1) with CLI 2.122.0, then the migration guard (`pnpm db:check`), `supabase start` (unused services off), `supabase test db` (isolation and schema checks), and the local URL and keys (the CLI's public local defaults) written into the job env for the app. A new **client bundle guard** (`pnpm check:bundle`) runs after the build: it fails if any browser file contains the service role key value, its name, or Supabase client code. Checked that it fails on a planted file.
+  - **`db-deploy.yml`:** runs only after **CI succeeds on a push to `staging`** (`workflow_run`, `event == push`, `head_branch == staging`), or by manual dispatch on `staging`; **never on PRs**. GitHub environment `supabase-staging`, then guard, link, dry run and push. The demo seed is applied only by a manual run with `seed_demo`. It deploys the exact commit CI tested.
+  - `.env.example` (names only) and CLAUDE.md commands (CLI, stack, reset, `db:test`, `db:check`, `check:bundle`, the staging migrate rule).
+- Tests: the local CI run is green (build, lint, typecheck, 61 unit tests, weight check, 29 Playwright tests) plus 123 database checks. The remote CI run on this push is the first with Supabase in it.
+- Page weight: no change (no app code changed). JS 145.4 KB.
+- Deviations: none.
+
+## Batch 2, checkpoint notes applied | 2026-11-12
+- The checkpoint was approved. Staging Postgres is 17.11.0.018, so `major_version = 17` is right. Altavision's subdomains will be added to the reserved names when you send them (a new migration plus `reservedSlugs`; the guard keeps them equal).
+- **Change-log deletion path** (migration `20261112100400_change_log_deletion.sql`): `admin_delete_change_log(business, reason)` is admin with aal2 only, deletes that business's log rows, and records the deletion in `support_access`. The append-only guard lets only this function through. Tests: `change_log.test.sql` (16 checks: the path works for admin aal2 and touches only that business; owner, admin aal1, anon, the service role and the database owner are refused direct edits and deletes; logging continues afterwards).
+- **Public fields locked:** `public_site_fields.test.sql` (11 checks) confirms both public functions are `security definer` with `search_path = ''`, compares the exact field names at every level (top, business, settings, contacts, items, media), and checks that an owner's email and an unlisted contact key never appear. The field list is in specs/row-level-security.md.
+- Database tests: 4 files, 152 checks, all pass locally.
+
+## Batch 2, CI fix: local Supabase ports | 2026-11-12
+- Failure on `4e62b4d`: `supabase start` could not bind `0.0.0.0:54322` ("address already in use") on the runner. **Root cause:** the CLI's default ports (54321–54329) are inside Linux's ephemeral port range (32768–60999), so an outgoing connection on the runner can hold one. **Fix:** all local Supabase ports moved to 25320–25329 (`supabase/config.toml`), below that range. Tests are unchanged. The previous green run had simply not collided.
+
+## Batch 2, feature 4: owner and admin login | 2026-11-12
+- Built:
+  - **Packages:** `@supabase/supabase-js` 2.118.0 and `@supabase/ssr` 0.12.7 (exact, approved), server only.
+  - **Supabase code:** `lib/supabase/{env,server,refresh}.ts`. Cookies are forced **HttpOnly** and **SameSite=Lax**, and Secure over HTTPS; there is no browser Supabase client. The proxy refreshes the session **only on platform paths** (core `isPlatformPath`), so guest pages still set no cookies.
+  - **Screens and routes:** `/login`, `/auth/reset`, `/auth/confirm` (verifies the email link's token hash on the server; fixed target per link type), `/auth/accept` (invite → first password), `/auth/update-password`, `/auth/signout` (POST), and a first `/owner` page. All are plain forms with server actions (they work without JS), EN + RW.
+  - **Rules in core:** `canEnter`, `landingFor`, `safeNext`, `passwordProblems`, `confirmTarget`, `isPlatformPath`.
+  - **Email templates** (`supabase/templates/invite.html`, `recovery.html`) link to `/auth/confirm?token_hash=…&type=…`. **Staging needs the same templates** pasted in Dashboard → Authentication → Emails (invite and reset password).
+  - The ESLint `no-console` rule now also covers the platform routes and the auth and Supabase helpers.
+- Found while testing:
+  - In the CLI config, `[auth.email] enable_signup = false` disables email login entirely, so it is back to `true`. Public sign-up stays off through `[auth] enable_signup = false`, and the test proves sign-up is refused.
+  - The local email limit was 2 per hour, so it is raised to 200 locally only.
+  - Redirects now use the request's own host, so cookies follow the visitor.
+- Tests: 69 unit tests (7 new) and 37 Playwright tests (8 new, against the local Supabase): the invite → accept → `/owner` flow, password rules, the same answer for a wrong password and an unknown email, reset by email → new password → sign out → sign in, the same reset answer for unknown emails, sign-up refused, bad email links → login, no guest-page cookie for a signed-in owner (whose cookies are HttpOnly), and a disabled owner seeing "No active site". 152 database checks.
+- Page weight: guest pages are +0.8 KB of CSS (the shared Tailwind file now includes the platform classes); JS is **145.4 KB, unchanged**. `/` is 166.4 KB.
+- Deviations: invites and resets use token-hash links to `/auth/confirm` instead of a `/auth/callback` code exchange, because admin-API invites carry no PKCE code. `/owner` is a first version; feature 6 completes it.
+
+## Batch 2, feature 5: platform admin with TOTP 2FA | 2026-11-12
+- Built:
+  - **2FA gate:** `/admin/mfa/enroll` shows a QR code and the key as text, then asks for a 6-digit code; earlier unfinished enrolments are removed first. `/admin/mfa` asks for the code on every new session. Every admin page and every admin action re-checks admin + aal2 on the server (`requireArea`, core `canEnter`), and RLS checks it again in the database.
+  - **Screens:** `/admin` lists clients (name, slug, status, style, modules on, owner status; filter by status, search by name). `/admin/new` creates a business from name, slug (from the name if empty), type and style (the preset comes from the style, core `presetOfStyle`), currency and languages: it is a **draft** with the preset's sections and modules (the others off). `/admin/b/<id>` holds basics (name, legal name, slug, custom domain, status; "active" needs a published site, core `canSetStatus`), module switches, owner invite and the member list with disable and enable, support sessions (open with a reason and close, with a banner while open), and the last 20 changes.
+  - **Owner invite:** the only use of the service role (`lib/supabase/admin.ts`). An ESLint `no-restricted-imports` rule forbids that file everywhere except the admin actions (checked with a planted import), and the bundle guard checks the browser files.
+  - **New migration** `20261112100500_accept_invites.sql`: `accept_my_invites()` turns only the caller's own invited memberships to active (never disabled ones). It is called when an invite is accepted.
+  - Core adds `siteBaseUrl`, `sitePath`, `supportReasonProblems`, `canSetStatus`, `looksLikeEmail` and `presetOfStyle`.
+- Tests: pgTAP `accept_invites.test.sql` (6 checks; 5 database test files and 158 checks in all). 74 unit tests (5 new). 41 Playwright tests (4 new: TOTP enrolment, including a wrong code, then the code required on a new session; a non-admin sent away; create a business with a reserved-slug refusal, draft modules, the "must publish" rule, a module switch logged as `platform_admin`, the owner invite email and membership, support session open and close; invite acceptance → membership active). The local CI run is green.
+- Page weight: no change for guests (JS 145.4 KB). `/` is 166.8 KB.
+- Deviations: the slug for a new business comes from its name when left empty. Admin wording RW drafts are in rw.json under `Admin` (also for the glossary). There is no "publish site" button yet; the editor (Batch 3) publishes, and the demo seed is published.
+
+## Batch 2, feature 6: owner "Your site" | 2026-11-12
+- Built: `/owner` (`/rw/owner`) shows one card per business the owner belongs to: name, a status pill (Live, Not live yet, Paused), the site address with "Open your site ↗" (core `siteBaseUrl`: `/s/<slug>` on getkaze.vercel.app until `PLATFORM_DOMAIN` is set), languages, modules switched on, and **our support visits** (when, reason, open or closed; ROLES.md §5), plus "Need a change? WhatsApp us" (`platform.supportWhatsApp`, a placeholder number). Everything is read through RLS as the owner, never the service role. With no active membership it shows "No active site for this account". An admin without a business is sent to `/admin`. Core `ownerSiteSummary` builds the cards.
+- Found while testing:
+  - The **service role could not evaluate the check constraints** (no USAGE on schema `app`), so any server-side service-role write to `site_settings`, `catalog_items` or `media` would have failed. New migration `20261112100600_service_role_checks.sql` grants only `is_localized` and `is_localized_or_null`, with a database test.
+  - The isolation and change-log fixtures touched every business in the database, so they are now scoped to their own rows. The database tests pass even with leftover data.
+- Tests: 159 database checks, 75 unit tests (1 new), and 43 Playwright tests (2 new: live site card with address, modules and a support visit while another business's data stays invisible, no sideways overflow at 360 px; draft card "Not live yet", "No support visits yet" and the `/rw/owner` wording). The local CI run is green.
+- Page weight: guests unchanged (JS 145.4 KB). `/` is 166.9 KB.
+- Deviations: none.
+
+## Batch 2, feature 7: business by host | 2026-11-12
+- Built:
+  - **Core `hosts.ts`:** `parseHost` (subdomain of `PLATFORM_DOMAIN`, app host, bare/www domain → demo, platform hosts with the `/s/<slug>` fallback or the demo, any other valid host → custom domain, junk/IP/reserved/nested → unknown), `servesPlatformScreens`, `splitLocale`, `siteKey`/`parseSiteKey` (a slug, `p~<slug>` for the fallback, or a custom host with dots), `normalizeHost` and `fallbackSlug`.
+  - **The proxy** has no database call. Platform screens are served only on platform hosts or `APP_HOST`, with the session refresh; on a business host they 404. Every guest path is rewritten to the internal route `/<locale>/site/<key>/…`, and **the internal route itself is a 404 from outside**.
+  - **Guest pages** moved to `app/[locale]/site/[site]/…`. They are static with `revalidate = 300`; demo keys are pre-rendered, and `/book` stays per request.
+  - **Links keep the prefix:** `pageHref` takes the site's `linkBase` (`""` or `/s/<slug>`), and so does the booking form's action and error path.
+  - **Root files per host:** `sitemap.xml`, `robots.txt`, `manifest.webmanifest` and `/icons/*` read the site for the request's host. Icons are rendered per request and cached for a day.
+  - **Clean 404 page** (`app/[locale]/not-found.tsx`): "This site is not available", no business data, noindex.
+  - Settings: `PLATFORM_DOMAIN`, `APP_HOST`, `PLATFORM_HOSTS`, `DEMO_SITE_SLUG`, `FALLBACK_HOST`.
+- Tests: 84 unit tests (9 new) and 49 Playwright tests (6 new, `e2e/hosts.spec.ts`):
+  - every link on `/s/kinigi-hills/rooms` keeps the prefix; the booking form posts and errors within it;
+  - the bare host shows the demo; unknown slugs, reserved slugs and the internal route give a 404 with noindex;
+  - with a second server on `PLATFORM_DOMAIN=altavision.test` and Chromium mapping `*.altavision.test` to this machine: `kinigi-hills.altavision.test/rw/contact` works with prefix-free links; unknown, reserved and nested subdomains and `/login` and `/admin` on a business host give a 404; `kaze.altavision.test/login` works.
+
+  The SEO test's base moved to the demo's own address, as the spec says (canonical = the demo's `siteBaseUrl`); its assertions are unchanged.
+- Page weight: every page passes; JS is 145.4 KB (unchanged); `/` is 167.2 KB.
+- Deviations: `PLATFORM_DOMAIN` is a **build-time** setting for canonical and sitemap addresses (static pages), so it needs a redeploy after a change; routing reads it per request. Noted in the spec. `/en/...` paths are now a 404 instead of a redirect to `/...`. The layout's theme colour is the template's (one template for now).
+
+## Batch 2, feature 8: demo lodge in the database, getSite() from the database | 2026-11-12
+- Built:
+  - **Seed:** `supabase/seed.sql` is **generated** from `apps/web/src/data/demo-lodge.ts` by `scripts/gen-demo-seed.mjs` (`pnpm db:seed:gen`): fixed name-based ids, upserts, marked DEMO DATA — FAKE. Checked idempotent by applying it twice (same counts). `pnpm db:check` (in CI) now also fails when the seed is out of date.
+  - **New migration** `20261112100700_item_handles.sql`: `catalog_items.handle` (readable ids for `#room-…` and `?room=…`, unique per business and kind), now also returned by `get_published_site`. The locked field list and its test are updated with exactly this one field.
+  - **Core `rowToSiteData`** maps the public JSON to `SiteData` with plain checks (template, style, currency, name, contacts, map link, English hero title, both prices); a broken published site raises an error instead of rendering half empty.
+  - **`getSite()`** (server-only) calls `get_published_site` with a cookie-less anonymous client and Next caching (`revalidate` 300 s, tag `site:<slug|host>`). `publishedSlugs()` feeds static generation. The app no longer imports `demo-lodge.ts` (an ESLint rule enforces it; it only feeds the seed). The restricted-import rules are regrouped so the two restrictions don't override each other.
+  - **Build without database settings** stops with "Missing NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY", so there is no silent fallback to the file.
+  - Glossary: platform-screen terms added (all draft).
+- Tests: 87 unit tests (3 new: mapping, ordering and handles, refusing a broken site); 159 database checks; 52 Playwright tests (3 new: the demo exists in the database; a new active, published business shows at `/s/<slug>` without a rebuild, with its own canonical; draft, unpublished and paused businesses give a clean 404 with no business data). **All Batch 1 guest tests pass unchanged against the database.** Bundle guard: no Supabase code in any browser file.
+- Page weight: **JS 145.4 KB on every guest page, unchanged** (within ±1 KB of Batch 1); every page is under 300 KB (`/` 167.2 KB).
+- Deviations: pages stay cached for up to 5 minutes after a change (including a pause) until the Batch 3 editor revalidates on save. Room and dish photos are `media` rows; other photos (hero, moments, dining, host) stay in `site_settings` JSON until the editor's photo upload (Batch 3).
+
+## Batch 2, final fixes | 2026-11-12
+- Built:
+  - **Reserved names:** `www`, `send`, `resend`, `zmail`, `mail`, `webmail`, `email`, `smtp`, `mx`, `autodiscover` are reserved in core and in the database. The new additive migration `20261112100800_reserved_mail_names.sql` uses `on conflict do nothing`. Names starting with `_` stay invalid by the slug format. The migration guard now reads every `reserved_slugs` insert, and core and SQL match (33 names).
+  - **The build never reads the database:**
+    - `generateStaticParams` returns no sites once Supabase is configured. Pages render on their first visit, then are cached (5 minutes, tag `site:<slug|host>`).
+    - **Settings missing** (both `NEXT_PUBLIC_SUPABASE_*` unset): `getSite()` serves the bundled demo for the demo slug only, pre-rendered, with one server warning. Every other site is a 404, and every platform path shows "Not configured yet" (503, EN and RW). The proxy skips the session refresh, and `/auth/confirm` and `/auth/signout` never call Supabase.
+    - **Settings present:** a database error is a 500, never the demo. Only one of the two set is also an error.
+    - Settings are read when used, not inlined at build time. ESLint allows the demo import in `src/data/get-site.ts` only.
+  - **db-deploy:** when all three `supabase-staging` settings are missing, it ends green with the notice "staging not configured" and every later step is skipped. When only some are missing, it fails and names them.
+  - **No deploy order:** Vercel and the migrations can happen in any order (spec and PR comment updated).
+  - Spec fixes: the staging redirect URLs and the local `additional_redirect_urls` are now `/auth/confirm`, the route actually built in feature 4. auth.md now says the same.
+- Tests:
+  - 162 database checks (3 new: `resend`, `zmail` and `_mail` refused).
+  - 88 unit tests (the reserved-names and underscore tests extended).
+  - **`pnpm check:build`** (`scripts/check-build-independence.mjs`, a new CI step) runs two production builds and starts each one:
+    - **Settings missing:** the build passes; `/`, `/s/kinigi-hills/rooms`, `/s/kinigi-hills/rw` and `/book` show the demo; another slug is a 404; `/login`, `/admin`, `/owner`, `/rw/login`, `/auth/reset` and `/auth/confirm` answer "Not configured yet" (503); exactly one warning; no server error.
+    - **Database unreachable:** the build passes; `/` and `/s/kinigi-hills` are a 500, not the demo; no not-configured warning.
+  - The db-deploy check step was run locally in all three cases (none set → skip, some set → fail, all set → run).
+- Found while testing: with no sites pre-rendered, `/book` and `/book/error` (which read `?room=` and `?reason=`) were treated as cached pages and failed with `DYNAMIC_SERVER_USAGE`. They are now marked `force-dynamic`, so they are rendered per request as before. The full Playwright suite caught it (52 tests pass now), and `check:build` covers `/book` too.
+- Page weight: unchanged. Every guest page has 145.4 KB of JS; `/` is 167.1 KB and `/book` 163.1 KB.
+- Deviations and choices:
+  - Guest pages are no longer pre-rendered once configured, so the first visit after a deploy or after 5 minutes renders on the server.
+  - Platform paths answer 503 while not configured, so nothing caches the notice as a real page.
+  - **At G2: remove the demo fallback, or keep it to the demo slug only.**
+
+## Next session starts here
+**Done (Batch 2, PR #6, ready for review):**
+- Core data, RLS and the isolation test.
+- Database tests and the staging deploy workflow.
+- Login, admin with TOTP 2FA, owner "Your site".
+- Business by host, and the demo lodge in the database.
+- The controlled change-log deletion.
+- The locked `get_published_site` fields.
+- Reserved mail names.
+- Builds that don't depend on the database.
+
+**Manual steps pending, in order** (you do these; none touch the repository):
+1. **GitHub** → Settings → Environments → `supabase-staging`: secrets `SUPABASE_ACCESS_TOKEN` and `SUPABASE_DB_PASSWORD`, variable `SUPABASE_PROJECT_REF`. Optionally add yourself as a required reviewer, and allow deployments from `staging` only. Until then, db-deploy skips with a notice.
+2. **Vercel** → Environment Variables:
+   - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Production and Preview).
+   - `SUPABASE_SERVICE_ROLE_KEY` (Production only, Sensitive).
+   - `DEMO_SITE_SLUG=kinigi-hills`.
+   - Leave `PLATFORM_DOMAIN` and `APP_HOST` unset until DNS points here.
+
+   Until then the site shows the bundled demo and login says "Not configured yet".
+3. **Supabase staging** → Authentication:
+   - Email on, sign-ups off.
+   - TOTP on.
+   - Site URL `https://getkaze.vercel.app`.
+   - Redirect URLs `…/auth/confirm` (db-testing-and-migrations.md).
+   - Paste the **Invite** and **Reset password** templates from `supabase/templates/`.
+4. **Merge PR #6 into `staging`.** CI runs, then db-deploy applies the migrations (after your approval, if set).
+5. **Actions → DB deploy (staging) → Run workflow** on `staging`, with `seed_demo` ticked (the fake demo lodge, idempotent).
+6. **First platform admin:** invite or create your user in the Supabase dashboard (Authentication → Users), then run in the staging SQL editor:
+   `insert into public.platform_admins (user_id) select id from auth.users where email = 'YOUR-EMAIL' on conflict do nothing;`
+7. Sign in at `https://getkaze.vercel.app/login` and enrol TOTP at `/admin/mfa/enroll`.
+
+No special order between steps 1–3 and 4: the build never reads the database.
+
+**Open:**
+- Altavision's existing subdomains, to add as reserved names (additive), when you send them.
+- Kinyarwanda checks of the platform wording, marked draft in the glossary.
+- The cache window (5 minutes) until Batch 3's editor revalidates on save.
+- Where screenshots go (CI artifacts or the PR, never the repository).
+- At G2: the demo fallback (remove, or keep to the demo slug), noindex per business, the custom email sender, and a check of icons on Cloudflare.
+
+**Next batch:** Batch 3 (editor, revalidation on save, photos in Storage), after the review of PR #6.

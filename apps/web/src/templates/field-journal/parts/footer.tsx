@@ -17,7 +17,7 @@ export async function Footer({ site, locale, pages }: { site: SiteView; locale: 
           <ul className="fj-footer-links">
             {links.map((id) => (
               <li key={id}>
-                <a href={pageHref(id, locale)}>{n(id)}</a>
+                <a href={pageHref(id, locale, site.linkBase)}>{n(id)}</a>
               </li>
             ))}
           </ul>

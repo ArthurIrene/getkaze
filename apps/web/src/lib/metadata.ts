@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { pageSeo, toSiteView, type PageId, type SeoLabels } from "@getkaze/core";
-import { getSite } from "@/data/get-site";
+import { pageSeo, type PageId, type SeoLabels } from "@getkaze/core";
+import { loadSite } from "@/lib/render-page";
 import { routing, type Locale } from "@/i18n/routing";
 
 /**
@@ -9,9 +9,8 @@ import { routing, type Locale } from "@/i18n/routing";
  * page (specs/seo-basics.md), built by packages/core. robots stays
  * "noindex, nofollow" from the layout until G2 (D-054).
  */
-export async function pageMetadata(page: PageId, locale: Locale): Promise<Metadata> {
-  const site = await getSite();
-  const view = toSiteView(site, locale);
+export async function pageMetadata(page: PageId, locale: Locale, siteKey: string): Promise<Metadata> {
+  const { view } = await loadSite(siteKey, locale);
   const t = await getTranslations({ locale, namespace: "Seo" });
   const n = await getTranslations({ locale, namespace: "Nav" });
   const p = await getTranslations({ locale, namespace: "Privacy" });

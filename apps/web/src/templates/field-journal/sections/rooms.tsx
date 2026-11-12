@@ -14,7 +14,7 @@ export async function Rooms({ site, locale, pages }: TemplateProps) {
       <div className="fj-head fj-rise">
         <h2 id="fj-rooms">{t("rooms")}</h2>
         {hasPage ? (
-          <a className="fj-head-link" href={pageHref("rooms", locale)}>
+          <a className="fj-head-link" href={pageHref("rooms", locale, site.linkBase)}>
             {r("allRooms")}
           </a>
         ) : null}
@@ -36,7 +36,7 @@ export async function Rooms({ site, locale, pages }: TemplateProps) {
           return (
             <li key={room.id} className="fj-room">
               {hasPage ? (
-                <a className="fj-room-link" href={pageHref("rooms", locale, `room-${room.id}`)}>
+                <a className="fj-room-link" href={pageHref("rooms", locale, site.linkBase, `room-${room.id}`)}>
                   {card}
                 </a>
               ) : (

@@ -19,7 +19,7 @@ Batch order:
 - **Batch 0, automatic checks:** CI, page-weight check, Playwright (done 2026-11-12).
 - **Batch 1, guest site:** rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages.
 - **Batch 2, data and access:** core data and RLS with isolation test, then a checkpoint; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database.
-- **Batch 3:** editor, click stats, security checklist, backups with restore test.
+- **Batch 3:** editor, owner dashboard, Wording editor (D-061), click stats, security checklist, backups with restore test.
 - **Then:** the prospect demos.
 
 Rule: a batch that runs more than 2 sessions over its plan gets cut down, not stretched.

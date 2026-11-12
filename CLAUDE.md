@@ -31,7 +31,7 @@ Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
 TypeScript, Turborepo + pnpm, Next.js (web + PWA), Tailwind, shadcn/ui, next-intl, Zod, Supabase (Postgres, Auth, Storage, Realtime). Vercel previews during build; Cloudflare in production. No Vercel-only features.
 
 ## Folders
-apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase/migrations (planned)
+apps/web (Next.js app) · packages/core (`@getkaze/core`, shared business rules) · docs · specs · mockups · supabase (config, migrations, tests, seed)
 
 ## Commands
 Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run from the repo root:
@@ -49,7 +49,13 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
   - Install the browser for the pinned Playwright version first (as CI does), so local runs match CI: `pnpm exec playwright install chromium`. It downloads from `cdn.playwright.dev`, which the cloud environment must allow.
   - `PW_CHROMIUM_PATH` (another installed Chromium) is a fallback only: a different browser version can behave differently from CI.
 - CI (`.github/workflows/ci.yml`) runs all of the above on every pull request and on pushes to `staging` and `main`.
-- Migrate: not set up yet (arrives with Supabase, day 5).
+- Supabase CLI (pinned 2.122.0, verified against the release checksums, cached in `.tools/`): `scripts/supabase-cli.sh <command>`. Needs Docker; behind a registry block add `SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io`.
+  - Local stack: `scripts/supabase-cli.sh start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta` (stop: `… stop`).
+  - Apply migrations and seed from scratch: `scripts/supabase-cli.sh db reset`.
+  - Database tests, including the isolation test (run before any data change): `pnpm db:test`.
+  - Migration guard (additive only, reserved slugs match): `pnpm db:check`.
+  - Client bundle guard (after a build): `pnpm check:bundle`.
+- Migrate staging: never by hand. Merging into `staging` runs `.github/workflows/db-deploy.yml` after CI passes (GitHub environment `supabase-staging`). Nothing touches a live project.
 
 Languages: platform wording lives in `apps/web/messages/<locale>.json` (en required; missing keys fall back to English). Locale routing is set in `apps/web/src/i18n/routing.ts` (English at `/`, Kinyarwanda at `/rw`).
 Pinned versions: Next.js, next-intl, Tailwind and shadcn use exact versions (no `^`). shadcn/ui components live in `apps/web/src/components/ui`; `pnpm --filter @getkaze/web exec shadcn add <name>` needs network access to ui.shadcn.com.
@@ -59,10 +65,12 @@ Start each session: "Read CLAUDE.md and /specs/<feature>.md, then give me a plan
 
 ## Batch mode (D-052)
 - A batch is several features in one session.
+- Open a **draft PR** into `staging` at the start of each batch, so CI runs on every push.
 - Write all specs first, wait for one approval, then build without stopping.
 - One commit group per feature. CI must be green after each feature.
 - After each feature, update `specs/BATCH_LOG.md`: built, tests, page weight, deviations. A new session resumes from it.
-- Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, or anything touching the live Supabase project.
+- Screenshots go to CI artifacts or the PR, never committed to the repository.
+- Stop and ask only for: a conflict with a rule or decision, a migration that removes or renames, a new dependency, a test still failing after three honest tries, anything touching the live Supabase project, or changes to environment, network or account settings outside the repo (ask first).
 - Data and security work (row-level security, isolation test) ends with a checkpoint before anything is built on it.
 
 ## Never do

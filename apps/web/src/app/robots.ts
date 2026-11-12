@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
-import { getSite } from "@/data/get-site";
+import { siteForHost } from "@/lib/site-for-host";
 
 /**
- * /robots.txt: allow everything and point to the sitemap. No Disallow on
- * purpose: crawlers must fetch pages to see their noindex (D-054).
+ * /robots.txt per host: allow everything and point to that site's sitemap.
+ * No Disallow on purpose: crawlers must fetch pages to see their noindex (D-054).
  */
 export default async function robots(): Promise<MetadataRoute.Robots> {
-  const { baseUrl } = await getSite();
-  return { rules: { userAgent: "*", allow: "/" }, sitemap: `${baseUrl.replace(/\/+$/, "")}/sitemap.xml` };
+  const found = await siteForHost();
+  return {
+    rules: { userAgent: "*", allow: "/" },
+    ...(found ? { sitemap: `${found.view.baseUrl.replace(/\/s\/[^/]+$/, "")}/sitemap.xml` } : {}),
+  };
 }

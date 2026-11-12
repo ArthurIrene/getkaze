@@ -1,18 +1,18 @@
 import type { MetadataRoute } from "next";
 import { shortName } from "@getkaze/core";
-import { getSite } from "@/data/get-site";
-import { pageMetadata } from "@/lib/metadata";
+import { siteForHost } from "@/lib/site-for-host";
 import { templateThemes } from "@/templates/registry";
 
 /** /manifest.webmanifest per business (pwa-manifest.md). No service worker in Batch 1. */
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
-  const site = await getSite();
-  const theme = templateThemes[site.template];
-  const description = (await pageMetadata("home", "en")).description ?? undefined;
+  const found = await siteForHost();
+  const name = found?.site.name ?? "Kaze";
+  const theme = templateThemes[found?.site.template ?? "field-journal"];
+  const description = found ? `${found.view.hero.title} ${found.view.hero.line}`.trim() : undefined;
   return {
-    name: site.name,
-    short_name: shortName(site.name),
-    description: description ?? undefined,
+    name,
+    short_name: shortName(name),
+    description,
     start_url: "/",
     scope: "/",
     display: "standalone",

@@ -2,10 +2,14 @@ import { pagePaths, whatsAppLink, type PageId, type SiteView } from "@getkaze/co
 import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
-/** Localised path of a page: "/rooms" in English, "/rw/rooms" in Kinyarwanda. */
-export function pageHref(page: PageId, locale: Locale, hash?: string): string {
+/**
+ * Localised path of a page inside the current site: "/rooms" or "/rw/rooms",
+ * with the site's link base in front on the fallback ("/s/<slug>/rw/rooms").
+ */
+export function pageHref(page: PageId, locale: Locale, base = "", hash?: string): string {
   const path = getPathname({ href: pagePaths[page], locale });
-  return hash ? `${path}#${hash}` : path;
+  const full = base ? (path === "/" ? base : `${base}${path}`) : path;
+  return hash ? `${full}#${hash}` : full;
 }
 
 /**
@@ -13,5 +17,5 @@ export function pageHref(page: PageId, locale: Locale, hash?: string): string {
  * otherwise WhatsApp with a prefilled message.
  */
 export function checkHref(site: SiteView, locale: Locale, pages: PageId[], message: string): string {
-  return pages.includes("book") ? pageHref("book", locale) : whatsAppLink(site.contacts.whatsapp, message);
+  return pages.includes("book") ? pageHref("book", locale, site.linkBase) : whatsAppLink(site.contacts.whatsapp, message);
 }

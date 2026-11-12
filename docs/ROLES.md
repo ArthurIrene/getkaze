@@ -26,9 +26,9 @@ Status: v1.0 (7 Nov 2026). Roles are permission settings, not fixed code. Each p
 - Owner can disable a login instantly.
 - One person can hold several roles.
 - PIN lockout after repeated failed attempts (D-034).
-- Platform admin uses two-factor login (D-034).
+- Platform admin uses two-factor login with a TOTP authenticator app; admin screens and admin data require it (aal2) (D-034, D-060).
 - Shared-device mode later, if a business provides a tablet.
-- Owner login method: open (email + password suggested, no SMS cost).
+- Owner login: email and password (Supabase Auth), invite only, no public sign-up, no SMS; password reset by email (D-059).
 
 ## 4. Devices
 - Owners and managers: web dashboard (PWA).

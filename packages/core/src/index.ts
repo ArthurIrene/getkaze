@@ -16,6 +16,8 @@ export const platform = {
    * (privacy-notice.md); the page shows a draft line while it is a draft.
    * Registration numbers stay null until NCSA issues them (COMPLIANCE.md).
    */
+  /** Our support WhatsApp number shown to owners (D-034). Placeholder until the business number is set. */
+  supportWhatsApp: "+250 700 000 000",
   privacyNotice: {
     status: "draft" as "draft" | "reviewed",
     updated: "2026-11-12",
@@ -39,3 +41,9 @@ export * from "./booking";
 export * from "./privacy";
 export * from "./seo";
 export * from "./brand";
+export * from "./slugs";
+export * from "./presets";
+export * from "./access";
+export * from "./admin";
+export * from "./hosts";
+export * from "./site/from-row";

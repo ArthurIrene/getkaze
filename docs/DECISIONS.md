@@ -238,7 +238,7 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 
 ## Open / Postponed
 - **Platform name and domain** (day 1 of execution).
-- **Owner login method** (email + password suggested).
+- ~~**Owner login method**~~ settled by D-059.
 - **Owned maintenance plan price.**
 - **NCSA outcome** for Supabase and Cloudflare; fallback to a Rwanda host (Strettch or AOS quotes).
 - **Lawyer question:** does our storage authorization cover Managed clients, or does each business need its own?
@@ -387,3 +387,27 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Replaces:** none
 - **Reason:** Automatic checks replace per-feature manual approval.
 - **Status:** Confirmed
+
+## D-059 | 2026-11-12
+- **Decision:** Owner login: email and password through Supabase Auth. Invite only (the platform admin invites an owner; no public sign-up). No SMS. Password reset by email. Supabase's built-in email sender is for testing only; a custom email sender (our own domain) is set up before G2.
+- **Replaces:** the open "owner login method" (DECISIONS.md "Open", PROJECT.md §12, ROLES.md §3).
+- **Reason:** No SMS cost, works on every phone, and nobody can create an account we did not invite.
+- **Status:** Confirmed
+
+## D-060 | 2026-11-12
+- **Decision:** Platform admin 2FA is a TOTP authenticator app (Supabase Auth MFA). Admin screens and admin data require it: the session must be at assurance level aal2, and row-level security on admin data checks aal2 too, not only the screens.
+- **Replaces:** refines D-034 ("platform admin 2FA").
+- **Reason:** Free, no SMS, and enforced by the database as well as the app.
+- **Status:** Confirmed
+
+## D-061 | 2026-11-12
+- **Decision:** Wording editor in platform admin (Batch 3). Each wording key shows English beside Kinyarwanda, with a status of draft or checked. A wording override is stored in the database. The app reads wording in this order: database override, then the messages file (`apps/web/messages/<locale>.json`), then English.
+- **Replaces:** refines D-048 (admin "Translations" screen).
+- **Reason:** The owner can fix Kinyarwanda without a code change, and every fix still falls back safely.
+- **Status:** Confirmed
+
+## D-062 | 2026-11-12
+- **Decision:** Domains. The platform domain is **altavision.rw**. Each business is served at **`<slug>.altavision.rw`**; the base domain is a setting (`PLATFORM_DOMAIN`), not hard-coded. Our own screens (owner login, owner pages, platform admin) are on **`kaze.altavision.rw`**, also a setting (`APP_HOST`). Before the domain is set up, the fallback is `getkaze.vercel.app/s/<slug>/…`, and the bare `getkaze.vercel.app` keeps showing the demo lodge (D-053). **Reserved names** that can never be a business slug: `www`, `mail`, `admin`, `app`, `api`, `kaze`, plus every subdomain the company already uses (added to the list as they are named), plus the technical names the platform needs (`s`, `auth`, `login`, `owner`, `static`, `cdn`, `assets`, `smtp`, `imap`, `pop`, `webmail`, `ftp`, `ns1`, `ns2`, `autodiscover`, `autoconfig`, `_dmarc`, `status`, `support`, `help`, `docs`, `blog`). The list lives in the database (`reserved_slugs`, enforced by a trigger) and in `packages/core` (for form checks); a test keeps the two equal.
+- **Replaces:** the `<slug>.getkaze.rw` example in specs/business-by-host.md; refines D-051 ("temporary hosting under altavision.rw").
+- **Reason:** One company domain for every client site until clients bring their own (D-006); settings keep a later move cheap.
+- **Status:** Confirmed. Open: the list of subdomains Altavision already uses.

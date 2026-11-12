@@ -22,6 +22,8 @@ export type SiteView = {
   /** Languages with owner content (D-029); only these get their own indexed pages. */
   languages: ContentLocale[];
   seoDescription: string;
+  /** Link prefix for this request: "" on a subdomain or custom domain, "/s/<slug>" on the fallback (set by the app). */
+  linkBase: string;
   legalName: string;
   defaultCurrency: Currency;
   sections: SectionId[];
@@ -90,6 +92,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
     propertyStyle: site.propertyStyle,
     languages: site.languages.includes("en") ? site.languages : ["en", ...site.languages],
     seoDescription: site.seoDescription ? t(site.seoDescription) : "",
+    linkBase: "",
     legalName: site.legalName,
     defaultCurrency: site.defaultCurrency,
     sections: visibleSections(site.sections, site.modulesOn, (id) => hasContent[id]),

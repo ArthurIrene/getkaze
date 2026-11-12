@@ -4,7 +4,6 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { platform } from "@getkaze/core";
 import { routing } from "@/i18n/routing";
-import { getSite } from "@/data/get-site";
 import { templateThemes } from "@/templates/registry";
 import "../globals.css";
 
@@ -20,9 +19,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/** Browser bar colour per scheme: the business template's paper colours (pwa-manifest.md). */
+/**
+ * Browser bar colour per scheme: the template's paper colours (pwa-manifest.md).
+ * Field Journal is the only template; per-business colours arrive with the editor.
+ */
 export async function generateViewport(): Promise<Viewport> {
-  const theme = templateThemes[(await getSite()).template];
+  const theme = templateThemes["field-journal"];
   return {
     themeColor: [
       { media: "(prefers-color-scheme: light)", color: theme.paper },

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { sitePages, toSiteView, type PageId } from "@getkaze/core";
+import { parseSiteKey, sitePages, toSiteView, type PageId, type SiteData, type SiteView } from "@getkaze/core";
 import { getSite } from "@/data/get-site";
 import type { Locale } from "@/i18n/routing";
 import { templates } from "@/templates/registry";
@@ -11,11 +11,19 @@ export function availablePages(template: keyof typeof templates, view: Parameter
   return sitePages(view).filter((id) => id in pages);
 }
 
+/** The site and its view for a route key (from the proxy), or a clean 404. */
+export async function loadSite(siteKey: string, locale: Locale): Promise<{ site: SiteData; view: SiteView }> {
+  const key = parseSiteKey(siteKey);
+  if (!key) notFound();
+  const site = await getSite(key);
+  if (!site) notFound();
+  return { site, view: { ...toSiteView(site, locale), linkBase: key.base } };
+}
+
 /** Shared page entry: load the business, pick the template page, 404 if the site has no such page. */
-export async function renderPage(page: PageId, locale: Locale, query?: Record<string, string | undefined>) {
+export async function renderPage(page: PageId, locale: Locale, siteKey: string, query?: Record<string, string | undefined>) {
   setRequestLocale(locale);
-  const site = await getSite();
-  const view = toSiteView(site, locale);
+  const { site, view } = await loadSite(siteKey, locale);
   const pages = availablePages(site.template, view);
   const Page = templates[site.template][page];
   if (!Page || !pages.includes(page)) notFound();

@@ -97,7 +97,7 @@ export default async function FieldJournalRooms(props: TemplateProps) {
                 className="fj-btn fj-btn-accent"
                 href={
                   hasBook
-                    ? `${pageHref("book", locale)}?room=${encodeURIComponent(room.id)}`
+                    ? `${pageHref("book", locale, site.linkBase)}?room=${encodeURIComponent(room.id)}`
                     : whatsAppLink(site.contacts.whatsapp, t("datesMessage", { name: site.name, room: room.name }))
                 }
               >

@@ -94,7 +94,7 @@ Owner, manager, receptionist, housekeeping, waiter, kitchen, bar, plus our platf
 
 ## 10. Build approach
 - Spec first, then small slices, built in batches (D-052): several features per session, all specs approved once, one commit group per feature, CI green after each (D-058), progress in `specs/BATCH_LOG.md`. Tested on the demo client, committed after each working step.
-- Batch order: Batch 0 automatic checks (done) → Batch 1 guest site (rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages) → Batch 2 data and access (core data and RLS with isolation test, then a checkpoint; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database) → Batch 3 (editor, click stats, security checklist, backups with restore test) → the prospect demos.
+- Batch order: Batch 0 automatic checks (done) → Batch 1 guest site (rooms, contact, privacy notice, SEO basics, WhatsApp booking message, PWA manifest, speed pass, with Playwright happy paths for new pages) → Batch 2 data and access (core data and RLS with isolation test, then a checkpoint; then login, platform admin with 2FA, module switches, subdomain routing, demo lodge in the database, `getSite()` on the database) → Batch 3 (editor, owner dashboard, Wording editor (D-061), click stats, security checklist, backups with restore test) → the prospect demos.
 - Chat 1 (done): master plan and documents. Chat 2: mockups. Then scaffold and Claude Code.
 - Build order (by product): compliance tasks → hotel website kit with editor → menu + WhatsApp orders → booking requests and QR table requests → manager orders page → the rest when clients pay; native staff app when time allows.
 - First sellable milestone: hotel website kit with editor and demo client, about 2 to 2.5 weeks at 5+ hours a day.
@@ -111,7 +111,9 @@ Owner, manager, receptionist, housekeeping, waiter, kitchen, bar, plus our platf
 - **Weak connections:** light pages, PWA caching, retry, WhatsApp backup (D-028).
 
 ## 12. Open (tracked in DECISIONS.md)
-Platform name and domain; owner login method; Owned maintenance price; NCSA outcome for the chosen provider; client agreement text; payment aggregator choice; WhatsApp Business API timing; full offline mode; channel manager sync; other business types.
+Platform name and domain; Owned maintenance price; NCSA outcome for the chosen provider; client agreement text; payment aggregator choice; WhatsApp Business API timing; full offline mode; channel manager sync; other business types.
+
+Settled since: owner login method (D-059), platform admin 2FA method (D-060), wording editor (D-061).
 
 ## Chat 2 addendum (2026-11-10)
 - §7 Templates are now Field Journal, Imigongo, Cinematic (D-039). Launch with Field Journal only (D-040).

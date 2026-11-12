@@ -1,11 +1,11 @@
 import { ImageResponse } from "next/og";
 import { initials } from "@getkaze/core";
-import { getSite } from "@/data/get-site";
+import { siteForHost } from "@/lib/site-for-host";
 import { templateThemes } from "@/templates/registry";
 
 /**
- * Placeholder icons with the business's initials (pwa-manifest.md), made at
- * build time. ImageResponse is part of Next.js (not a new dependency) and
+ * Placeholder icons with the business's initials (pwa-manifest.md), made per
+ * host on request. ImageResponse is part of Next.js (not a new dependency) and
  * not Vercel-only, but it must be re-checked on Cloudflare Workers at G2.
  */
 const files = {
@@ -17,12 +17,8 @@ const files = {
 } as const;
 type IconFile = keyof typeof files;
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return Object.keys(files).map((file) => ({ file }));
-}
+// Per host (each business has its own initials), so rendered on request and cached by the browser for a day.
+export const dynamic = "force-dynamic";
 
 function escapeXml(text: string): string {
   return text.replace(/[<>&"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -31,9 +27,9 @@ function escapeXml(text: string): string {
 export async function GET(_request: Request, { params }: RouteContext<"/icons/[file]">) {
   const { file } = await params;
   if (!(file in files)) return new Response("Not found", { status: 404 });
-  const site = await getSite();
-  const theme = templateThemes[site.template];
-  const text = initials(site.name);
+  const found = await siteForHost();
+  const theme = templateThemes[found?.site.template ?? "field-journal"];
+  const text = initials(found?.site.name ?? "Kaze");
   const spec = files[file as IconFile];
 
   if (file === "icon.svg") {
@@ -64,6 +60,6 @@ export async function GET(_request: Request, { params }: RouteContext<"/icons/[f
         {text}
       </div>
     ),
-    { width: size, height: size },
+    { width: size, height: size, headers: { "Cache-Control": "public, max-age=86400" } },
   );
 }

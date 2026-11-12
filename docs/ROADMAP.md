@@ -45,4 +45,5 @@ Visit and live setup, basic photos, Google Business Profile claim and verificati
 ## Progress (2026-11-12)
 - Batch 0 (CI, weight check, Playwright): done.
 - Batch 1 (guest site: rooms, contact, navigation, privacy notice draft, SEO basics, booking request launch mode, PWA manifest, speed pass): built on demo data. See specs/BATCH_LOG.md.
-- Next: Batch 2 (data and access), starting with core data, RLS and the isolation test, then a checkpoint.
+- Batch 2 (data and access): in progress. Core data, RLS and the isolation test, then a checkpoint; then owner login (D-059), admin TOTP 2FA (D-060), business by host, demo lodge in the database.
+- Batch 3 adds the **Wording editor** (D-061) and the **owner dashboard**, alongside the editor, click stats, security checklist and backups.
