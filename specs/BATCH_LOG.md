@@ -302,3 +302,10 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Tests: nav.spec.ts: phone asserts it is hidden; new desktop test on `/`, `/rooms`, `/contact`, `/book` (visible, named "WhatsApp", `wa.me` link, sits right of the button). Guest Playwright tests pass locally; database-backed tests need Docker, which this session lacks, so GitHub CI covers them.
 - Page weight: `/` 167.2 KB (+0.1 KB), JS 145.4 KB (unchanged).
 - Deviations: none.
+
+## Batch 3a, specs | 2026-11-13
+- Built: specs/batch-3a-editor.md (overview, 11 conflicts and questions with defaults), media-storage.md, editor-basics.md, editor-rooms-look.md, change-log-view.md.
+- Tests: none (specs only).
+- Page weight: unchanged.
+- Deviations: none yet.
+- Next: wait for one approval of all specs, then build 1 (checkpoint) → 2 → 3 → 4.
