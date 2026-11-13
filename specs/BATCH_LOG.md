@@ -292,3 +292,7 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - At G2: the demo fallback (remove, or keep to the demo slug), noindex per business, the custom email sender, and a check of icons on Cloudflare.
 
 **Next batch:** Batch 3 (editor, revalidation on save, photos in Storage), after the review of PR #6.
+
+## Batch 3a, content editor: started | 2026-11-13
+- Built: branch `feature/batch-3a-editor` from `staging` (PR #7 merged), draft PR opened.
+- Next: item 0 (header WhatsApp button), then specs for features 1–4, then one approval.
