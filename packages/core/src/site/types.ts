@@ -40,6 +40,10 @@ export type Photo = {
   place: PhotoPlace;
   alt: LocalizedText;
   src?: string;
+  /** Sizes made on the owner's device (480/960/1440 px), for <img srcset>. */
+  srcset?: string;
+  width?: number;
+  height?: number;
 };
 
 export type Fact = { id: string; value: LocalizedText; icon: IconKey; detail: LocalizedText };
@@ -123,6 +127,8 @@ export type SiteData = {
   /** Payment choices offered on the booking request (D-045). */
   bookingPayments: PaymentMethod[];
   sections: SectionSetting[];
+  /** Colour set and accent (Look & colors). Missing on older sites: Auto and Forest. */
+  look?: { colorSet: "auto" | "day" | "night"; accent: "forest" | "clay" | "ochre" | "slate" | "bark" };
   hero: { title: LocalizedText; line: LocalizedText; photo: Photo };
   facts: Fact[];
   moments: Moment[];

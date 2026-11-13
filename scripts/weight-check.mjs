@@ -12,6 +12,12 @@
  *
  *   node scripts/weight-check.mjs [--skip-build] [--port 3100] [--json out.json]
  *   WEIGHT_PAGES=/,/rooms node scripts/weight-check.mjs   (measure only these pages)
+ *
+ * With a LOCAL Supabase configured (as in CI), it also measures a lodge with
+ * an uploaded hero photo (approved point 4) at 2x pixel ratio, so the phone
+ * loads the 960 px file. The fixture's files are made at their size targets
+ * (480: 40 KB, 960: 80 KB, 1440: 160 KB), so the check covers the worst case
+ * the editor allows by target.
  */
 import { spawn, spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
@@ -66,8 +72,8 @@ function kind(type, mime, url) {
   return "Other";
 }
 
-async function measure(browser, path) {
-  const context = await browser.newContext({ viewport: { width: 360, height: 800 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true });
+async function measure(browser, path, deviceScaleFactor = 1) {
+  const context = await browser.newContext({ viewport: { width: 360, height: 800 }, deviceScaleFactor, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
   await cdp.send("Network.enable");
@@ -119,12 +125,89 @@ async function measure(browser, path) {
 const kb = (b) => (b / 1024).toFixed(1).padStart(7) + " KB";
 const pad = (s, n) => String(s).padEnd(n);
 
+// ---------- Hero photo fixture (local Supabase only) ----------
+const sbUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const sbKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+const localDb = /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(sbUrl) && sbKey && !process.env.WEIGHT_PAGES;
+const HERO_SLUG = "weight-hero";
+
+async function sb(path, init = {}) {
+  const res = await fetch(`${sbUrl}${path}`, {
+    ...init,
+    headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}`, "Content-Type": "application/json", Prefer: "return=representation", ...(init.headers ?? {}) },
+  });
+  if (!res.ok) throw new Error(`${path}: ${res.status} ${await res.text()}`);
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/** Photo-like WebP files at each width, padded up to their size target (browsers ignore bytes after the RIFF chunk). */
+async function heroFiles(browser) {
+  const page = await browser.newPage();
+  const out = {};
+  for (const [w, target] of [[480, 40], [960, 80], [1440, 160]]) {
+    const b64 = await page.evaluate(async ([w, target]) => {
+      const h = Math.round((w * 3) / 4);
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      const g = c.getContext("2d");
+      const img = g.createImageData(w, h);
+      for (let p = 0, i = 0; p < w * h; p++, i += 4) { const x = p % w, y = (p / w) | 0, n = Math.random() * 24; img.data[i] = 60 + (y * 50) / h + n; img.data[i + 1] = 90 + (x * 60) / w + n; img.data[i + 2] = 200 - (y * 110) / h + n; img.data[i + 3] = 255; }
+      g.putImageData(img, 0, 0);
+      // The editor's rule: step the quality down until the file is under its target.
+      let blob;
+      for (let q = 0.82; q >= 0.25; q -= 0.08) {
+        blob = await new Promise((r) => c.toBlob(r, "image/webp", q));
+        if (blob.size <= target * 1024) break;
+      }
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+      return btoa(s);
+    }, [w, target]);
+    const file = Buffer.from(b64, "base64");
+    if (file.length > target * 1024) throw new Error(`hero fixture ${w}: ${file.length} B is over its ${target} KB target`);
+    out[w] = Buffer.concat([file, Buffer.alloc(target * 1024 - file.length)]);
+  }
+  await page.close();
+  return out;
+}
+
+async function heroFixture(browser) {
+  const [existing] = await sb(`/rest/v1/businesses?slug=eq.${HERO_SLUG}&select=id`);
+  if (existing) return `/s/${HERO_SLUG}`;
+  const [demo] = await sb(`/rest/v1/site_settings?select=*,businesses!inner(slug)&businesses.slug=eq.${process.env.DEMO_SITE_SLUG ?? "kinigi-hills"}`);
+  if (!demo) throw new Error("the demo lodge is not in the database (seed)");
+  const [b] = await sb("/rest/v1/businesses", { method: "POST", body: JSON.stringify({ slug: HERO_SLUG, name: "Weight Hero Lodge", legal_name: "Weight Hero Lodge", preset: "hotel_lodge", style: "lodge", languages: ["en", "rw"] }) });
+  const { businesses: _b, business_id: _id, updated_at: _u, ...settings } = demo;
+  await sb("/rest/v1/site_settings", { method: "POST", body: JSON.stringify({ ...settings, business_id: b.id }) });
+  const folder = `${b.id}/${crypto.randomUUID()}`;
+  const files = await heroFiles(browser);
+  for (const [w, body] of Object.entries(files)) {
+    const res = await fetch(`${sbUrl}/storage/v1/object/business-media/${folder}/${w}.webp`, { method: "POST", headers: { apikey: sbKey, Authorization: `Bearer ${sbKey}`, "Content-Type": "image/webp" }, body });
+    if (!res.ok) throw new Error(`upload ${w}: ${res.status} ${await res.text()}`);
+  }
+  await sb("/rest/v1/media", { method: "POST", body: JSON.stringify({ business_id: b.id, place: "hero", alt: { en: "The volcanoes" }, storage_path: folder, format: "webp", width: 1440, height: 1080, bytes: Object.values(files).reduce((n, f) => n + f.length, 0) }) });
+  await sb(`/rest/v1/businesses?id=eq.${b.id}`, { method: "PATCH", body: JSON.stringify({ status: "active" }) });
+  return `/s/${HERO_SLUG}`;
+}
+
 let failed = false;
 const results = [];
 try {
   await waitForServer();
   const browser = await chromium.launch(process.env.PW_CHROMIUM_PATH ? { executablePath: process.env.PW_CHROMIUM_PATH } : {});
   for (const path of PAGES) results.push(await measure(browser, path));
+  if (localDb) {
+    const path = await heroFixture(browser);
+    const r = await measure(browser, path, 2);
+    r.path = `${path} @2x`;
+    const hero = r.rows.find((x) => x.kind === "Images" && /\/business-media\//.test(x.url));
+    if (!hero || !/\/960\.webp$/.test(new URL(hero.url).pathname)) {
+      failed = true;
+      console.error(`FAIL  ${r.path}: the hero did not load its 960 px file (${hero ? new URL(hero.url).pathname : "no photo"})`);
+    }
+    results.push(r);
+  }
   await browser.close();
 } finally {
   stopServer();

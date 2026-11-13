@@ -7,3 +7,4 @@
 - WhatsApp Business API for automatic messages.
 - Imigongo pattern set commissioned from an Imigongo cooperative.
 - Remaining Imigongo and Cinematic pages; desktop views.
+- Photo storage cleanup check (from Batch 3a): find `media` rows whose files are missing and files in `business-media` with no `media` row; report, then remove after review.

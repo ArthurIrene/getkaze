@@ -54,7 +54,7 @@ export async function getSite(key: Pick<SiteKey, "slug" | "host">): Promise<Site
   if (error) throw new Error(`Could not load the site (${error.code ?? "unknown"}).`);
   if (!data) return null;
   const slug = (data as { business?: { slug?: string } }).business?.slug ?? key.slug ?? "";
-  const mapped = rowToSiteData(data, siteBaseUrl({ slug }, hostConfig()));
+  const mapped = rowToSiteData(data, siteBaseUrl({ slug }, hostConfig()), supabaseEnv().url);
   if (!mapped.ok) throw new Error(`The published site "${slug}" is incomplete: ${mapped.errors.join("; ")}`);
   return mapped.site;
 }

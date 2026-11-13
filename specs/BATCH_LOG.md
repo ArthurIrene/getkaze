@@ -251,6 +251,16 @@ Entry format:
 - Deviations: none. The unused `Nav.home` wording stays (no rename or removal needed).
 
 ## Next session starts here
+**Batch 3a (content editor, PR #8) is built and ready for review:** item 0 and features 1–4, see the Batch 3a entries at the end. Local runs need Docker: start it with `dockerd` if `docker info` fails, then the Supabase command in CLAUDE.md.
+
+**Open after Batch 3a:**
+- Kinyarwanda checks of the editor wording (glossary, "Content editor" table, all draft).
+- The photo cleanup check (backlog).
+- Zod: specs name it, the code uses plain checks; add Zod only if you approve the dependency.
+- Gallery photos are stored but not shown yet (no gallery section in Field Journal).
+
+**Earlier (Batch 2) notes follow.**
+
 **Done (Batch 2, PR #6, ready for review):**
 - Core data, RLS and the isolation test.
 - Database tests and the staging deploy workflow.
@@ -292,3 +302,56 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - At G2: the demo fallback (remove, or keep to the demo slug), noindex per business, the custom email sender, and a check of icons on Cloudflare.
 
 **Next batch:** Batch 3 (editor, revalidation on save, photos in Storage), after the review of PR #6.
+
+## Batch 3a, content editor: started | 2026-11-13
+- Built: branch `feature/batch-3a-editor` from `staging` (PR #7 merged), draft PR opened.
+- Next: item 0 (header WhatsApp button), then specs for features 1–4, then one approval.
+
+## Batch 3a, item 0: desktop WhatsApp button | 2026-11-13
+- Built: a compact (34 px) WhatsApp icon button in the desktop header, right after "Check availability" (`.fj-nav-wa`, inside `.fj-nav-inline`, so phones never show it; they keep the bottom bar). No JavaScript.
+- Tests: nav.spec.ts: phone asserts it is hidden; new desktop test on `/`, `/rooms`, `/contact`, `/book` (visible, named "WhatsApp", `wa.me` link, sits right of the button). Guest Playwright tests pass locally; database-backed tests need Docker, which this session lacks, so GitHub CI covers them.
+- Page weight: `/` 167.2 KB (+0.1 KB), JS 145.4 KB (unchanged).
+- Deviations: none.
+
+## Batch 3a, specs | 2026-11-13
+- Built: specs/batch-3a-editor.md (overview, 11 conflicts and questions with defaults), media-storage.md, editor-basics.md, editor-rooms-look.md, change-log-view.md.
+- Tests: none (specs only).
+- Page weight: unchanged.
+- Deviations: none yet.
+- Next: wait for one approval of all specs, then build 1 (checkpoint) → 2 → 3 → 4.
+
+## Batch 3a, feature 1: photo storage and its security | 2026-11-13
+- Approval: specs approved with answers (see the PR conversation): 3 deletion of files with photo and business; 4 three widths (480/960/1440 WebP) made on the device, `<img srcset>`, hero ~80 KB, lazy below the fold, no optimizer; 5 owner may change only name, languages, default currency (database-enforced); 8 start `dockerd`; 10 admin reads of a change log are logged as support access.
+- Built: migration `20261113100000_media_storage.sql`: bucket `business-media` (public read, 300 KB, WebP/JPEG); names `<business_id>/<photo_id>/<480|960|1440>.<webp|jpg>` (`app.media_business`); insert/select/delete policies on `storage.objects` (no update); `app.has_open_support`, `app.can_write_media`, `app.media_file_count`, `app.media_limits`; `media.translations_checked`; `media` trigger (own folder, ≤ 60 photos, ≤ 3 × 300 KB). Core `media.ts` (`photoLimits`, names, `photoProblems` with magic bytes, `publicMediaUrl`, `photoFiles`). Web `lib/media/remove.ts`: `deletePhoto` (files, then row) and `purgeBusinessMedia` (whole folder, D-031). `pnpm db:check` keeps core and database limits equal. CI and CLAUDE.md now start `storage-api`.
+- Tests: database 206 (new `storage.test.sql`, 40; isolation +4 storage checks); a mutation check (insert policy loosened) made 5 tests fail as expected. Unit 94 (6 new). Playwright 64 (5 new in `e2e/media-storage.spec.ts`, through the Storage API: own folder only, 301 KB and PNG refused, no overwrite, B can't list or delete A, photo delete removes files and row, business purge removes only that folder, admin aal1 refused). Full local CI green (Docker started with `dockerd`).
+- Page weight: unchanged (`/` 167.2 KB, JS 145.4 KB). No owner screens yet.
+- Deviations: the limits-sync check lives in `scripts/check-migrations.mjs`, not a unit test (core has no Node types; no new dependency).
+- Next: CHECKPOINT. After your go: feature 2 (editor part 1).
+
+## Batch 3a, feature 2: editor part 1 | 2026-11-13
+- Built: `/owner/b/<id>/edit` hub (progress %, done marks), Business info (name, phone/WhatsApp normalised to +250, email, Google Maps link or "Use my location", area, directions, hours as one translatable line per area), Languages (RW/FR switches with "x of y texts filled"), Photos (grid, add, detail: place, room, alt text EN/RW/FR, delete with its files). Translatable fields show Missing / Draft + "Tap when checked" / Checked; a changed text goes back to Draft. "Edit your site" on `/owner`; "Open the editor" on the admin client page during a support session. Access: core `canEditSite` (active owner, or admin at aal2 with an open support session), else 404. Saves use the user's session, then `updateTag` on `site:<slug>` and `site:<custom domain>` (the guest page updates on the next request).
+- Photos: shrunk on the phone with canvas (no dependency): 480/960/1440 px WebP (JPEG fallback), quality stepped to 40/80/160 KB targets, EXIF dropped by the redraw; one server action checks type, size and magic bytes and uploads with the owner's session. Guest pages: placed hero/dining/host photos with plain `<img srcset>` (hero eager, `sizes=100vw`; others lazy). Consent hint shown.
+- Database: migration `20261113110000_editor_basics.sql`: owner update policy on `businesses` + a column guard (security definer) so owners change only name, languages, default currency; `site_settings.translations_checked`; `media.format`; `get_published_site` returns `format`.
+- CSS split: guest pages now build Tailwind only from guest-rendered files (`globals.css`, `source(none)` + `@source`); platform screens add `app/platform.css`. Guest CSS went from 5.7 to 4.0 KB gzipped, and new platform screens no longer add weight to guest pages.
+- Tests: database 221 (new `editor.test.sql`, 15: allowed and refused columns, B untouched, admin aal1/aal2; two isolation asserts now expect "refused" instead of "0 rows"); unit 114 (20 new, incl. a map-link hole the tests caught: `google.com.evil.io`); Playwright 69 (5 new: info save → live contact page + change log; bad phone refused; Missing → Draft → Checked → Draft; 4 MB JPEG with fake GPS EXIF → three WebP files ≤ 300 KB without the EXIF, hero `srcset` and the 960 file on a 2× phone; another owner gets 404). Full local CI green.
+- Page weight: guest pages 1.1 KB lighter (`/` 166.1 KB), JS 145.4 KB unchanged. New check case `/s/weight-hero @2x` (local Supabase, hero files at their targets): 243.5 KB, hero 80.0 KB, and it must load the 960 file.
+- Owner-screen JS: hub 145.4 KB, info 146.3 KB, photos 146.8 KB, languages 145.4 KB (framework 145.4 KB + small client parts).
+- Deviations: plain parse functions instead of Zod (Zod is not installed; adding it needs approval). Gallery photos are stored but not shown on guest pages yet (no gallery section in the template). Form errors come back as a notice after a redirect (the fields reload from the saved values).
+
+## Batch 3a, feature 3: editor part 2 | 2026-11-13
+- Built: Rooms (Hotel/Lodge only): list in order with prices and units, move up/down, "+ Add room"; form with name and line (EN required, RW/FR with markers), RWF and USD both required (D-023), most guests, units, up to 6 amenities (icon + translatable label), shown/hidden, delete (its photos move to the gallery). Handles from the English name (`garden-double`, unique). Sections: every home section with a switch and up/down (each move saves); one that needs an off module shows "Needs Menu" and stays off. Look & colors: Field Journal (others "coming later"), colour set Auto/Day/Night, accent from five safe colours. Hub: rows for all parts and "N texts have no RW yet".
+- Guest site: `data-look` (day/night forced; Auto follows the phone) and `data-accent` on the page root; each accent sets a day and a night shade through CSS variables. No JS.
+- Database: migration `20261113120000_editor_rooms_look.sql`: `site_settings.look` (checked by `app.is_look`: colour set, accent id, no other keys), `catalog_items.translations_checked`, `get_published_site` returns `look`. `pnpm db:check` keeps the accent ids equal to core `accentPalette`.
+- Tests: database 233 (+12: rooms of A added, reordered, deleted; B's rooms untouched; a room with one price refused; bad looks refused); unit 125 (+11, incl. 4.5:1 contrast for every accent by day and night); Playwright 73 (+4: add room → `/rooms` in RWF and USD, reorder, RWF-only refused by the server; Missing RW in form and hub; Find us moved to the top and Rooms off → home follows; Clay + Night on `/`, `/rooms`, `/contact`). Full local CI green.
+- Page weight: `/` 166.2 KB (batch start 167.2 KB), JS 145.4 KB unchanged; hero case 243.6 KB.
+- Owner-screen JS: rooms, room form, sections, look: 145.4 KB each (no client code).
+- Deviations: two mockup accents darkened to pass 4.5:1 (Clay `#B5643C` → `#9E5530`, Ochre `#8A6A2E` → `#7A5D26`); night shades added for each accent. Reordering uses up/down buttons (no drag, no JavaScript). The browser's own "required" check blocks an empty price before the server sees it; the server check is tested too.
+
+## Batch 3a, feature 4: change log view | 2026-11-13
+- Built: owner `/owner/b/<id>/edit/changes` (hub row "Changes"): newest first, grouped by Kigali day, 50 per page ("Older changes →"). Each row: what in plain words (area · item · fields, never values), who (You, Owner, Support team, Set-up), time. Support visits (start and end with the reason) and our log reads are rows too. Admin `/admin/changes` (aal2; link "Change log" on Clients): every business, business filter, actor email.
+- Database: migration `20261113130000_change_log_view.sql`: `support_access.kind` (`session` or `log_read`); `public.get_change_log(business, offset, limit)` (security definer: owners need `changes.view` on that business, admins aal2; email only for admins) over a private `app.change_log_page`. Each admin read of a business's log is recorded as a `log_read` support access (once per 10 minutes per admin and business; for the all-businesses view, each business on the page), so the owner sees it (approved point 10).
+- Tests: database 252 (new `change_log_view.test.sql`, 19: owner reads only A, no emails, field names not values, "you"/"support" actors, visit start/end, nothing of B, no all-view for owners, private function not callable, admin aal1 nothing, aal2 all with emails, reads recorded once, owner sees the read); unit 129 (+4); Playwright 75 (+2: owner price change → "You · Rooms · Garden room · price"; admin 404 without a support session, edit during a session, admin log with filter and email, owner sees "Support team", the visit and the read, never the email). Full local CI green.
+- Page weight: unchanged from feature 3 (`/` 166.2 KB, JS 145.4 KB; hero case 243.6 KB).
+- Owner-screen JS: changes 145.4 KB (no client code).
+- Fixes found on the way: an hours-only save also logged "map and directions" (an empty list was added); the save now leaves untouched parts as they were. A database test was not scoped to its own business and failed when e2e data was present; scoped.
+- Deviations: none.

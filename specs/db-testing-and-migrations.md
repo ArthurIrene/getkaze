@@ -13,7 +13,7 @@ Goal: Every push proves the schema, RLS and isolation on a throwaway local Supab
   - Mailpit (the bundled inbox) on. Studio, realtime, storage, edge runtime, analytics and the pooler stay off with `supabase start -x …`.
 - CI workflow, new job `db` (before `ci` needs it, or merged into one job; one job keeps one Next build):
   1. `supabase/setup-cli@45a513f8c64c0bc8e0e3dfe572b5c95be85f6359 # v3.0.1` with `version: 2.122.0`.
-  2. `supabase start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta`. The CLI pins every container image per CLI version, so pinning the CLI pins Postgres, GoTrue and Mailpit.
+  2. `supabase start -x studio,realtime,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta`. The CLI pins every container image per CLI version, so pinning the CLI pins Postgres, GoTrue, Storage and Mailpit. Storage runs since Batch 3a (photos).
   3. `supabase db reset` applies all migrations and `supabase/seed.sql` (the demo lodge, fake data).
   4. `supabase test db` runs the pgTAP files (the isolation test).
   5. `node scripts/check-migrations.mjs` (additive-only check).

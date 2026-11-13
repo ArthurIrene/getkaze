@@ -79,3 +79,22 @@ describe("rowToSiteData", () => {
     expect(rowToSiteData(null, "x")).toEqual({ ok: false, errors: ["not a published site"] });
   });
 });
+
+describe("uploaded photos", () => {
+  const A = "00000000-0000-0000-0000-00000000000a";
+  const P = "00000000-0000-0000-0000-0000000000f2";
+  const withMedia = (media: unknown[]) => ({ ...row, media: [...row.media, ...media] });
+  it("a placed hero photo gets src and srcset from Storage", () => {
+    const r = rowToSiteData(withMedia([{ id: "h", itemId: null, place: "hero", position: 0, path: `${A}/${P}`, format: "webp", alt: { en: "Volcanoes" }, width: 1440, height: 960 }]), "x", "http://127.0.0.1:25321");
+    if (!r.ok) throw new Error(r.errors.join());
+    const base = `http://127.0.0.1:25321/storage/v1/object/public/business-media/${A}/${P}`;
+    expect(r.site.hero.photo).toEqual({ id: "h", place: "hero", alt: { en: "Volcanoes" }, src: `${base}/1440.webp`, srcset: `${base}/480.webp 480w, ${base}/960.webp 960w, ${base}/1440.webp 1440w`, width: 1440, height: 960 });
+  });
+  it("a small JPEG only lists the widths it has; without a Storage base, no src", () => {
+    const m = { id: "d", itemId: null, place: "dining", position: 0, path: `${A}/${P}`, format: "jpg", alt: { en: "Table" }, width: 900, height: 600 };
+    const r = rowToSiteData(withMedia([m]), "x", "https://s.example");
+    expect(r.ok && r.site.dining.photo.srcset).toBe(`https://s.example/storage/v1/object/public/business-media/${A}/${P}/480.jpg 480w`);
+    const bare = rowToSiteData(withMedia([m]), "x");
+    expect(bare.ok && bare.site.dining.photo.src).toBeUndefined();
+  });
+});

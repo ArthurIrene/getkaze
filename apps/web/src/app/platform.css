@@ -1,0 +1,13 @@
+/* Platform screens only (login, owner, editor, admin; D-050): the Tailwind
+   utilities they use, on top of globals.css. Guest pages never load this. */
+@reference "./globals.css";
+@import "tailwindcss/utilities.css" source(none);
+@source "../components/platform";
+@source "../components/editor";
+@source "../components/ui";
+@source "./**/owner/**/*.tsx";
+@source "./**/admin/**/*.tsx";
+@source "./**/login/**/*.tsx";
+@source "./**/auth/**/*.tsx";
+@source "./**/not-configured/**/*.tsx";
+@source "./**/(platform)/layout.tsx";

@@ -4,14 +4,15 @@
  * Motion: CSS only, transform and opacity, off for reduced motion (D-041).
  */
 
-/* ---------- Colours: day, and night via the system setting ---------- */
+/* ---------- Colours: day; night via the phone setting (colour set Auto) or forced (data-look="night").
+   The owner's accent (data-accent, safe palette) sets --a-day and --a-night. ---------- */
 .fj {
   --paper: #f4eee3;
   --card: #fbf7f0;
   --ink: #2b2620;
   --muted: #5e554a;
   --line: #d8ccb8;
-  --accent: #3f5b3a;
+  --accent: var(--a-day, #3f5b3a);
   --on-accent: #ffffff;
   --inv: #2b2620;
   --inv-fg: #f4eee3;
@@ -34,13 +35,13 @@
   overflow-x: clip;
 }
 @media (prefers-color-scheme: dark) {
-  .fj {
+  .fj:not([data-look="day"]) {
     --paper: #1e1b17;
     --card: #2a2621;
     --ink: #f1eadd;
     --muted: #bbaf9c;
     --line: #433c33;
-    --accent: #8faf7e;
+    --accent: var(--a-night, #8faf7e);
     --on-accent: #1e1b17;
     --inv: #f1eadd;
     --inv-fg: #1e1b17;
@@ -52,6 +53,27 @@
     color-scheme: dark;
   }
 }
+.fj[data-look="night"] {
+  --paper: #1e1b17;
+  --card: #2a2621;
+  --ink: #f1eadd;
+  --muted: #bbaf9c;
+  --line: #433c33;
+  --accent: var(--a-night, #8faf7e);
+  --on-accent: #1e1b17;
+  --inv: #f1eadd;
+  --inv-fg: #1e1b17;
+  --bar: rgb(30 27 23 / 0.96);
+  --ph: #3a3631;
+  --ph-far: #46413a;
+  --ph-near: #524c44;
+  --ph-ink: #b7ada0;
+  color-scheme: dark;
+}
+.fj[data-accent="clay"] { --a-day: #9e5530; --a-night: #e0a07c; }
+.fj[data-accent="ochre"] { --a-day: #7a5d26; --a-night: #d4b072; }
+.fj[data-accent="slate"] { --a-day: #2b3a4a; --a-night: #9db4cc; }
+.fj[data-accent="bark"] { --a-day: #5b4636; --a-night: #c9a88e; }
 
 .fj a { color: inherit; }
 .fj h1, .fj h2, .fj p { margin: 0; }
@@ -499,6 +521,10 @@
   .fj-nav-check {
     height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--on-accent) !important;
     display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none;
+  }
+  .fj-nav-wa {
+    width: 34px; height: 34px; margin-inline-start: -12px; border-radius: 999px; border: 1px solid var(--ink);
+    display: flex; align-items: center; justify-content: center; color: var(--ink);
   }
   .fj-hero { --hero-h: 520px; --hero-r: 24px; margin-inline: 24px; }
   .fj-hero-title { left: calc(var(--hero-m) + 40px); top: 40px; font-size: 56px; }

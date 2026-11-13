@@ -1,0 +1,24 @@
+# Batch 3a: content editor (overview)
+
+Branch `feature/batch-3a-editor`, PR ArthurIrene/getkaze#8 (draft). Build order: 1 (checkpoint) → 2 → 3 → 4.
+Specs: [media-storage.md](media-storage.md), [editor-basics.md](editor-basics.md), [editor-rooms-look.md](editor-rooms-look.md), [change-log-view.md](change-log-view.md). Parent: [content-editor.md](content-editor.md). Item 0 (desktop WhatsApp button) is done.
+
+## Conflicts and questions (please answer; my default is in **bold**)
+1. **Owner-only vs ROLES.md.** ROLES.md gives Manager "menu and rooms" and the database already grants `content.edit` to Manager. You asked for owner and platform admin only. **Default: screens require the `owner` role; database policies keep `content.edit`** (no manager logins exist until P2, and P2 then needs no policy change). Alternative: a new `site.edit` permission held by Owner only.
+2. **Admin edits need an open support session.** ROLES.md §5 says our access is logged and visible. **Default: an admin can open the editor for a business only while a support session for it is open; storage writes by an admin need it in the database too.** Existing table policies stay as they are (the admin pages already write through them).
+3. **Photos: public read.** Guest pages are cached and must show photos without signed URLs. **Default: bucket `business-media` is public for reading (object names are random UUIDs under the business id); every write is checked by policy.** Draft businesses' photos are reachable only by someone who has the exact URL. PROJECT.md §8 puts photos on Cloudflare R2 in production: the URL is built in core from one setting, so moving to R2 later changes one function.
+4. **Show uploaded photos on the guest site in this batch?** The rule "guest-page weight and JS unchanged" holds for the demo (no photos). **Default: yes, the template shows a photo where one is placed (hero eager, others `loading="lazy"`, width and height set, no JS), else the drawing as today.** A page with a hero photo gains about 120 KB and stays under 300 KB; the weight check gets one extra case with a 120 KB hero.
+5. **Business name and languages live in `businesses`, which only admins may update.** **Default: a new policy lets an owner update their business, plus a trigger that refuses any column other than `name`, `languages` and `default_currency` unless the writer is an admin.** No column is removed or renamed.
+6. **Opening hours.** The mockup shows hours per area; the site stores lines of text. **Default: one line per area (area name + hours, both translatable), closed days written in the line.** Structured per-day hours wait for the booking calendar.
+7. **Colour set "night" and "day".** Today night follows the phone setting only. **Default: Day, Night or Auto (follow the phone).** It adds about 0.3 KB of CSS to guest pages (the night colours under one more selector); JS unchanged.
+8. **Docker:** the daemon is installed but not running at session start; `dockerd` starts it, and the full local stack (with Storage) then runs here. CI and the CLAUDE.md command now start `storage-api`.
+9. **Kinyarwanda "checked" status** (D-048, content-editor.md) is stored per field in a new `translations_checked` column. Missing = empty field (marked "Missing RW"); filled but unchecked = "Draft · tap when checked". French has the same marker but nothing nags when it is empty.
+10. **Admin reading the change log is not logged** (it is our own log); only editing a business needs a support session, which is logged and shown to the owner. Say if you want reads logged too.
+11. Out of this batch: menu groups and dishes, today's menu, activities ("Around us"), the Wording editor (D-061), staff, the dashboard (Batch 3b+).
+
+## Shared rules (all four features)
+- **Who:** an active owner of the business (`owner` role), or a platform admin at aal2 with an open support session. Checked in the server action (core `canEditSite`) and again by RLS.
+- **Save:** server actions only; input parsed with Zod schemas in `packages/core` (no rules in screens); the user's own Supabase session (never the service role); then `revalidateTag` for `site:<slug>`, `site:<slug>.<root>` and `site:<custom domain>` so the guest site shows the change at once. Every save writes `content_changes` through the existing triggers.
+- **Screens:** platform style (D-050), phone first at 360 px, every row opens its form, "+" opens it empty, Save says "Live on your site". English and Kinyarwanda; every new Kinyarwanda string is a draft in `docs/kinyarwanda-glossary.md`.
+- **Weight:** guest-page HTML, CSS and JS checked with `pnpm weight-check` (JS must stay 145.4 KB). The owner screens' JS is reported per feature in BATCH_LOG.
+- **Tests:** a Playwright happy path per screen (local Supabase in CI), database tests for every new policy, core unit tests for every rule.

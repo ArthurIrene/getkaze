@@ -5,6 +5,8 @@
  *    any RENAME, ALTER COLUMN ... TYPE, TRUNCATE.
  * 2. Keeps the reserved slug list in packages/core equal to the database's
  *    (D-062).
+ * 3. Keeps the photo limits in packages/core/src/media.ts equal to the
+ *    database's (app.media_limits and the business-media bucket).
  * `--self-test` checks that bad samples are caught.
  */
 import { readdirSync, readFileSync } from "node:fs";
@@ -75,6 +77,8 @@ if (process.argv.includes("--self-test")) {
 let failed = false;
 const files = readdirSync(DIR).filter((f) => f.endsWith(".sql")).sort();
 let reservedSql = [];
+let mediaSql = "";
+let lookSql = "";
 for (const file of files) {
   const sql = readFileSync(join(DIR, file), "utf8");
   const found = problems(sql);
@@ -84,6 +88,8 @@ for (const file of files) {
   } else {
     console.log(`ok   ${file}`);
   }
+  if (/function app\.media_limits\(\)/i.test(sql)) mediaSql = sql; // the latest definition wins
+  if (/function app\.is_look\(/i.test(sql)) lookSql = sql;
   if (/insert into public\.reserved_slugs/i.test(sql)) reservedSql = reservedSql.concat(reservedFromSql(sql));
 }
 const reservedCore = reservedFromCore();
@@ -96,5 +102,38 @@ if (JSON.stringify(reservedSql) !== JSON.stringify(reservedCore)) {
   });
 } else {
   console.log(`ok   reserved slugs match (${reservedCore.length})`);
+}
+const mediaTs = readFileSync(join(ROOT, "packages/core/src/media.ts"), "utf8");
+// A number or a simple product like "300 * 1024".
+const num = (re) => (mediaTs.match(re)?.[1] ?? "NaN").split("*").reduce((p, n) => p * Number(n.trim()), 1);
+const core = {
+  photos: num(/\bphotos: (\d+),/),
+  widths: JSON.parse(`[${mediaTs.match(/widths: \[([\d, ]+)\] as const/)?.[1] ?? ""}]`),
+  file_bytes: num(/fileBytes: ([\d *]+),/),
+};
+const limits = JSON.parse(mediaSql.match(/select '(\{"photos"[^']+)'::jsonb/)?.[1] ?? "{}");
+const bucket = mediaSql.match(/values \('business-media', 'business-media', true, (\d+),/)?.[1];
+const same =
+  limits.photos === core.photos &&
+  JSON.stringify(limits.widths) === JSON.stringify(core.widths) &&
+  limits.files_per_photo === core.widths.length &&
+  limits.file_bytes === core.file_bytes &&
+  Number(bucket) === core.file_bytes;
+if (!same) {
+  failed = true;
+  console.error("FAIL photo limits differ between packages/core/src/media.ts and the migrations", { core, limits, bucket });
+} else {
+  console.log(`ok   photo limits match (${core.photos} photos, widths ${core.widths.join("/")}, ${core.file_bytes} B per file)`);
+}
+// 4. Accent ids: packages/core accentPalette = app.is_look.
+const itemsTs = readFileSync(join(ROOT, "packages/core/src/editor-items.ts"), "utf8");
+const palette = itemsTs.match(/export const accentPalette = \[([\s\S]*?)\] as const/)?.[1] ?? "";
+const coreAccents = [...palette.matchAll(/id: "([a-z]+)"/g)].map((m) => m[1]);
+const sqlAccents = [...(lookSql.match(/j ->> 'accent' in \(([^)]*)\)/)?.[1] ?? "").matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
+if (!coreAccents.length || JSON.stringify(coreAccents) !== JSON.stringify(sqlAccents)) {
+  failed = true;
+  console.error("FAIL accent ids differ between packages/core/src/editor-items.ts and app.is_look", { coreAccents, sqlAccents });
+} else {
+  console.log(`ok   accent ids match (${coreAccents.join(", ")})`);
 }
 process.exit(failed ? 1 : 0);

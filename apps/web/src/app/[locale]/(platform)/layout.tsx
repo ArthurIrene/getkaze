@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "../../platform.css";
 
 /** Platform screens (login, owner, admin) share this wrapper; each page renders <Shell>. Not a guest page. */
 export default function PlatformLayout({ children }: { children: ReactNode }) {

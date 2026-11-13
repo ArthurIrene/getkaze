@@ -32,6 +32,7 @@ test("phone menu opens with Rooms and Contact only; Check availability is in the
   await expect(page.getByRole("link", { name: "Check availability", exact: true }).filter({ visible: true })).toHaveCount(1);
   await expect(page.locator(".fj-bar-main")).toBeVisible();
   await expect(page.locator(".fj-nav-check")).toBeHidden();
+  await expect(page.locator(".fj-nav-wa")).toBeHidden();
   await panel.getByRole("link", { name: "Rooms" }).click();
   await expect(page).toHaveURL(/\/rooms$/);
   await expect(page.locator("h1")).toHaveText("Rooms");
@@ -69,6 +70,20 @@ test.describe("desktop", () => {
       await expect(page.locator(".fj-nav-check"), path).toHaveAttribute("href", "/book");
       await expect(page.locator(".fj-bar"), path).toBeHidden();
       await expect(page.getByRole("link", { name: "Check availability", exact: true }).filter({ visible: true }), path).toHaveCount(1);
+    }
+  });
+
+  test("a compact WhatsApp button sits next to Check availability", async ({ page }) => {
+    for (const path of ["/", "/rooms", "/contact", "/book"]) {
+      await page.goto(path);
+      const wa = page.locator(".fj-nav-wa");
+      await expect(wa, path).toBeVisible();
+      await expect(wa, path).toHaveAccessibleName("WhatsApp");
+      await expect(wa, path).toHaveAttribute("href", /^https:\/\/wa\.me\/\d+/);
+      const [c, w] = [await page.locator(".fj-nav-check").boundingBox(), await wa.boundingBox()];
+      expect(w!.x, path).toBeGreaterThan(c!.x + c!.width);
+      expect(w!.x - (c!.x + c!.width), path).toBeLessThan(16);
+      expect(w!.width, path).toBeLessThanOrEqual(40);
     }
   });
 

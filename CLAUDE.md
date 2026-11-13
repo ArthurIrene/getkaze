@@ -50,7 +50,7 @@ Node 22 (`.nvmrc`), pnpm 10 (`corepack enable` picks the pinned version). Run fr
   - `PW_CHROMIUM_PATH` (another installed Chromium) is a fallback only: a different browser version can behave differently from CI.
 - CI (`.github/workflows/ci.yml`) runs all of the above on every pull request and on pushes to `staging` and `main`.
 - Supabase CLI (pinned 2.122.0, verified against the release checksums, cached in `.tools/`): `scripts/supabase-cli.sh <command>`. Needs Docker; behind a registry block add `SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io`.
-  - Local stack: `scripts/supabase-cli.sh start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta` (stop: `… stop`).
+  - Local stack: `scripts/supabase-cli.sh start -x studio,realtime,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta` (stop: `… stop`).
   - Apply migrations and seed from scratch: `scripts/supabase-cli.sh db reset`.
   - Database tests, including the isolation test (run before any data change): `pnpm db:test`.
   - Migration guard (additive only, reserved slugs match): `pnpm db:check`.

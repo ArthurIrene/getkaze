@@ -1,4 +1,12 @@
-@import "tailwindcss";
+/* Guest pages load this file: Tailwind's base, the theme and only the utilities
+   that guest-rendered files use (so new platform screens never add weight to
+   guest pages). Platform screens add app/platform.css. */
+@import "tailwindcss" source(none);
+@source "../templates";
+@source "../components/ui";
+@source "./**/site/**/*.tsx";
+@source "./**/not-found.tsx";
+@source "./**/[[]locale]/layout.tsx";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
