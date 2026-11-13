@@ -39,3 +39,6 @@ Editor hint (feature 2): "Don't upload photos of guests without their consent."
 
 ## CHECKPOINT
 After this feature I stop with a short report (policies, test results from CI) before the editor is built on it.
+
+## Accepted risk (checkpoint, 2026-11-13)
+Photos of a paused business stay reachable by direct link until deletion at day 90 (D-031): the bucket is public, paths are random UUIDs, and there is no public listing. Accepted.
