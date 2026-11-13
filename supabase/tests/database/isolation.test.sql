@@ -242,5 +242,18 @@ select is_empty(
   'the public site JSON holds no account, log or private fields'
 );
 
+-- ================= 10. Storage: owner A cannot read or write B's photo files (media-storage.md; more in storage.test.sql) =================
+reset role;
+select set_config('storage.allow_delete_query', 'true', true);
+insert into storage.objects (bucket_id, name) values
+  ('business-media', '00000000-0000-0000-0000-00000000000b/00000000-0000-0000-0000-0000000000f1/960.webp');
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000a1", "role": "authenticated", "aal": "aal1"}', true);
+select is((select count(*) from storage.objects where name like '00000000-0000-0000-0000-00000000000b/%'), 0::bigint, 'owner A lists none of B''s files');
+select is(tests.exec_count($$ insert into storage.objects (bucket_id, name) values ('business-media', '00000000-0000-0000-0000-00000000000b/00000000-0000-0000-0000-0000000000f2/480.webp') $$), -1::bigint, 'owner A cannot add a file to B');
+select is(tests.exec_count($$ delete from storage.objects where name like '00000000-0000-0000-0000-00000000000b/%' $$), 0::bigint, 'owner A deletes none of B''s files');
+select is(tests.exec_count($$ insert into storage.objects (bucket_id, name) values ('business-media', '00000000-0000-0000-0000-00000000000a/00000000-0000-0000-0000-0000000000f2/480.webp') $$), 1::bigint, 'owner A adds a file to A');
+reset role;
+
 select * from finish();
 rollback;

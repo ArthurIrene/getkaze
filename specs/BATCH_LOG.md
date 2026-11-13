@@ -309,3 +309,11 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Page weight: unchanged.
 - Deviations: none yet.
 - Next: wait for one approval of all specs, then build 1 (checkpoint) → 2 → 3 → 4.
+
+## Batch 3a, feature 1: photo storage and its security | 2026-11-13
+- Approval: specs approved with answers (see the PR conversation): 3 deletion of files with photo and business; 4 three widths (480/960/1440 WebP) made on the device, `<img srcset>`, hero ~80 KB, lazy below the fold, no optimizer; 5 owner may change only name, languages, default currency (database-enforced); 8 start `dockerd`; 10 admin reads of a change log are logged as support access.
+- Built: migration `20261113100000_media_storage.sql`: bucket `business-media` (public read, 300 KB, WebP/JPEG); names `<business_id>/<photo_id>/<480|960|1440>.<webp|jpg>` (`app.media_business`); insert/select/delete policies on `storage.objects` (no update); `app.has_open_support`, `app.can_write_media`, `app.media_file_count`, `app.media_limits`; `media.translations_checked`; `media` trigger (own folder, ≤ 60 photos, ≤ 3 × 300 KB). Core `media.ts` (`photoLimits`, names, `photoProblems` with magic bytes, `publicMediaUrl`, `photoFiles`). Web `lib/media/remove.ts`: `deletePhoto` (files, then row) and `purgeBusinessMedia` (whole folder, D-031). `pnpm db:check` keeps core and database limits equal. CI and CLAUDE.md now start `storage-api`.
+- Tests: database 206 (new `storage.test.sql`, 40; isolation +4 storage checks); a mutation check (insert policy loosened) made 5 tests fail as expected. Unit 94 (6 new). Playwright 64 (5 new in `e2e/media-storage.spec.ts`, through the Storage API: own folder only, 301 KB and PNG refused, no overwrite, B can't list or delete A, photo delete removes files and row, business purge removes only that folder, admin aal1 refused). Full local CI green (Docker started with `dockerd`).
+- Page weight: unchanged (`/` 167.2 KB, JS 145.4 KB). No owner screens yet.
+- Deviations: the limits-sync check lives in `scripts/check-migrations.mjs`, not a unit test (core has no Node types; no new dependency).
+- Next: CHECKPOINT. After your go: feature 2 (editor part 1).

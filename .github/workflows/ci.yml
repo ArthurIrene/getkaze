@@ -48,7 +48,7 @@ jobs:
         run: pnpm db:check
 
       - name: Start local Supabase (migrations and seed)
-        run: supabase start -x studio,realtime,storage-api,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta
+        run: supabase start -x studio,realtime,imgproxy,edge-runtime,logflare,vector,supavisor,postgres-meta
 
       - name: Database tests (isolation test, schema checks)
         run: supabase test db
