@@ -58,7 +58,7 @@ select is(
 );
 select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'media' -> 0) k),
-  array['alt', 'height', 'id', 'itemId', 'path', 'place', 'position', 'width'],
+  array['alt', 'format', 'height', 'id', 'itemId', 'path', 'place', 'position', 'width'],
   'media fields'
 );
 select ok((select doc::text not like '%private-owner@example.test%' and doc::text not like '%never public%' from site),

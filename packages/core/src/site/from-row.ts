@@ -3,6 +3,8 @@ import { currencies, type Currency } from "../money";
 import { moduleIds, type ModuleId } from "../modules";
 import { paymentMethods, type PaymentMethod } from "../booking";
 import type { SectionSetting } from "../sections";
+import { photoLimits, publicMediaUrl, type PhotoWidth } from "../media";
+import { photoSrcset, widthsFor } from "../editor";
 import { templateIds, type Activity, type Amenity, type Dish, type IconKey, type Photo, type PropertyStyle, type Room, type SiteData } from "./types";
 
 /**
@@ -29,18 +31,32 @@ const textOrUndefined = (v: unknown): LocalizedText | undefined => (isObj(v) && 
 
 const styles: Record<string, PropertyStyle> = { lodge: "lodge", town_hotel: "townHotel", guesthouse: "guesthouse" };
 
-function photo(v: unknown, fallbackId: string, place: Photo["place"]): Photo {
+const folderPattern = /^[0-9a-f-]{36}\/[0-9a-f-]{36}$/;
+
+/**
+ * A photo. Uploaded photos (a media row with a folder path) get the largest
+ * stored width as src and every stored width in srcset; the files live in
+ * Storage at mediaBase (approved point 4: plain <img srcset>, no optimizer).
+ */
+function photo(v: unknown, fallbackId: string, place: Photo["place"], mediaBase?: string): Photo {
   if (!isObj(v)) return { id: fallbackId, place, alt: { en: "" } };
-  const src = str(v.src) || str(v.path);
-  return {
-    id: str(v.id, fallbackId),
-    place: (str(v.place) as Photo["place"]) || place,
-    alt: text(v.alt),
-    ...(src.startsWith("https://") || src.startsWith("/") ? { src } : {}),
-  };
+  const base = { id: str(v.id, fallbackId), place: (str(v.place) as Photo["place"]) || place, alt: text(v.alt) };
+  const path = str(v.path);
+  if (mediaBase && folderPattern.test(path)) {
+    const format = str(v.format) === "jpg" ? "jpg" : "webp";
+    const largest = Math.min(num(v.width) ?? photoLimits.widths[0], photoLimits.widths[photoLimits.widths.length - 1]!);
+    const widths = widthsFor(largest);
+    const urlOf = (name: string) => publicMediaUrl(name, mediaBase);
+    const top = widths[widths.length - 1] as PhotoWidth;
+    const w = num(v.width);
+    const h = num(v.height);
+    return { ...base, src: urlOf(`${path}/${top}.${format}`), srcset: photoSrcset(urlOf, path, format, widths), ...(w && h ? { width: w, height: h } : {}) };
+  }
+  const src = str(v.src) || path;
+  return { ...base, ...(src.startsWith("https://") || src.startsWith("/") ? { src } : {}) };
 }
 
-export function rowToSiteData(row: unknown, baseUrl: string): RowResult {
+export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string): RowResult {
   const errors: string[] = [];
   if (!isObj(row) || !isObj(row.business) || !isObj(row.settings)) return { ok: false, errors: ["not a published site"] };
   const b = row.business;
@@ -67,7 +83,12 @@ export function rowToSiteData(row: unknown, baseUrl: string): RowResult {
     media
       .filter((m) => m.itemId === itemId)
       .sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0))
-      .map((m) => photo(m, str(m.id), place));
+      .map((m) => photo(m, str(m.id), place, mediaBase));
+  // A photo the owner placed (hero, dining, host) replaces the drawing set in the settings.
+  const placed = (place: Photo["place"], fallback: unknown, id: string) => {
+    const m = media.filter((x) => x.place === place && !x.itemId && str(x.path)).sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0))[0];
+    return m ? photo(m, str(m.id), place, mediaBase) : photo(fallback, id, place);
+  };
   const byKind = (kind: string) => items.filter((i) => i.kind === kind).sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0));
   const price = (i: Json, label: string) => {
     const rwf = num(i.priceRwf);
@@ -141,7 +162,7 @@ export function rowToSiteData(row: unknown, baseUrl: string): RowResult {
     payment: list(s.payment).map(text),
     bookingPayments: list(s.bookingPayments).filter((p): p is PaymentMethod => (paymentMethods as readonly unknown[]).includes(p)),
     sections: list(s.sections).filter(isObj).map((x) => ({ id: str(x.id), visible: x.visible !== false }) as SectionSetting),
-    hero: { title: text(hero.title), line: text(hero.line), photo: photo(hero.photo, "hero", "hero") },
+    hero: { title: text(hero.title), line: text(hero.line), photo: placed("hero", hero.photo, "hero") },
     facts: list(s.facts).filter(isObj).map((f, k) => ({ id: str(f.id, `fact-${k}`), value: text(f.value), icon: str(f.icon) as IconKey, detail: text(f.detail) })),
     moments: list(s.moments).filter(isObj).map((m, k) => ({ id: str(m.id, `moment-${k}`), caption: text(m.caption), icon: str(m.icon) as IconKey, photo: photo(m.photo, `moment-${k}`, "gallery") })),
     rooms,
@@ -153,9 +174,9 @@ export function rowToSiteData(row: unknown, baseUrl: string): RowResult {
       breakfastIncluded: stay.breakfastIncluded === true,
       notes: list(stay.notes).map(text),
     },
-    dining: { name: text(dining.name), photo: photo(dining.photo, "dining", "dining"), dishes },
+    dining: { name: text(dining.name), photo: placed("dining", dining.photo, "dining"), dishes },
     activities,
-    host: { name: str(host.name), greeting: text(host.greeting), note: text(host.note), photo: photo(host.photo, "host", "host") },
+    host: { name: str(host.name), greeting: text(host.greeting), note: text(host.note), photo: placed("host", host.photo, "host") },
     reviews: {
       quote: text(reviews.quote),
       scores: list(reviews.scores).filter(isObj).map((x) => ({ source: str(x.source), value: str(x.value) })),

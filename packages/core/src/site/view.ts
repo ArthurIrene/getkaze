@@ -7,7 +7,7 @@ import type { AmenityIcon, IconKey, Photo, PhotoPlace, PropertyStyle, SiteData }
 /** A price in both currencies, already formatted, so a page can switch without a server trip. */
 export type PriceView = Record<Currency, string>;
 
-export type PhotoView = { id: string; place: PhotoPlace; alt: string; src?: string };
+export type PhotoView = { id: string; place: PhotoPlace; alt: string; src?: string; srcset?: string; width?: number; height?: number };
 
 /**
  * Site data in one language, ready to display: texts picked with English
@@ -71,7 +71,7 @@ function prices(price: Price): PriceView {
 /** Build the view of a business site for one language. */
 export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
   const t = (text: LocalizedText) => pickText(text, locale);
-  const photo = (p: Photo): PhotoView => ({ id: p.id, place: p.place, alt: t(p.alt), src: p.src });
+  const photo = (p: Photo): PhotoView => ({ id: p.id, place: p.place, alt: t(p.alt), src: p.src, srcset: p.srcset, width: p.width, height: p.height });
 
   const hasContent: Record<SectionId, boolean> = {
     hero: true,

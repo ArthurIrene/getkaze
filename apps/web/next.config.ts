@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
   // Compile the shared TypeScript package directly from source.
   transpilePackages: ["@getkaze/core"],
   poweredByHeader: false,
+  // Photo uploads from the editor: three sizes of at most 300 KB each, sent in one server action (media-storage.md).
+  experimental: { serverActions: { bodySizeLimit: "1.5mb" } },
   // Demo data only: noindex everything until gate G2 (CLAUDE.md "Never do").
   // No robots.txt Disallow on purpose: crawlers must fetch pages to see noindex.
   async headers() {

@@ -43,6 +43,7 @@ export default async function BusinessDetail({ params, searchParams }: PageProps
     <Shell path={`/admin/b/${b.id}`} locale={locale} aside={<AdminBar locale={locale} />}>
       <div className="flex flex-col gap-4">
         {openSession ? <Notice tone="info">{t("supportBanner", { reason: openSession.reason })}</Notice> : null}
+        {openSession ? <a href={platformHref(`/owner/b/${id}/edit`, locale)} className="text-sm font-semibold underline">{t("openEditor")}</a> : null}
         {error ? <Notice tone="error">{tx(`errors.${error}`, t("failed"))}</Notice> : null}
         {q.saved || q.created ? <Notice tone="ok">{t(q.created ? "created" : "saved")}</Notice> : null}
         {q.invited ? <Notice tone="ok">{t("invited")}</Notice> : null}

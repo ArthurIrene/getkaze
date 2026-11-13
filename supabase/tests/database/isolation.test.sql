@@ -170,8 +170,8 @@ select is(tests.exec_count($$ update public.site_settings set rooms_line = '{"en
 select is(tests.count_rows('support_access', 'business_id', '00000000-0000-0000-0000-00000000000a'), 0::bigint, 'owner A sees no support visits of A yet');
 
 -- ================= 4. Owners cannot do admin things =================
-select is(tests.exec_count($$ update public.businesses set status = 'paused' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'owner cannot change business status');
-select is(tests.exec_count($$ update public.businesses set slug = 'stolen' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'owner cannot change the slug');
+select is(tests.exec_count($$ update public.businesses set status = 'paused' where id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'owner cannot change business status (refused by the column guard)');
+select is(tests.exec_count($$ update public.businesses set slug = 'stolen' where id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'owner cannot change the slug (refused by the column guard)');
 select is(tests.exec_count($$ update public.business_modules set enabled = false where business_id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'owner cannot flip module switches');
 select is(tests.exec_count($$ update public.memberships set roles = array['owner', 'manager'] where business_id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'owner cannot edit memberships');
 select throws_ok($$ insert into public.platform_admins (user_id) values ('00000000-0000-0000-0000-0000000000a1') $$, '42501', null, 'owner cannot become platform admin');

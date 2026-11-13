@@ -48,3 +48,4 @@ export * from "./admin";
 export * from "./hosts";
 export * from "./site/from-row";
 export * from "./media";
+export * from "./editor";

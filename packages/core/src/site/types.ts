@@ -40,6 +40,10 @@ export type Photo = {
   place: PhotoPlace;
   alt: LocalizedText;
   src?: string;
+  /** Sizes made on the owner's device (480/960/1440 px), for <img srcset>. */
+  srcset?: string;
+  width?: number;
+  height?: number;
 };
 
 export type Fact = { id: string; value: LocalizedText; icon: IconKey; detail: LocalizedText };

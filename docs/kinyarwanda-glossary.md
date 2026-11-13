@@ -59,3 +59,27 @@ Rules:
 | Draft / Active / Paused (business status) | Igitekerezo / Gikora / Cyahagaritswe | Admin.statusName.* | draft |
 | Two-factor login / 6-digit code / Verify | Kwinjira mu ntambwe ebyiri / Imibare 6 / Emeza | Admin.enrollTitle, Admin.code, Admin.verify | draft |
 | This site is not available | Uru rubuga ntiruboneka | NotFound.title | draft |
+
+### Content editor (Batch 3a; all draft)
+| English | Kinyarwanda (draft) | Used in | Status |
+|---|---|---|---|
+| Edit your site | Hindura urubuga rwawe | Editor.hubTitle, Owner.edit | draft |
+| Business info | Amakuru y'ubucuruzi | Editor.row.info | draft |
+| Photos | Amafoto | Editor.row.photos | draft |
+| Languages | Indimi | Editor.row.languages | draft |
+| Sections (of the page) | Ibice by'urupapuro | Editor.row.sections | draft |
+| Look & colors | Isura n'amabara | Editor.row.look | draft |
+| Changes | Impinduka | Editor.row.changes | draft |
+| Save | Bika | Editor.save | draft |
+| Live on your site as soon as you save | Bigaragara ku rubuga rwawe ukimara kubika | Editor.saveNote | draft |
+| Draft (translation) | Igerageza | Editor.draft | draft |
+| Checked (translation) | Byemejwe | Editor.checked | draft |
+| Tap when checked | Kanda niba byemejwe | Editor.tapChecked | draft |
+| Missing {lang} | {lang} irabura | Editor.missing | draft |
+| Opening hours | Amasaha yo gukora | Editor.hours | draft |
+| Map location | Aho muherereye ku ikarita | Editor.map | draft |
+| Use my location | Koresha aho ndi | Editor.locate | draft |
+| Add photo | Ongeraho ifoto | Editor.addPhoto | draft |
+| Where it shows | Aho igaragara | Editor.placeLabel | draft |
+| Don't upload photos of guests without their consent | Ntugashyireho amafoto y'abashyitsi batabyemeye | Editor.consent | draft |
+| Support session (we edit for the owner) | Igihe cy'ubufasha | Editor.supportEditing | draft |

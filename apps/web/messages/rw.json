@@ -197,7 +197,8 @@
     "noSupport": "Nta gusurwa n'abafasha kurabaho.",
     "ongoing": "birakomeje",
     "help": "Ukeneye impinduka? Twandikire kuri WhatsApp",
-    "helpMessage": "Muraho Kaze, nkeneye impinduka ku rubuga rwanjye."
+    "helpMessage": "Muraho Kaze, nkeneye impinduka ku rubuga rwanjye.",
+    "edit": "Hindura urubuga rwawe"
   },
   "Admin": {
     "clients": "Abakiriya",
@@ -289,10 +290,102 @@
       "member": "Ubutumire bwoherejwe ariko ntibwabitswe.",
       "reason": "Andika impamvu (inyuguti 5 kugeza 200).",
       "failed": "Ntibyakunze. Ongera ugerageze."
-    }
+    },
+    "openEditor": "Fungura aho guhindura"
   },
   "NotFound": {
     "title": "Uru rubuga ntiruboneka",
     "body": "Reba aderesi, cyangwa usabe ubucuruzi umurongo wabwo."
+  },
+  "Editor": {
+    "back": "Subira inyuma",
+    "supportEditing": "Igihe cy'ubufasha: urimo guhindura uru rubuga mu izina rya nyir'ubucuruzi. Buri mpinduka irandikwa kandi nyir'ubucuruzi arayibona.",
+    "saved": "Byabitswe. Biri ku rubuga rwawe.",
+    "deleted": "Byasibwe.",
+    "problem": {
+      "name": "Andika izina ry'ubucuruzi.",
+      "phone": "Reba nimero ya telefoni (urugero 0788 123 456).",
+      "whatsapp": "Reba nimero ya WhatsApp (urugero 0788 123 456).",
+      "email": "Reba aderesi ya imeyili.",
+      "map": "Shyiraho umurongo wa Google Maps cyangwa ukoreshe aho uri.",
+      "coords": "Reba latitude na longitude.",
+      "save": "Ntibyabitswe. Ongera ugerageze.",
+      "missing": "Uru rubuga nta igenamiterere rufite. Twandikire kuri WhatsApp.",
+      "delete": "Ifoto ntiyasibwe. Ongera ugerageze.",
+      "count": "Ufite amafoto menshi urubuga rushobora kwakira (60). Siba imwe kugira ngo wongereho indi.",
+      "tooBig": "Iyi dosiye ni nini cyane (irenga MB 25).",
+      "notImage": "Iyi dosiye si ifoto dushobora gusoma. Gerageza ifoto ya JPEG cyangwa HEIC yo muri kamera.",
+      "upload": "Kohereza ntibyakunze",
+      "place": "Hitamo aho ifoto igaragara.",
+      "alt": "Sobanura ifoto mu Cyongereza.",
+      "room": "Hitamo icyumba cy'iyi foto."
+    },
+    "hubTitle": "Hindura urubuga rwawe",
+    "complete": "Byuzuye ku {percent}%",
+    "row": {
+      "info": "Amakuru y'ubucuruzi",
+      "photos": "Amafoto",
+      "languages": "Indimi",
+      "rooms": "Ibyumba",
+      "sections": "Ibice by'urupapuro",
+      "look": "Isura n'amabara",
+      "changes": "Impinduka"
+    },
+    "done": "Byarangiye",
+    "todo": "Bisigaye",
+    "required": "birakenewe",
+    "missing": "{lang} irabura",
+    "draft": "Igerageza",
+    "checked": "Byemejwe",
+    "tapChecked": "Kanda niba byemejwe",
+    "name": "Izina ry'ubucuruzi",
+    "contacts": "Aho mubariza",
+    "phone": "Telefoni",
+    "whatsapp": "WhatsApp",
+    "email": "Imeyili (si ngombwa)",
+    "map": "Aho muherereye ku ikarita",
+    "mapHint": "Shyiraho umurongo wa Google Maps, cyangwa uhagarare ku muryango ukande Koresha aho ndi.",
+    "mapLink": "Umurongo wa Google Maps",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "locate": "Koresha aho ndi",
+    "locating": "Turashaka aho uri…",
+    "locateFailed": "Ntitwabonye aho uri. Emera aho uri, cyangwa ushyireho umurongo w'ikarita.",
+    "area": "Agace (urugero Kinigi, hafi ya pariki)",
+    "directions": "Uko mwahagera, intambwe",
+    "hours": "Amasaha yo gukora",
+    "hoursHint": "Umurongo umwe kuri buri gice, urugero “Kwakira abashyitsi: amasaha 24” cyangwa “Resitora: 7:00–22:00, ifunga ku wa mbere”.",
+    "hoursLine": "Umurongo w'amasaha",
+    "save": "Bika",
+    "saveNote": "Bigaragara ku rubuga rwawe ukimara kubika.",
+    "lang": {
+      "rw": "Ikinyarwanda",
+      "fr": "Igifaransa"
+    },
+    "filled": "Inyandiko {done} kuri {total} zuzuye",
+    "languagesHint": "Abashyitsi babona Icyongereza aho ubusobanuro bubura.",
+    "photosHint": "Kanda ku ifoto uhitemo aho igaragara. Ahabura ifoto hagaragara igishushanyo.",
+    "photosTip": "Shyiraho nibura amafoto 3: igitanda, ibyo ureba, ubwiherero.",
+    "addPhoto": "Ongeraho ifoto",
+    "photoNote": "Tugabanya ingano y'ifoto kugira ngo ifunguke vuba no kuri interineti itihuta.",
+    "consent": "Ntugashyireho amafoto y'abashyitsi batabyemeye.",
+    "pickPhoto": "Ifoto",
+    "shrinking": "Turagabanya ifoto…",
+    "uploading": "Turohereza…",
+    "alt": "Icyo ifoto yerekana",
+    "altHint": "Bisomerwa abashyitsi batabona kandi bigaragara iyo ifoto idafunguka.",
+    "place": {
+      "hero": "Hejuru ku rupapuro rw'ibanze",
+      "room": "Icyumba",
+      "dining": "Aho kurira",
+      "host": "Ubakira",
+      "gallery": "Amafoto menshi"
+    },
+    "placeLabel": "Aho igaragara",
+    "roomLabel": "Icyumba",
+    "photo": "Ifoto",
+    "deletePhoto": "Siba iyi foto",
+    "deleteConfirm": "Ifoto ivanwa ku rubuga rwawe no mu bubiko bwacu. Ntibishobora gusubizwa.",
+    "deleteYes": "Yego, yisibe"
   }
 }

@@ -60,6 +60,7 @@ export default async function OwnerPage({ params, searchParams }: PageProps<"/[l
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${c.statusKey === "live" ? "bg-green-100 text-green-800" : "bg-neutral-100 text-neutral-700"}`}>{t(c.statusKey)}</span>
                 </div>
                 <p className="break-all text-sm"><a className="underline" href={c.address}>{t("open")}</a> <span className="text-neutral-600">{c.address}</span></p>
+                <a href={platformHref(`/owner/b/${c.id}/edit`, locale)} className="flex h-11 items-center justify-center rounded-lg bg-neutral-900 text-sm font-semibold text-white">{t("edit")}</a>
                 <p className="text-sm text-neutral-700">{t("languages")}: {c.languages.join(", ")}</p>
                 <div className="text-sm">
                   <b>{t("modules")}</b>

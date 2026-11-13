@@ -210,7 +210,8 @@
     "noSupport": "No support visits yet.",
     "ongoing": "ongoing",
     "help": "Need a change? WhatsApp us",
-    "helpMessage": "Hello Kaze, I need a change on my site."
+    "helpMessage": "Hello Kaze, I need a change on my site.",
+    "edit": "Edit your site"
   },
   "Admin": {
     "clients": "Clients",
@@ -302,10 +303,102 @@
       "member": "The invite was sent but the membership could not be saved.",
       "reason": "Write a reason (5 to 200 characters).",
       "failed": "That did not work. Please try again."
-    }
+    },
+    "openEditor": "Open the editor"
   },
   "NotFound": {
     "title": "This site is not available",
     "body": "Check the address, or ask the business for its link."
+  },
+  "Editor": {
+    "back": "Back",
+    "supportEditing": "Support session: you are editing this site for the owner. Every change is logged and the owner sees it.",
+    "saved": "Saved. It is live on your site.",
+    "deleted": "Deleted.",
+    "problem": {
+      "name": "Write the business name.",
+      "phone": "Check the phone number (for example 0788 123 456).",
+      "whatsapp": "Check the WhatsApp number (for example 0788 123 456).",
+      "email": "Check the email address.",
+      "map": "Paste a Google Maps link or use your location.",
+      "coords": "Check the latitude and longitude.",
+      "save": "Could not save. Try again.",
+      "missing": "This site has no settings yet. WhatsApp us.",
+      "delete": "Could not delete the photo. Try again.",
+      "count": "You have the most photos a site can hold (60). Delete one to add another.",
+      "tooBig": "This file is too large (over 25 MB).",
+      "notImage": "This file is not a photo we can read. Try a JPEG or HEIC photo from your camera.",
+      "upload": "The upload failed",
+      "place": "Choose where the photo shows.",
+      "alt": "Describe the photo in English.",
+      "room": "Choose the room for this photo."
+    },
+    "hubTitle": "Edit your site",
+    "complete": "{percent}% complete",
+    "row": {
+      "info": "Business info",
+      "photos": "Photos",
+      "languages": "Languages",
+      "rooms": "Rooms",
+      "sections": "Sections",
+      "look": "Look & colors",
+      "changes": "Changes"
+    },
+    "done": "Done",
+    "todo": "To do",
+    "required": "required",
+    "missing": "Missing {lang}",
+    "draft": "Draft",
+    "checked": "Checked",
+    "tapChecked": "Tap when checked",
+    "name": "Business name",
+    "contacts": "Contacts",
+    "phone": "Phone",
+    "whatsapp": "WhatsApp",
+    "email": "Email (optional)",
+    "map": "Map location",
+    "mapHint": "Paste your Google Maps link, or stand at the entrance and tap Use my location.",
+    "mapLink": "Google Maps link",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "locate": "Use my location",
+    "locating": "Finding you…",
+    "locateFailed": "Could not get your location. Allow location, or paste the map link.",
+    "area": "Area (for example Kinigi, near the park)",
+    "directions": "Getting here, step",
+    "hours": "Opening hours",
+    "hoursHint": "One line per area, for example “Reception: 24 hours” or “Restaurant: 7:00–22:00, closed Monday”.",
+    "hoursLine": "Hours line",
+    "save": "Save",
+    "saveNote": "Live on your site as soon as you save.",
+    "lang": {
+      "rw": "Kinyarwanda",
+      "fr": "French"
+    },
+    "filled": "{done} of {total} texts filled",
+    "languagesHint": "Guests see English where a translation is missing.",
+    "photosHint": "Tap a photo to choose where it shows. Empty spots show a drawing until you add one.",
+    "photosTip": "Add at least 3 photos: the bed, the view, the bathroom.",
+    "addPhoto": "Add photo",
+    "photoNote": "We shrink photos so they load fast, even on slow networks.",
+    "consent": "Don't upload photos of guests without their consent.",
+    "pickPhoto": "Photo",
+    "shrinking": "Shrinking the photo…",
+    "uploading": "Sending…",
+    "alt": "What the photo shows",
+    "altHint": "Read aloud to blind guests and shown if the photo cannot load.",
+    "place": {
+      "hero": "Top of the home page",
+      "room": "Room",
+      "dining": "Dining",
+      "host": "Host",
+      "gallery": "Gallery"
+    },
+    "placeLabel": "Where it shows",
+    "roomLabel": "Room",
+    "photo": "Photo",
+    "deletePhoto": "Delete this photo",
+    "deleteConfirm": "The photo is removed from your site and from our storage. This cannot be undone.",
+    "deleteYes": "Yes, delete it"
   }
 }

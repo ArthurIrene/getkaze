@@ -22,7 +22,7 @@ export async function Hero({ site }: TemplateProps) {
               {photo.src ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035) */}
-                  <img src={photo.src} alt="" fetchPriority="high" decoding="async" className="fj-hero-img" />
+                  <img src={photo.src} srcSet={photo.srcset} sizes={photo.srcset ? "100vw" : undefined} width={photo.width} height={photo.height} alt="" fetchPriority="high" decoding="async" className="fj-hero-img" />
                   <span className="fj-hero-scrim" />
                 </>
               ) : (
