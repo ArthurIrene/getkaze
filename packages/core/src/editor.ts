@@ -1,6 +1,9 @@
 import type { ContentLocale, LocalizedText } from "./i18n";
 import { photoLimits, type PhotoWidth } from "./media";
 
+// Size rules live in ./media (no imports there, so scripts can load them directly).
+export { widthsFor } from "./media";
+
 /**
  * Content editor rules (specs/editor-basics.md). Plain checks, no library
  * (like parseBookingRequest): screens pass raw form values in and get either
@@ -226,11 +229,6 @@ export function parsePhotoDetails(get: Get, languages: readonly ContentLocale[])
   return problems.length ? { ok: false, problems } : { ok: true, value: { place, itemId, alt: alt! } };
 }
 
-/** Widths to make for an original of this width: every standard width it can fill, at least the smallest. */
-export function widthsFor(originalWidth: number): PhotoWidth[] {
-  const fit = photoLimits.widths.filter((w) => w <= originalWidth);
-  return fit.length ? [...fit] : [photoLimits.widths[0]];
-}
 
 // ---------- Guest site photos ----------
 /** srcset for a stored photo folder and type, from the widths it has. */

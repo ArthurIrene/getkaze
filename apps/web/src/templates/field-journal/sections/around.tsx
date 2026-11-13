@@ -21,7 +21,12 @@ export async function Around({ site }: TemplateProps) {
               <summary>
                 <span className="fj-front">
                   <span className="fj-mono fj-dist">{activity.distance}</span>
-                  <Drawing icon={activity.icon} size={120} stroke={1.4} />
+                  {activity.photo?.src ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035)
+                    <img src={activity.photo.src} srcSet={activity.photo.srcset} sizes="(min-width: 760px) 25vw, 60vw" alt={activity.photo.alt} loading="lazy" decoding="async" className="fj-card-photo" />
+                  ) : (
+                    <Drawing icon={activity.icon} size={120} stroke={1.4} />
+                  )}
                   <span className="fj-card-name">{activity.name}</span>
                 </span>
                 <span className="fj-back fj-fade">

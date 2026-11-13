@@ -2,6 +2,7 @@ import { pickText, type ContentLocale, type LocalizedText } from "../i18n";
 import { currencies, showPrice, type Currency, type Price } from "../money";
 import { telLink } from "../contact";
 import { visibleSections, type SectionId } from "../sections";
+import { licenceLabel, needsAttribution } from "../media";
 import type { AmenityIcon, IconKey, Photo, PhotoPlace, PropertyStyle, SiteData } from "./types";
 
 /** A price in both currencies, already formatted, so a page can switch without a server trip. */
@@ -60,10 +61,35 @@ export type SiteView = {
     photo: PhotoView;
     dishes: { id: string; name: string; price: PriceView; icon: IconKey; photo: PhotoView }[];
   };
-  activities: { id: string; name: string; line: string; distance: string; icon: IconKey; arrange: boolean }[];
+  activities: { id: string; name: string; line: string; distance: string; icon: IconKey; arrange: boolean; photo?: PhotoView }[];
+  /** Credited photos (openly licensed), for the "Photo credits" page; empty when there are none. */
+  credits: CreditView[];
   host: { name: string; greeting: string; note: string; photo: PhotoView };
   reviews: { quote: string; scores: { source: string; value: string }[] };
 };
+
+export type CreditView = { title: string; author: string; sourceUrl: string; licence: string; licenceUrl?: string; attribution: boolean; shows: string };
+
+/** Every credited photo once (by file), in page order: hero, life, rooms, dining, dishes, around us, host. */
+export function photoCredits(site: SiteData, t: (x: LocalizedText) => string): CreditView[] {
+  const all: Photo[] = [
+    site.hero.photo, ...site.moments.map((m) => m.photo), ...site.rooms.flatMap((r) => r.photos), site.dining.photo,
+    ...site.dining.dishes.map((d) => d.photo), ...site.activities.flatMap((a) => (a.photo ? [a.photo] : [])), site.host.photo,
+  ];
+  const seen = new Set<string>();
+  const out: CreditView[] = [];
+  for (const p of all) {
+    if (!p.credit) continue;
+    const key = p.path ?? p.credit.source_url;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      title: p.credit.title, author: p.credit.author, sourceUrl: p.credit.source_url, licence: licenceLabel(p.credit.licence),
+      ...(p.credit.licence_url ? { licenceUrl: p.credit.licence_url } : {}), attribution: needsAttribution(p.credit.licence), shows: t(p.alt),
+    });
+  }
+  return out;
+}
 
 function prices(price: Price): PriceView {
   return Object.fromEntries(currencies.map((c) => [c, showPrice(price, c)])) as PriceView;
@@ -142,7 +168,9 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       distance: t(a.distance),
       icon: a.icon,
       arrange: a.arrange,
+      ...(a.photo ? { photo: photo(a.photo) } : {}),
     })),
+    credits: photoCredits(site, t),
     host: { name: site.host.name, greeting: t(site.host.greeting), note: t(site.host.note), photo: photo(site.host.photo) },
     reviews: { quote: t(site.reviews.quote), scores: site.reviews.scores },
   };

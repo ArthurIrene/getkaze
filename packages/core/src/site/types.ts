@@ -3,6 +3,7 @@ import type { Currency, Price } from "../money";
 import type { ModuleId } from "../modules";
 import type { SectionSetting } from "../sections";
 import type { PaymentMethod } from "../booking";
+import type { PhotoCredit } from "../media";
 
 /** Property style of a Hotel/Lodge business (D-043): sets wording and structured data type. */
 export type PropertyStyle = "lodge" | "townHotel" | "guesthouse";
@@ -44,6 +45,12 @@ export type Photo = {
   srcset?: string;
   width?: number;
   height?: number;
+  /** Seed data only: files bundled with the app under /demo-photos/ (demo-photos.md). */
+  source?: "static";
+  path?: string;
+  format?: "webp" | "jpg";
+  /** Public credit of an openly licensed photo (photographer, link, licence). */
+  credit?: PhotoCredit;
 };
 
 export type Fact = { id: string; value: LocalizedText; icon: IconKey; detail: LocalizedText };
@@ -84,6 +91,8 @@ export type Activity = {
   icon: IconKey;
   /** Shows "Ask us to arrange" (D-042). */
   arrange: boolean;
+  /** Optional photo on the postcard (else the drawing). */
+  photo?: Photo;
 };
 
 export type ReviewScore = { source: string; value: string };

@@ -24,6 +24,7 @@ export async function pageMetadata(page: PageId, locale: Locale, siteKey: string
     contactDescription: (v) => t("contactDescription", v),
     bookDescription: (v) => t("bookDescription", v),
     privacyDescription: (v) => t("privacyDescription", v),
+    creditsDescription: (v) => t("creditsDescription", v),
   };
   const seo = pageSeo(page, view, locale, routing.locales, labels);
   return {
