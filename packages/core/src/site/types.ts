@@ -127,6 +127,8 @@ export type SiteData = {
   /** Payment choices offered on the booking request (D-045). */
   bookingPayments: PaymentMethod[];
   sections: SectionSetting[];
+  /** Colour set and accent (Look & colors). Missing on older sites: Auto and Forest. */
+  look?: { colorSet: "auto" | "day" | "night"; accent: "forest" | "clay" | "ochre" | "slate" | "bark" };
   hero: { title: LocalizedText; line: LocalizedText; photo: Photo };
   facts: Fact[];
   moments: Moment[];

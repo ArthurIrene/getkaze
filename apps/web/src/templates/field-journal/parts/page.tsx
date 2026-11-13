@@ -16,7 +16,7 @@ export function FieldJournalPage({
   children,
 }: TemplateProps & { bar?: "call" | "whatsapp"; className?: string; children: ReactNode }) {
   return (
-    <div className="fj" data-cur={site.defaultCurrency} data-page={page}>
+    <div className="fj" data-cur={site.defaultCurrency} data-page={page} data-look={site.look.colorSet === "auto" ? undefined : site.look.colorSet} data-accent={site.look.accent === "forest" ? undefined : site.look.accent}>
       <Header site={site} locale={locale} page={page} pages={pages} />
       <main className={className}>{children}</main>
       <Footer site={site} locale={locale} pages={pages} />

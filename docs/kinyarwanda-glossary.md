@@ -83,3 +83,12 @@ Rules:
 | Where it shows | Aho igaragara | Editor.placeLabel | draft |
 | Don't upload photos of guests without their consent | Ntugashyireho amafoto y'abashyitsi batabyemeye | Editor.consent | draft |
 | Support session (we edit for the owner) | Igihe cy'ubufasha | Editor.supportEditing | draft |
+| Add room | Ongeraho icyumba | Editor.addRoom | draft |
+| Price per night | Igiciro cy'ijoro rimwe | Editor.prices | draft |
+| Rooms of this type (units) | Ibyumba by'ubu bwoko | Editor.units | draft |
+| Amenities | Ibikoresho | Editor.amenities | draft |
+| Move up / Move down | Zamura / Manura | Editor.moveUp, Editor.moveDown | draft |
+| Colours: Auto, Day, Night | Amabara: Byikora, Ku manywa, Nijoro | Editor.colorSetName.* | draft |
+| Accent colour | Ibara ry'ingenzi | Editor.accent | draft |
+| Accents: Forest, Clay, Ochre, Slate, Bark | Ishyamba, Ibumba, Umuhondo w'ubutaka, Ikibuye, Igishishwa | Editor.accentName.* | draft |
+| Show on the site | Garagaza ku rubuga | Editor.showOnSite | draft |

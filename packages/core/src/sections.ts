@@ -18,7 +18,7 @@ export type SectionId = (typeof sectionIds)[number];
 export type SectionSetting = { id: SectionId; visible: boolean };
 
 /** Sections that only show when a module is on. */
-const requiredModule: Partial<Record<SectionId, ModuleId>> = {
+export const requiredModule: Partial<Record<SectionId, ModuleId>> = {
   table: "menu",
 };
 

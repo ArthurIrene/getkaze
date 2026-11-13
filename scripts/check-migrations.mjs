@@ -78,6 +78,7 @@ let failed = false;
 const files = readdirSync(DIR).filter((f) => f.endsWith(".sql")).sort();
 let reservedSql = [];
 let mediaSql = "";
+let lookSql = "";
 for (const file of files) {
   const sql = readFileSync(join(DIR, file), "utf8");
   const found = problems(sql);
@@ -88,6 +89,7 @@ for (const file of files) {
     console.log(`ok   ${file}`);
   }
   if (/function app\.media_limits\(\)/i.test(sql)) mediaSql = sql; // the latest definition wins
+  if (/function app\.is_look\(/i.test(sql)) lookSql = sql;
   if (/insert into public\.reserved_slugs/i.test(sql)) reservedSql = reservedSql.concat(reservedFromSql(sql));
 }
 const reservedCore = reservedFromCore();
@@ -122,5 +124,16 @@ if (!same) {
   console.error("FAIL photo limits differ between packages/core/src/media.ts and the migrations", { core, limits, bucket });
 } else {
   console.log(`ok   photo limits match (${core.photos} photos, widths ${core.widths.join("/")}, ${core.file_bytes} B per file)`);
+}
+// 4. Accent ids: packages/core accentPalette = app.is_look.
+const itemsTs = readFileSync(join(ROOT, "packages/core/src/editor-items.ts"), "utf8");
+const palette = itemsTs.match(/export const accentPalette = \[([\s\S]*?)\] as const/)?.[1] ?? "";
+const coreAccents = [...palette.matchAll(/id: "([a-z]+)"/g)].map((m) => m[1]);
+const sqlAccents = [...(lookSql.match(/j ->> 'accent' in \(([^)]*)\)/)?.[1] ?? "").matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
+if (!coreAccents.length || JSON.stringify(coreAccents) !== JSON.stringify(sqlAccents)) {
+  failed = true;
+  console.error("FAIL accent ids differ between packages/core/src/editor-items.ts and app.is_look", { coreAccents, sqlAccents });
+} else {
+  console.log(`ok   accent ids match (${coreAccents.join(", ")})`);
 }
 process.exit(failed ? 1 : 0);

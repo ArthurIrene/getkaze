@@ -8,6 +8,7 @@
  */
 import { redirect } from "next/navigation";
 import {
+  fullSections, moveItem, parseLook, parseMove, parseRoom, parseSections, roomHandle, roomTexts, type ModuleId, type RoomInput, type SectionSetting,
   infoTexts, mediaBucket, mediaFile, mediaFolder, nextChecks, parseBusinessInfo, parseLanguages, parsePhotoDetails,
   photoLimits, photoProblems, widthsFor, type BusinessInfo, type LocalizedText, type PhotoType, type TranslationChecks,
 } from "@getkaze/core";
@@ -149,4 +150,90 @@ export async function removePhoto(form: FormData) {
   const ok = await deletePhoto(supabase, mediaId).catch(() => false);
   refreshSite(business);
   redirect(`${editorHref(locale, business.id, "/photos")}?${ok ? "deleted=1" : "error=delete"}`);
+}
+
+// ---------- Rooms (Hotel/Lodge only) ----------
+async function roomsEditor(form: FormData) {
+  const e = await editor(form);
+  if (e.business.preset !== "hotel_lodge") redirect(editorHref(e.locale, e.business.id));
+  return e;
+}
+
+export async function saveRoom(form: FormData) {
+  const { locale, supabase, business } = await roomsEditor(form);
+  const roomId = val(form, "room", 40);
+  const isNew = roomId === "new";
+  const back = (q: string, id = roomId) => redirect(`${editorHref(locale, business.id, `/rooms/${id}`)}?${q}`);
+  const parsed = parseRoom(getter(form), business.languages);
+  if (!parsed.ok) back(`error=${parsed.problems.join(",")}`);
+  const room = (parsed as { ok: true; value: RoomInput }).value;
+
+  const { data: rooms } = await supabase.from("catalog_items").select("id, handle, position, name, line, amenities, translations_checked").eq("business_id", business.id).eq("kind", "room_type");
+  const before = (rooms ?? []).find((r) => r.id === roomId);
+  if (!isNew && !before) back("error=missing");
+  const oldTexts = before ? roomTexts({ name: before.name as LocalizedText, line: (before.line as LocalizedText | null) ?? null, amenities: (before.amenities ?? []) as RoomInput["amenities"] }) : {};
+  const checks = nextChecks(oldTexts, roomTexts(room), (before?.translations_checked ?? {}) as TranslationChecks, getter(form));
+  const row = { ...room, translations_checked: checks };
+
+  if (isNew) {
+    const handle = roomHandle(room.name.en, (rooms ?? []).map((r) => r.handle as string).filter(Boolean));
+    const position = Math.max(-1, ...(rooms ?? []).map((r) => r.position as number)) + 1;
+    const { data, error } = await supabase.from("catalog_items").insert({ ...row, business_id: business.id, kind: "room_type", handle, position }).select("id").single();
+    if (error || !data) back("error=save");
+    refreshSite(business);
+    back("saved=1", data!.id as string);
+  }
+  const { error } = await supabase.from("catalog_items").update(row).eq("id", roomId).eq("business_id", business.id);
+  if (error) back("error=save");
+  refreshSite(business);
+  back("saved=1");
+}
+
+export async function moveRoom(form: FormData) {
+  const { locale, supabase, business } = await roomsEditor(form);
+  const move = parseMove(val(form, "move", 60));
+  const { data: rooms } = await supabase.from("catalog_items").select("id, position").eq("business_id", business.id).eq("kind", "room_type").order("position").order("created_at");
+  if (move && rooms) {
+    const order = moveItem(rooms.map((r) => r.id as string), move.id, move.dir);
+    // Only rows whose position changes are written (each write is logged).
+    await Promise.all(order.map((id, position) => (rooms.find((r) => r.id === id)!.position === position ? null : supabase.from("catalog_items").update({ position }).eq("id", id).eq("business_id", business.id))));
+    refreshSite(business);
+  }
+  redirect(`${editorHref(locale, business.id, "/rooms")}?saved=1`);
+}
+
+export async function deleteRoom(form: FormData) {
+  const { locale, supabase, business } = await roomsEditor(form);
+  const roomId = val(form, "room", 40);
+  // The room's photos are kept and move to the gallery (specs/editor-rooms-look.md).
+  await supabase.from("media").update({ item_id: null, place: "gallery" }).eq("business_id", business.id).eq("item_id", roomId);
+  const { error } = await supabase.from("catalog_items").delete().eq("id", roomId).eq("business_id", business.id).eq("kind", "room_type");
+  refreshSite(business);
+  redirect(`${editorHref(locale, business.id, "/rooms")}?${error ? "error=delete" : "deleted=1"}`);
+}
+
+// ---------- Sections (D-042) ----------
+export async function saveSections(form: FormData) {
+  const { locale, supabase, business } = await editor(form);
+  const back = (q: string) => redirect(`${editorHref(locale, business.id, "/sections")}?${q}`);
+  const { data: modules } = await supabase.from("business_modules").select("module_id").eq("business_id", business.id).eq("enabled", true);
+  let order = form.getAll("order").map(String);
+  const move = parseMove(val(form, "move", 60));
+  if (move) order = moveItem(order, move.id, move.dir);
+  const parsed = parseSections(order, getter(form), (modules ?? []).map((m) => m.module_id as ModuleId));
+  if (!parsed.ok) back("error=order");
+  const sections = fullSections((parsed as { ok: true; value: SectionSetting[] }).value);
+  const { error } = await supabase.from("site_settings").update({ sections }).eq("business_id", business.id);
+  if (error) back("error=save");
+  refreshSite(business);
+  back("saved=1");
+}
+
+// ---------- Look & colors ----------
+export async function saveLook(form: FormData) {
+  const { locale, supabase, business } = await editor(form);
+  const look = parseLook(getter(form));
+  const { error } = await supabase.from("site_settings").update({ look }).eq("business_id", business.id);
+  refreshSite(business);
+  redirect(`${editorHref(locale, business.id, "/look")}?${error ? "error=save" : "saved=1"}`);
 }

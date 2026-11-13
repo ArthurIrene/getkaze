@@ -331,7 +331,13 @@
       "upload": "The upload failed",
       "place": "Choose where the photo shows.",
       "alt": "Describe the photo in English.",
-      "room": "Choose the room for this photo."
+      "room": "Choose the room for this photo.",
+      "priceRwf": "Type the price in RWF (whole francs).",
+      "priceUsd": "Type the price in USD (for example 45 or 45.50).",
+      "maxGuests": "Type how many guests (1 to 50).",
+      "units": "Type how many rooms of this type (0 to 500).",
+      "amenity": "Each amenity needs an icon and a name.",
+      "order": "Could not read the order. Try again."
     },
     "hubTitle": "Edit your site",
     "complete": "{percent}% complete",
@@ -399,6 +405,72 @@
     "photo": "Photo",
     "deletePhoto": "Delete this photo",
     "deleteConfirm": "The photo is removed from your site and from our storage. This cannot be undone.",
-    "deleteYes": "Yes, delete it"
+    "deleteYes": "Yes, delete it",
+    "roomsHint": "Each room type with how many rooms of it you have. Used for prices on your site and, later, for availability.",
+    "hidden": "hidden",
+    "unitsCount": "{count, plural, one {# room} other {# rooms}}",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "addRoom": "Add room",
+    "editRoom": "Edit room",
+    "roomName": "Room name",
+    "roomLine": "Short line (for example Queen bed, garden view)",
+    "prices": "Price per night",
+    "pricesHint": "Type both: RWF for residents and USD for international guests. Guests switch between them.",
+    "maxGuests": "Most guests",
+    "units": "Rooms of this type",
+    "unitsHint": "How many rooms like this you have.",
+    "amenities": "Amenities",
+    "amenityIcon": "Icon",
+    "amenityLabel": "Amenity",
+    "icon": {
+      "bed": "Bed",
+      "people": "Guests",
+      "shower": "Shower",
+      "wifi": "Wi-Fi",
+      "view": "View",
+      "fire": "Fireplace",
+      "desk": "Desk"
+    },
+    "showOnSite": "Show on the site",
+    "roomPhotos": "Add or place this room's photos",
+    "deleteRoom": "Delete this room",
+    "deleteRoomConfirm": "The room is removed from your site. Its photos stay in Photos (in the gallery).",
+    "sectionsHint": "Choose which parts of your home page show, and in which order.",
+    "section": {
+      "hero": "Top photo and title",
+      "facts": "Quick facts",
+      "life": "Life at the lodge",
+      "rooms": "Rooms",
+      "table": "At our table",
+      "around": "Around us",
+      "host": "Your host",
+      "reviews": "Reviews",
+      "findUs": "Find us"
+    },
+    "needsModule": "Needs {module}",
+    "module": {
+      "menu": "Menu",
+      "ordering": "Menu + WhatsApp orders",
+      "booking": "Booking system"
+    },
+    "template": "Template",
+    "templatesLater": "More templates are coming later.",
+    "colorSet": "Colours",
+    "colorSetName": {
+      "auto": "Auto (follows the phone)",
+      "day": "Day",
+      "night": "Night"
+    },
+    "accent": "Accent colour",
+    "accentName": {
+      "forest": "Forest",
+      "clay": "Clay",
+      "ochre": "Ochre",
+      "slate": "Slate",
+      "bark": "Bark"
+    },
+    "accentHint": "Each colour is easy to read by day and by night.",
+    "missingSummary": "{count, plural, one {# text has} other {# texts have}} no {lang} yet. Guests see English there."
   }
 }

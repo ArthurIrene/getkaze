@@ -27,6 +27,7 @@ export type SiteView = {
   legalName: string;
   defaultCurrency: Currency;
   sections: SectionId[];
+  look: { colorSet: "auto" | "day" | "night"; accent: "forest" | "clay" | "ochre" | "slate" | "bark" };
   contacts: { phone: string; whatsapp: string; email?: string; telHref: string };
   location: {
     mapUrl: string;
@@ -96,6 +97,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
     legalName: site.legalName,
     defaultCurrency: site.defaultCurrency,
     sections: visibleSections(site.sections, site.modulesOn, (id) => hasContent[id]),
+    look: site.look ?? { colorSet: "auto", accent: "forest" },
     contacts: { ...site.contacts, telHref: telLink(site.contacts.phone) },
     location: {
       mapUrl: site.location.mapUrl,

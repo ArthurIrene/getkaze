@@ -43,7 +43,7 @@ select is(
 );
 select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'settings') k),
-  array['bookingPayments', 'contacts', 'dining', 'facts', 'hero', 'host', 'hours', 'location', 'moments', 'payment', 'publishedAt', 'reviews', 'roomsLine', 'sections', 'seoDescription', 'stay'],
+  array['bookingPayments', 'contacts', 'dining', 'facts', 'hero', 'host', 'hours', 'location', 'look', 'moments', 'payment', 'publishedAt', 'reviews', 'roomsLine', 'sections', 'seoDescription', 'stay'],
   'settings fields'
 );
 select is(

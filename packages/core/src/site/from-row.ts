@@ -134,6 +134,10 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
   const reviews = isObj(s.reviews) ? s.reviews : {};
   const address = isObj(location.address) ? location.address : {};
 
+  const lookRow = isObj(s.look) ? s.look : {};
+  const colorSet = (["auto", "day", "night"] as const).find((c) => c === lookRow.color_set) ?? "auto";
+  const accent = (["forest", "clay", "ochre", "slate", "bark"] as const).find((a) => a === lookRow.accent) ?? "forest";
+
   if (errors.length) return { ok: false, errors };
 
   const site: SiteData = {
@@ -161,6 +165,7 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
     hours: list(s.hours).map(text),
     payment: list(s.payment).map(text),
     bookingPayments: list(s.bookingPayments).filter((p): p is PaymentMethod => (paymentMethods as readonly unknown[]).includes(p)),
+    look: { colorSet, accent },
     sections: list(s.sections).filter(isObj).map((x) => ({ id: str(x.id), visible: x.visible !== false }) as SectionSetting),
     hero: { title: text(hero.title), line: text(hero.line), photo: placed("hero", hero.photo, "hero") },
     facts: list(s.facts).filter(isObj).map((f, k) => ({ id: str(f.id, `fact-${k}`), value: text(f.value), icon: str(f.icon) as IconKey, detail: text(f.detail) })),

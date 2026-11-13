@@ -318,7 +318,13 @@
       "upload": "Kohereza ntibyakunze",
       "place": "Hitamo aho ifoto igaragara.",
       "alt": "Sobanura ifoto mu Cyongereza.",
-      "room": "Hitamo icyumba cy'iyi foto."
+      "room": "Hitamo icyumba cy'iyi foto.",
+      "priceRwf": "Andika igiciro muri RWF (amafaranga yuzuye).",
+      "priceUsd": "Andika igiciro muri USD (urugero 45 cyangwa 45.50).",
+      "maxGuests": "Andika umubare w'abashyitsi (1 kugeza 50).",
+      "units": "Andika umubare w'ibyumba by'ubu bwoko (0 kugeza 500).",
+      "amenity": "Buri gikoresho gikenera akamenyetso n'izina.",
+      "order": "Ntitwasomye uko bikurikirana. Ongera ugerageze."
     },
     "hubTitle": "Hindura urubuga rwawe",
     "complete": "Byuzuye ku {percent}%",
@@ -386,6 +392,72 @@
     "photo": "Ifoto",
     "deletePhoto": "Siba iyi foto",
     "deleteConfirm": "Ifoto ivanwa ku rubuga rwawe no mu bubiko bwacu. Ntibishobora gusubizwa.",
-    "deleteYes": "Yego, yisibe"
+    "deleteYes": "Yego, yisibe",
+    "roomsHint": "Buri bwoko bw'icyumba n'umubare w'ibyumba ufite. Bikoreshwa ku biciro biri ku rubuga, kandi nyuma ku byumba bihari.",
+    "hidden": "cyahishwe",
+    "unitsCount": "{count, plural, one {icyumba #} other {ibyumba #}}",
+    "moveUp": "Zamura",
+    "moveDown": "Manura",
+    "addRoom": "Ongeraho icyumba",
+    "editRoom": "Hindura icyumba",
+    "roomName": "Izina ry'icyumba",
+    "roomLine": "Umurongo mugufi (urugero uburiri bunini, reba ubusitani)",
+    "prices": "Igiciro cy'ijoro rimwe",
+    "pricesHint": "Andika byombi: RWF ku batuye mu gihugu na USD ku bashyitsi b'abanyamahanga. Abashyitsi bahitamo.",
+    "maxGuests": "Abashyitsi benshi",
+    "units": "Ibyumba by'ubu bwoko",
+    "unitsHint": "Umubare w'ibyumba nk'iki ufite.",
+    "amenities": "Ibikoresho",
+    "amenityIcon": "Akamenyetso",
+    "amenityLabel": "Igikoresho",
+    "icon": {
+      "bed": "Uburiri",
+      "people": "Abashyitsi",
+      "shower": "Douche",
+      "wifi": "Wi-Fi",
+      "view": "Ahantu ho kureba",
+      "fire": "Iziko",
+      "desk": "Ameza"
+    },
+    "showOnSite": "Garagaza ku rubuga",
+    "roomPhotos": "Ongeraho cyangwa ushyire amafoto y'iki cyumba",
+    "deleteRoom": "Siba iki cyumba",
+    "deleteRoomConfirm": "Icyumba kivanwa ku rubuga rwawe. Amafoto yacyo aguma mu Mafoto.",
+    "sectionsHint": "Hitamo ibice by'urupapuro rw'ibanze bigaragara, n'uko bikurikirana.",
+    "section": {
+      "hero": "Ifoto yo hejuru n'umutwe",
+      "facts": "Amakuru y'ingenzi",
+      "life": "Ubuzima kuri lodge",
+      "rooms": "Ibyumba",
+      "table": "Ku meza yacu",
+      "around": "Hafi yacu",
+      "host": "Ubakira",
+      "reviews": "Ibitekerezo",
+      "findUs": "Aho turi"
+    },
+    "needsModule": "Bisaba {module}",
+    "module": {
+      "menu": "Ibiribwa n'ibinyobwa",
+      "ordering": "Gutumiza kuri WhatsApp",
+      "booking": "Gufata ibyumba"
+    },
+    "template": "Isura y'urubuga",
+    "templatesLater": "Izindi sura zizaza nyuma.",
+    "colorSet": "Amabara",
+    "colorSetName": {
+      "auto": "Byikora (bikurikira telefoni)",
+      "day": "Ku manywa",
+      "night": "Nijoro"
+    },
+    "accent": "Ibara ry'ingenzi",
+    "accentName": {
+      "forest": "Ishyamba",
+      "clay": "Ibumba",
+      "ochre": "Umuhondo w'ubutaka",
+      "slate": "Ikibuye",
+      "bark": "Igishishwa"
+    },
+    "accentHint": "Buri bara risomeka neza ku manywa na nijoro.",
+    "missingSummary": "{count, plural, one {Inyandiko # nta} other {Inyandiko # nta}} {lang} irafite. Abashyitsi babona Icyongereza."
   }
 }

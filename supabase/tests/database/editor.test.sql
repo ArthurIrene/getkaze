@@ -57,5 +57,28 @@ reset role;
 select is((select name || ' ' || array_to_string(languages, ',') || ' ' || default_currency || ' ' || slug from public.businesses where id = '00000000-0000-0000-0000-00000000000a'),
   'Lodge A2 en,rw usd biz-a-x', 'the allowed changes were saved');
 
+-- ---------- Feature 3: rooms, sections, look (editor-rooms-look.md) ----------
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000a1", "role": "authenticated", "aal": "aal1"}', true);
+select lives_ok($$ insert into public.catalog_items (id, business_id, kind, handle, name, price_rwf, price_usd, max_guests, units, translations_checked)
+  values ('00000000-0000-0000-0000-0000000001a1', '00000000-0000-0000-0000-00000000000a', 'room_type', 'garden', '{"en": "Garden", "rw": "Ubusitani"}', 120000, 90, 2, 3, '{"name": ["rw"]}') $$, 'owner A adds a room to A');
+select throws_ok($$ insert into public.catalog_items (business_id, kind, name, price_rwf, max_guests) values ('00000000-0000-0000-0000-00000000000a', 'room_type', '{"en": "Half"}', 1000, 2) $$,
+  '23514', null, 'a room needs both prices (D-023)');
+select throws_ok($$ insert into public.catalog_items (business_id, kind, name, price_rwf, price_usd, max_guests) values ('00000000-0000-0000-0000-00000000000b', 'room_type', '{"en": "Sneaky"}', 1, 1, 1) $$,
+  '42501', null, 'owner A cannot add a room to B');
+select is(tests.exec_count($$ update public.catalog_items set position = 5 where id = '00000000-0000-0000-0000-0000000001a1' $$), 1::bigint, 'owner A reorders A''s room');
+select is(tests.exec_count($$ update public.site_settings set look = '{"color_set": "night", "accent": "clay"}', sections = '[{"id": "rooms", "visible": true}]' where business_id = '00000000-0000-0000-0000-00000000000a' $$), 1::bigint, 'owner A saves look and sections');
+select is(tests.exec_count(format($$ update public.site_settings set look = %L where business_id = '00000000-0000-0000-0000-00000000000a' $$, bad)), -2::bigint, 'a bad look is refused: ' || bad)
+from unnest(array['{"accent": "pink"}', '{"color_set": "dusk"}', '{"font": "comic"}', '[]']) bad;
+select is(tests.exec_count($$ delete from public.catalog_items where id = '00000000-0000-0000-0000-0000000001a1' $$), 1::bigint, 'owner A deletes A''s room');
+reset role;
+insert into public.catalog_items (id, business_id, kind, name, price_rwf, price_usd, max_guests) values
+  ('00000000-0000-0000-0000-0000000001b1', '00000000-0000-0000-0000-00000000000b', 'room_type', '{"en": "Room B"}', 1, 1, 1);
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000a1", "role": "authenticated", "aal": "aal1"}', true);
+select is(tests.exec_count($$ update public.catalog_items set price_rwf = 1 where id = '00000000-0000-0000-0000-0000000001b1' $$), 0::bigint, 'owner A cannot change B''s room');
+select is(tests.exec_count($$ delete from public.catalog_items where id = '00000000-0000-0000-0000-0000000001b1' $$), 0::bigint, 'owner A cannot delete B''s room');
+reset role;
+
 select * from finish();
 rollback;
