@@ -500,6 +500,10 @@
     height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--on-accent) !important;
     display: flex; align-items: center; font-weight: 600; font-size: 13px; text-decoration: none;
   }
+  .fj-nav-wa {
+    width: 34px; height: 34px; margin-inline-start: -12px; border-radius: 999px; border: 1px solid var(--ink);
+    display: flex; align-items: center; justify-content: center; color: var(--ink);
+  }
   .fj-hero { --hero-h: 520px; --hero-r: 24px; margin-inline: 24px; }
   .fj-hero-title { left: calc(var(--hero-m) + 40px); top: 40px; font-size: 56px; }
   .fj-hero-title .fj-hand { font-size: 72px; }

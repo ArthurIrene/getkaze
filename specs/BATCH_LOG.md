@@ -296,3 +296,9 @@ No special order between steps 1–3 and 4: the build never reads the database.
 ## Batch 3a, content editor: started | 2026-11-13
 - Built: branch `feature/batch-3a-editor` from `staging` (PR #7 merged), draft PR opened.
 - Next: item 0 (header WhatsApp button), then specs for features 1–4, then one approval.
+
+## Batch 3a, item 0: desktop WhatsApp button | 2026-11-13
+- Built: a compact (34 px) WhatsApp icon button in the desktop header, right after "Check availability" (`.fj-nav-wa`, inside `.fj-nav-inline`, so phones never show it; they keep the bottom bar). No JavaScript.
+- Tests: nav.spec.ts: phone asserts it is hidden; new desktop test on `/`, `/rooms`, `/contact`, `/book` (visible, named "WhatsApp", `wa.me` link, sits right of the button). Guest Playwright tests pass locally; database-backed tests need Docker, which this session lacks, so GitHub CI covers them.
+- Page weight: `/` 167.2 KB (+0.1 KB), JS 145.4 KB (unchanged).
+- Deviations: none.

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
-import { menuPages, type PageId, type SiteView } from "@getkaze/core";
+import { menuPages, whatsAppLink, type PageId, type SiteView } from "@getkaze/core";
 import { routing, type Locale } from "@/i18n/routing";
+import { Glyph } from "./icons";
 import { checkHref, pageHref } from "./links";
 
 type HeaderProps = { site: SiteView; locale: Locale; page: PageId; pages: PageId[] };
@@ -9,7 +10,8 @@ type HeaderProps = { site: SiteView; locale: Locale; page: PageId; pages: PageId
  * Name (links home), language links to the same page (plain links), the
  * CSS-only RWF/USD switch, and the site menu (Rooms, Contact): a <details>
  * on phones, inline links on desktop. Sticky on every page. "Check
- * availability" is here on desktop only; phones have the bottom bar. No JavaScript.
+ * availability" and a compact WhatsApp button are here on desktop only;
+ * phones have the bottom bar. No JavaScript.
  */
 export async function Header({ site, locale, page, pages }: HeaderProps) {
   const t = await getTranslations("FieldJournal");
@@ -35,6 +37,9 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
         <ul>{items}</ul>
         <a className="fj-nav-check" href={check}>
           {t("check")}
+        </a>
+        <a className="fj-nav-wa" href={whatsAppLink(site.contacts.whatsapp)} aria-label={t("whatsapp")}>
+          <Glyph name="chat" size={18} />
         </a>
       </nav>
       <div className="fj-header-tools">
