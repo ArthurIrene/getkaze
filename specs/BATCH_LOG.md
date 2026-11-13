@@ -355,3 +355,7 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Owner-screen JS: changes 145.4 KB (no client code).
 - Fixes found on the way: an hours-only save also logged "map and directions" (an empty list was added); the save now leaves untouched parts as they were. A database test was not scoped to its own business and failed when e2e data was present; scoped.
 - Deviations: none.
+
+## Demo photos: started | 2026-11-13
+- Built: branch `feature/demo-photos` from `staging` (PR #8 merged), draft PR opened.
+- Blocked: the photo sources (Openverse API, Wikimedia hosts) are not on the network allowlist; waiting for your decision on the hosts.
