@@ -251,6 +251,16 @@ Entry format:
 - Deviations: none. The unused `Nav.home` wording stays (no rename or removal needed).
 
 ## Next session starts here
+**Batch 3a (content editor, PR #8) is built and ready for review:** item 0 and features 1–4, see the Batch 3a entries at the end. Local runs need Docker: start it with `dockerd` if `docker info` fails, then the Supabase command in CLAUDE.md.
+
+**Open after Batch 3a:**
+- Kinyarwanda checks of the editor wording (glossary, "Content editor" table, all draft).
+- The photo cleanup check (backlog).
+- Zod: specs name it, the code uses plain checks; add Zod only if you approve the dependency.
+- Gallery photos are stored but not shown yet (no gallery section in Field Journal).
+
+**Earlier (Batch 2) notes follow.**
+
 **Done (Batch 2, PR #6, ready for review):**
 - Core data, RLS and the isolation test.
 - Database tests and the staging deploy workflow.
