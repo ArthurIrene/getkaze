@@ -92,3 +92,7 @@ Rules:
 | Accent colour | Ibara ry'ingenzi | Editor.accent | draft |
 | Accents: Forest, Clay, Ochre, Slate, Bark | Ishyamba, Ibumba, Umuhondo w'ubutaka, Ikibuye, Igishishwa | Editor.accentName.* | draft |
 | Show on the site | Garagaza ku rubuga | Editor.showOnSite | draft |
+| Change log | Impinduka zose | Admin.changeLog | draft |
+| Support team (who changed it) | Itsinda ry'abafasha | Changes.actor.support | draft |
+| Support read this change log | Abafasha basomye izi mpinduka | Changes.event.log_read | draft |
+| Older changes | Impinduka za kera | Changes.older | draft |

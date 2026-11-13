@@ -304,7 +304,8 @@
       "reason": "Write a reason (5 to 200 characters).",
       "failed": "That did not work. Please try again."
     },
-    "openEditor": "Open the editor"
+    "openEditor": "Open the editor",
+    "changeLog": "Change log"
   },
   "NotFound": {
     "title": "This site is not available",
@@ -472,5 +473,73 @@
     },
     "accentHint": "Each colour is easy to read by day and by night.",
     "missingSummary": "{count, plural, one {# text has} other {# texts have}} no {lang} yet. Guests see English there."
+  },
+  "Changes": {
+    "title": "Changes",
+    "hint": "Who changed what on your site, and when (Kigali time). Our support visits show here too.",
+    "adminHint": "Every change on every site. Each time you read a business's log, its owner sees that support read it.",
+    "empty": "No changes yet.",
+    "older": "Older changes →",
+    "back": "Back",
+    "business": "Business",
+    "allBusinesses": "All businesses",
+    "filter": "Show",
+    "actor": {
+      "you": "You",
+      "owner": "Owner",
+      "staff": "Staff",
+      "support": "Support team",
+      "system": "Set-up"
+    },
+    "area": {
+      "info": "Business info",
+      "rooms": "Rooms",
+      "photos": "Photos",
+      "sections": "Sections",
+      "look": "Look & colors",
+      "languages": "Languages",
+      "site": "Site texts",
+      "modules": "Modules",
+      "members": "Logins",
+      "business": "Business",
+      "other": "Other"
+    },
+    "field": {
+      "name": "name",
+      "contacts": "contacts",
+      "map": "map and directions",
+      "hours": "hours",
+      "sections": "sections",
+      "look": "colours",
+      "languages": "languages",
+      "currency": "currency",
+      "translations": "translation checks",
+      "price": "price",
+      "guests": "guests",
+      "units": "rooms",
+      "amenities": "amenities",
+      "visibility": "shown or hidden",
+      "order": "order",
+      "line": "short line",
+      "place": "where it shows",
+      "alt": "description",
+      "photo": "photo file",
+      "status": "status",
+      "address": "web address",
+      "texts": "texts",
+      "switch": "on or off",
+      "roles": "roles",
+      "other": "other"
+    },
+    "action": {
+      "insert": "added",
+      "update": "changed",
+      "delete": "deleted"
+    },
+    "event": {
+      "support_start": "Support visit started · {reason}",
+      "support_end": "Support visit ended · {reason}",
+      "log_read": "Support read this change log"
+    }
   }
 }

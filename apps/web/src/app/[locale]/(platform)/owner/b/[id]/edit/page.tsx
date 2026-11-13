@@ -44,7 +44,7 @@ export default async function EditorHub({ params, searchParams }: PageProps<"/[l
     { id: "changes", href: "/changes" },
   ];
   // Rows whose screens exist (features 3 and 4 add the rest).
-  const ready = new Set<EditorSection>(["info", "photos", "rooms", "sections", "look", "languages"]);
+  const ready = new Set<EditorSection>(["info", "photos", "rooms", "sections", "look", "languages", "changes"]);
   return (
     <EditorFrame locale={locale} path={`/owner/b/${id}/edit`} back={ownerHref(locale)} title={t("hubTitle")} business={business.name} support={access.ok && access.as === "support"} q={q as Record<string, string>}>
       <p className="text-sm font-semibold" data-progress={progress.percent}>{t("complete", { percent: progress.percent })}</p>

@@ -50,3 +50,4 @@ export * from "./site/from-row";
 export * from "./media";
 export * from "./editor";
 export * from "./editor-items";
+export * from "./change-log";

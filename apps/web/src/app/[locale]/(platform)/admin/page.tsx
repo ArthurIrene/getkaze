@@ -30,7 +30,10 @@ export default async function AdminHome({ params, searchParams }: PageProps<"/[l
   return (
     <Shell path="/admin" locale={locale} aside={<AdminBar locale={locale} />}>
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold">{t("clients")}</h1>
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-2xl font-bold">{t("clients")}</h1>
+          <a href={platformHref("/admin/changes", locale)} className="text-sm font-semibold underline">{t("changeLog")}</a>
+        </div>
         <form className="flex flex-wrap gap-2 text-sm" method="get">
           <input name="q" defaultValue={search} placeholder={t("search")} aria-label={t("search")} className="h-10 rounded-lg border border-neutral-300 px-3" />
           <select name="status" defaultValue={status} aria-label={t("status")} className="h-10 rounded-lg border border-neutral-300 px-2">

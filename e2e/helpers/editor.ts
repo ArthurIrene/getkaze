@@ -47,3 +47,21 @@ export async function signIn(page: Page, email: string) {
 export async function noSideScroll(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBe(0);
 }
+
+/** A fresh platform admin signed in at aal2 (TOTP enrolled in the test, as in admin.spec.ts). */
+export async function adminAal2(page: Page) {
+  const { createUser: create, insert: add, totp, uniqueEmail: email } = await import("./supabase");
+  const address = email("editor-admin");
+  const userId = await create(address, PASSWORD);
+  await add("platform_admins", { user_id: userId });
+  await page.goto("/login");
+  await page.getByLabel("Email").fill(address);
+  await page.getByLabel("Password").fill(PASSWORD);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL(/\/admin\/mfa\/enroll$/);
+  const secret = (await page.getByTestId("totp-secret").textContent())!.trim();
+  await page.getByLabel("6-digit code").fill(totp(secret));
+  await page.getByRole("button", { name: "Verify" }).click();
+  await expect(page).toHaveURL(/\/admin$/);
+  return { email: address, userId };
+}

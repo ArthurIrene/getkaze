@@ -291,7 +291,8 @@
       "reason": "Andika impamvu (inyuguti 5 kugeza 200).",
       "failed": "Ntibyakunze. Ongera ugerageze."
     },
-    "openEditor": "Fungura aho guhindura"
+    "openEditor": "Fungura aho guhindura",
+    "changeLog": "Impinduka zose"
   },
   "NotFound": {
     "title": "Uru rubuga ntiruboneka",
@@ -459,5 +460,73 @@
     },
     "accentHint": "Buri bara risomeka neza ku manywa na nijoro.",
     "missingSummary": "{count, plural, one {Inyandiko # nta} other {Inyandiko # nta}} {lang} irafite. Abashyitsi babona Icyongereza."
+  },
+  "Changes": {
+    "title": "Impinduka",
+    "hint": "Uwahinduye iki ku rubuga rwawe, n'igihe (isaha y'i Kigali). Gusurwa n'abafasha bacu bigaragara hano.",
+    "adminHint": "Buri mpinduka kuri buri rubuga. Buri gihe usomye impinduka z'ubucuruzi, nyirabwo abona ko abafasha bazisomye.",
+    "empty": "Nta mpinduka kugeza ubu.",
+    "older": "Impinduka za kera →",
+    "back": "Subira inyuma",
+    "business": "Ubucuruzi",
+    "allBusinesses": "Ubucuruzi bwose",
+    "filter": "Erekana",
+    "actor": {
+      "you": "Wowe",
+      "owner": "Nyir'ubucuruzi",
+      "staff": "Umukozi",
+      "support": "Itsinda ry'abafasha",
+      "system": "Gutangiza"
+    },
+    "area": {
+      "info": "Amakuru y'ubucuruzi",
+      "rooms": "Ibyumba",
+      "photos": "Amafoto",
+      "sections": "Ibice by'urupapuro",
+      "look": "Isura n'amabara",
+      "languages": "Indimi",
+      "site": "Inyandiko z'urubuga",
+      "modules": "Ibice",
+      "members": "Kwinjira",
+      "business": "Ubucuruzi",
+      "other": "Ibindi"
+    },
+    "field": {
+      "name": "izina",
+      "contacts": "aho mubariza",
+      "map": "ikarita n'inzira",
+      "hours": "amasaha",
+      "sections": "ibice",
+      "look": "amabara",
+      "languages": "indimi",
+      "currency": "ifaranga",
+      "translations": "kwemeza ubusobanuro",
+      "price": "igiciro",
+      "guests": "abashyitsi",
+      "units": "ibyumba",
+      "amenities": "ibikoresho",
+      "visibility": "kigaragara cyangwa cyahishwe",
+      "order": "uko bikurikirana",
+      "line": "umurongo mugufi",
+      "place": "aho igaragara",
+      "alt": "ibisobanuro",
+      "photo": "dosiye y'ifoto",
+      "status": "uko bihagaze",
+      "address": "aderesi y'urubuga",
+      "texts": "inyandiko",
+      "switch": "gukora cyangwa guhagarara",
+      "roles": "inshingano",
+      "other": "ibindi"
+    },
+    "action": {
+      "insert": "byongeweho",
+      "update": "byahinduwe",
+      "delete": "byasibwe"
+    },
+    "event": {
+      "support_start": "Gusurwa n'abafasha byatangiye · {reason}",
+      "support_end": "Gusurwa n'abafasha byarangiye · {reason}",
+      "log_read": "Abafasha basomye izi mpinduka"
+    }
   }
 }

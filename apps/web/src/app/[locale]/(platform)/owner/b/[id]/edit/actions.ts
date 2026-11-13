@@ -48,6 +48,8 @@ export async function saveInfo(form: FormData) {
   const location = { ...oldLocation, ...info.location };
   if (!info.location.area) delete (location as Record<string, unknown>).area;
   if (info.location.lat === undefined) { delete (location as Record<string, unknown>).lat; delete (location as Record<string, unknown>).lng; }
+  // No empty list where there was none: an untouched part must not show up as a change in the log.
+  if (!info.location.directions.length && !("directions" in oldLocation)) delete (location as Record<string, unknown>).directions;
   const otherChecks = Object.fromEntries(Object.entries((before!.translations_checked ?? {}) as TranslationChecks).filter(([k]) => !k.startsWith("location.") && !k.startsWith("hours.")));
 
   const { error, count } = await supabase.from("site_settings")
