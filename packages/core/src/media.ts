@@ -76,3 +76,38 @@ export function publicMediaUrl(objectName: string, storageBaseUrl: string): stri
 export function photoFiles(folder: string): string[] {
   return photoLimits.widths.flatMap((w) => photoLimits.types.map((t) => mediaFile(folder, w, t)));
 }
+
+/** Widths to make for an original of this width: every standard width it can fill, at least the smallest. */
+export function widthsFor(originalWidth: number): PhotoWidth[] {
+  const fit = photoLimits.widths.filter((w) => w <= originalWidth);
+  return fit.length ? [...fit] : [photoLimits.widths[0]];
+}
+
+/**
+ * Static photos (seed data only, demo-photos.md): files bundled with the app at
+ * /demo-photos/<name>/<width>.webp, the same widths and size targets as uploads.
+ */
+export const staticPhotoPattern = /^demo-photos\/[a-z0-9](-?[a-z0-9])*$/;
+
+/** src (largest width) and srcset of a static photo folder. */
+export function staticPhotoUrls(path: string, format: "webp" | "jpg", largestWidth: number): { src: string; srcset: string } {
+  if (!staticPhotoPattern.test(path)) throw new Error(`not a static photo path: ${path}`);
+  const widths = widthsFor(largestWidth);
+  const url = (w: number) => `/${path}/${w}.${format}`;
+  return { src: url(widths[widths.length - 1]!), srcset: widths.map((w) => `${url(w)} ${w}w`).join(", ") };
+}
+
+/** Licences accepted for credited photos (the database checks the same list in app.is_credit). */
+export const photoLicences = ["cc0", "pdm", "cc-by-2.0", "cc-by-2.5", "cc-by-3.0", "cc-by-4.0"] as const;
+export type PhotoLicence = (typeof photoLicences)[number];
+export type PhotoCredit = { title: string; author: string; source_url: string; licence: PhotoLicence; licence_url?: string };
+
+/** CC BY licences require a visible credit; CC0 and the Public Domain Mark do not. */
+export const needsAttribution = (licence: PhotoLicence): boolean => licence.startsWith("cc-by-");
+
+/** "CC BY 4.0", "CC0 1.0", "Public Domain Mark". */
+export function licenceLabel(licence: PhotoLicence): string {
+  if (licence === "cc0") return "CC0 1.0";
+  if (licence === "pdm") return "Public Domain Mark 1.0";
+  return `CC BY ${licence.slice(6)}`;
+}

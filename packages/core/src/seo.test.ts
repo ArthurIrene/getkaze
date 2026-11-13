@@ -6,12 +6,13 @@ const labels: SeoLabels = {
   style: (s) => ({ lodge: "Lodge", townHotel: "Hotel", guesthouse: "Guesthouse" })[s],
   homeTitle: (v) => `${v.name} | ${v.style} in ${v.locality}, ${v.region}`,
   pageTitle: (v) => `${v.page} | ${v.name}`,
-  pageName: (p) => ({ rooms: "Rooms", contact: "Contact", book: "Check availability", privacy: "Privacy notice" })[p],
+  pageName: (p) => ({ rooms: "Rooms", contact: "Contact", book: "Check availability", privacy: "Privacy notice", credits: "Photo credits" })[p],
   homeDescription: (v) => `${v.title}. ${v.style} in ${v.area}. Rooms from ${v.price}.`,
   roomsDescription: (v) => `${v.count} rooms from ${v.price}${v.breakfast ? ", breakfast included" : ""}.`,
   contactDescription: (v) => `Call, WhatsApp or find ${v.name} in ${v.area}. ${v.hours}.`,
   bookDescription: (v) => `Send ${v.name} a booking request by WhatsApp or email.`,
   privacyDescription: (v) => `How ${v.name} handles your personal data.`,
+  creditsDescription: (v) => `Who took the photos on ${v.name}'s site.`,
 };
 
 const room = (name: string, usd: number, rwf: number, maxGuests: number) => ({

@@ -41,7 +41,8 @@
     "rooms": "Ibyumba",
     "contact": "Twandikire",
     "book": "Reba ibyumba bihari",
-    "privacy": "Ubuzima bwite"
+    "privacy": "Ubuzima bwite",
+    "credits": "Abafashe amafoto"
   },
   "Rooms": {
     "title": "Ibyumba",
@@ -158,7 +159,8 @@
     "roomsDescription": "Ibyumba {count} guhera kuri {price}{breakfast, select, yes {, ifunguro rya mu gitondo ririmo} other {}}.",
     "contactDescription": "Hamagara, andika kuri WhatsApp cyangwa usure {name} i {area}. {hours}.",
     "bookDescription": "Oherereza {name} icyifuzo cyo gufata icyumba kuri WhatsApp cyangwa imeli.",
-    "privacyDescription": "Uko {name} ifata amakuru yawe bwite."
+    "privacyDescription": "Uko {name} ifata amakuru yawe bwite.",
+    "creditsDescription": "Who took the photos on {name}'s site, with links and licences."
   },
   "Platform": {
     "language": "Ururimi",
@@ -528,5 +530,11 @@
       "support_end": "Gusurwa n'abafasha byarangiye · {reason}",
       "log_read": "Abafasha basomye izi mpinduka"
     }
+  },
+  "Credits": {
+    "title": "Abafashe amafoto",
+    "intro": "The photos on this site are openly licensed. Thank you to the photographers. Each photo was resized and compressed for the web.",
+    "by": "by {author}",
+    "changes": "Resized and compressed from the originals linked above."
   }
 }

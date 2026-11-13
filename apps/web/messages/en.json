@@ -41,7 +41,8 @@
     "rooms": "Rooms",
     "contact": "Contact",
     "book": "Check availability",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "credits": "Photo credits"
   },
   "Rooms": {
     "title": "Rooms",
@@ -171,7 +172,8 @@
     "roomsDescription": "{count, plural, one {# room} other {# rooms}} from {price}{breakfast, select, yes {, breakfast included} other {}}.",
     "contactDescription": "Call, WhatsApp or find {name} in {area}. {hours}.",
     "bookDescription": "Send {name} a booking request by WhatsApp or email.",
-    "privacyDescription": "How {name} handles your personal data."
+    "privacyDescription": "How {name} handles your personal data.",
+    "creditsDescription": "Who took the photos on {name}'s site, with links and licences."
   },
   "Platform": {
     "language": "Language",
@@ -541,5 +543,11 @@
       "support_end": "Support visit ended · {reason}",
       "log_read": "Support read this change log"
     }
+  },
+  "Credits": {
+    "title": "Photo credits",
+    "intro": "The photos on this site are openly licensed. Thank you to the photographers. Each photo was resized and compressed for the web.",
+    "by": "by {author}",
+    "changes": "Resized and compressed from the originals linked above."
   }
 }

@@ -3,7 +3,7 @@ import { currencies, type Currency } from "../money";
 import { moduleIds, type ModuleId } from "../modules";
 import { paymentMethods, type PaymentMethod } from "../booking";
 import type { SectionSetting } from "../sections";
-import { photoLimits, publicMediaUrl, type PhotoWidth } from "../media";
+import { photoLicences, photoLimits, publicMediaUrl, staticPhotoPattern, staticPhotoUrls, type PhotoCredit, type PhotoWidth } from "../media";
 import { photoSrcset, widthsFor } from "../editor";
 import { templateIds, type Activity, type Amenity, type Dish, type IconKey, type Photo, type PropertyStyle, type Room, type SiteData } from "./types";
 
@@ -38,18 +38,31 @@ const folderPattern = /^[0-9a-f-]{36}\/[0-9a-f-]{36}$/;
  * stored width as src and every stored width in srcset; the files live in
  * Storage at mediaBase (approved point 4: plain <img srcset>, no optimizer).
  */
+function creditOf(v: unknown): PhotoCredit | undefined {
+  if (!isObj(v)) return undefined;
+  const licence = str(v.licence) as PhotoCredit["licence"];
+  if (!str(v.title) || !str(v.author) || !str(v.source_url).startsWith("https://") || !(photoLicences as readonly string[]).includes(licence)) return undefined;
+  return { title: str(v.title), author: str(v.author), source_url: str(v.source_url), licence, ...(str(v.licence_url).startsWith("https://") ? { licence_url: str(v.licence_url) } : {}) };
+}
+
 function photo(v: unknown, fallbackId: string, place: Photo["place"], mediaBase?: string): Photo {
   if (!isObj(v)) return { id: fallbackId, place, alt: { en: "" } };
-  const base = { id: str(v.id, fallbackId), place: (str(v.place) as Photo["place"]) || place, alt: text(v.alt) };
+  const credit = creditOf(v.credit);
+  const base = { id: str(v.id, fallbackId), place: (str(v.place) as Photo["place"]) || place, alt: text(v.alt), ...(credit ? { credit } : {}) };
   const path = str(v.path);
+  const w = num(v.width);
+  const h = num(v.height);
+  // Static photos (seed data only): bundled with the app, same widths as uploads.
+  if (str(v.source) === "static" && staticPhotoPattern.test(path)) {
+    const format = str(v.format) === "jpg" ? "jpg" : "webp";
+    return { ...base, source: "static", path, format, ...staticPhotoUrls(path, format, w ?? photoLimits.widths[0]), ...(w && h ? { width: w, height: h } : {}) };
+  }
   if (mediaBase && folderPattern.test(path)) {
     const format = str(v.format) === "jpg" ? "jpg" : "webp";
     const largest = Math.min(num(v.width) ?? photoLimits.widths[0], photoLimits.widths[photoLimits.widths.length - 1]!);
     const widths = widthsFor(largest);
     const urlOf = (name: string) => publicMediaUrl(name, mediaBase);
     const top = widths[widths.length - 1] as PhotoWidth;
-    const w = num(v.width);
-    const h = num(v.height);
     return { ...base, src: urlOf(`${path}/${top}.${format}`), srcset: photoSrcset(urlOf, path, format, widths), ...(w && h ? { width: w, height: h } : {}) };
   }
   const src = str(v.src) || path;
@@ -120,6 +133,7 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
   });
 
   const activities: Activity[] = byKind("activity").map((i) => ({
+    ...(photosOf(i.id, "gallery")[0] ? { photo: photosOf(i.id, "gallery")[0] } : {}),
     id: str(i.handle) || str(i.id),
     name: text(i.name),
     line: text(i.line),

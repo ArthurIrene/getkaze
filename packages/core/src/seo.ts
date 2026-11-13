@@ -60,6 +60,7 @@ export type SeoLabels = {
   contactDescription: (v: { name: string; area: string; hours: string }) => string;
   bookDescription: (v: { name: string }) => string;
   privacyDescription: (v: { name: string }) => string;
+  creditsDescription: (v: { name: string }) => string;
 };
 
 export type PageSeo = {
@@ -116,6 +117,10 @@ export function pageSeo(
       break;
     case "privacy":
       description = labels.privacyDescription({ name });
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
+    case "credits":
+      description = labels.creditsDescription({ name });
       title = labels.pageTitle({ page: labels.pageName(page), name });
       break;
   }

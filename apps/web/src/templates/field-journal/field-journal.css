@@ -278,6 +278,7 @@
 .fj-card details[open] .fj-back { display: flex; justify-content: flex-start; }
 .fj-dist { align-self: flex-end; border: 1px solid #fbf7f0; border-radius: 999px; padding: 3px 8px; font-size: 11px; }
 .fj-front .fj-icon { align-self: center; width: 120px; height: 80px; }
+.fj-card-photo { display: block; width: 100%; height: 96px; object-fit: cover; border-radius: 6px; }
 .fj-card-name { font: 700 22px/1.05 var(--f-display); }
 .fj-card-line { font-size: 14px; line-height: 1.45; }
 .fj-arrange {
@@ -678,3 +679,10 @@
     }
   }
 }
+
+/* ---------- Photo credits ---------- */
+.fj-credits { list-style: none; margin: 16px 0; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 14px; line-height: 1.45; }
+.fj-credits li { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--line); padding-top: 10px; }
+.fj-credit-shows { font-weight: 600; }
+.fj-credits a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+

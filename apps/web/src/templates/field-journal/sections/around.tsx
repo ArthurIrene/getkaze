@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { whatsAppLink } from "@getkaze/core";
 import type { TemplateProps } from "../../types";
 import { Drawing } from "../parts/icons";
+import { LazyImg } from "../parts/lazy-img";
 
 /** Around us: postcards that flip to a line and "Ask us to arrange" (<details>, no JavaScript). */
 export async function Around({ site }: TemplateProps) {
@@ -21,7 +22,11 @@ export async function Around({ site }: TemplateProps) {
               <summary>
                 <span className="fj-front">
                   <span className="fj-mono fj-dist">{activity.distance}</span>
-                  <Drawing icon={activity.icon} size={120} stroke={1.4} />
+                  {activity.photo?.src ? (
+                    <LazyImg src={activity.photo.src} srcset={activity.photo.srcset} sizes="(min-width: 760px) 25vw, 60vw" alt={activity.photo.alt} className="fj-card-photo" />
+                  ) : (
+                    <Drawing icon={activity.icon} size={120} stroke={1.4} />
+                  )}
                   <span className="fj-card-name">{activity.name}</span>
                 </span>
                 <span className="fj-back fj-fade">

@@ -10,6 +10,7 @@
  * fallback (D-029).
  */
 import type { Amenity, Photo, SiteData } from "@getkaze/core";
+import { demoPhotos, type DemoPhotoName } from "./demo-photos";
 
 const photo = (id: string, place: Photo["place"], en: string, rw?: string): Photo => ({
   id,
@@ -17,14 +18,21 @@ const photo = (id: string, place: Photo["place"], en: string, rw?: string): Phot
   alt: rw ? { en, rw } : { en },
 });
 
+/**
+ * A real, openly licensed demo photo (scripts/demo-photos.mjs; credits in
+ * CREDITS.md and on the site's Photo credits page). Static: bundled with the
+ * app, seed data only (demo-photos.md). Kinyarwanda alt texts are drafts.
+ */
+const shot = (name: DemoPhotoName, id: string, place: Photo["place"], en: string, rw: string): Photo => {
+  const d = demoPhotos[name];
+  return {
+    id, place, alt: { en, rw }, source: "static", path: d.path, format: "webp", width: d.width, height: d.height, credit: d.credit,
+    src: d.src, srcset: d.srcset,
+  };
+};
+
 const a = (icon: Amenity["icon"], en: string, rw?: string): Amenity => ({ icon, label: rw ? { en, rw } : { en } });
 
-/** Three placeholder photos per room (bed, view, bathroom), as in the rooms mockup. */
-const roomPhotos = (id: string, name: string): Photo[] => [
-  photo(`${id}-1`, "room", `${name}: the bed`),
-  photo(`${id}-2`, "room", `${name}: the view`),
-  photo(`${id}-3`, "room", `${name}: the bathroom`),
-];
 
 export const demoLodge: SiteData = {
   businessId: "demo-kinigi-hills",
@@ -71,7 +79,7 @@ export const demoLodge: SiteData = {
   hero: {
     title: { en: "Wake up facing", rw: "Byuka ureba" },
     line: { en: "the volcanoes", rw: "ibirunga" },
-    photo: photo("hero", "hero", "The lodge below the volcanoes", "Icumbi munsi y'ibirunga"),
+    photo: shot("hero-volcanoes", "hero", "hero", "Volcanoes above green fields near Kinigi", "Ibirunga hejuru y'imirima itoshye hafi ya Kinigi"),
   },
   facts: [
     {
@@ -94,10 +102,10 @@ export const demoLodge: SiteData = {
     },
   ],
   moments: [
-    { id: "coffee", caption: { en: "5 a.m. coffee" }, icon: "coffee", photo: photo("m-coffee", "gallery", "Morning coffee") },
-    { id: "fire", caption: { en: "evening fire" }, icon: "fire", photo: photo("m-fire", "gallery", "Evening fire") },
-    { id: "garden", caption: { en: "the garden" }, icon: "garden", photo: photo("m-garden", "gallery", "The garden") },
-    { id: "stars", caption: { en: "Bisoke stars" }, icon: "stars", photo: photo("m-stars", "gallery", "Stars over Bisoke") },
+    { id: "coffee", caption: { en: "5 a.m. coffee" }, icon: "coffee", photo: shot("life-coffee", "m-coffee", "gallery", "Coffee brewing on a wooden table", "Ikawa itegurwa ku meza y'igiti") },
+    { id: "fire", caption: { en: "evening fire" }, icon: "fire", photo: shot("life-fire", "m-fire", "gallery", "Flames of the evening fire", "Umuriro wa nimugoroba") },
+    { id: "garden", caption: { en: "the garden" }, icon: "garden", photo: shot("life-garden", "m-garden", "gallery", "Wild flowers on the green hillside", "Indabo zo ku musozi utoshye") },
+    { id: "trail", caption: { en: "the forest trail" }, icon: "trek", photo: shot("life-trail", "m-trail", "gallery", "A misty forest trail", "Inzira yo mu ishyamba ririmo igihu") },
   ],
   rooms: [
     {
@@ -106,7 +114,10 @@ export const demoLodge: SiteData = {
       line: { en: "Quiet, facing the garden. Made for solo trekkers who want an early night." },
       price: { rwf: 45000, usd: 35 },
       maxGuests: 1,
-      photos: roomPhotos("r-garden-single", "Garden Single"),
+      photos: [
+        shot("room-garden-single-bed", "r-garden-single-1", "room", "Garden Single: a bed in a wooden room", "Garden Single: uburiri mu cyumba cy'ibiti"),
+        shot("room-garden-single-view", "r-garden-single-2", "room", "Garden Single: green hills and clouds", "Garden Single: imisozi itoshye n'ibicu"),
+      ],
       amenities: [a("bed", "1 bed", "uburiri 1"), a("people", "1 guest", "umuntu 1"), a("shower", "Shower", "Douche"), a("wifi", "Wi-Fi")],
     },
     {
@@ -115,7 +126,7 @@ export const demoLodge: SiteData = {
       line: { en: "Queen bed, a writing desk and morning sun on the garden." },
       price: { rwf: 60000, usd: 45 },
       maxGuests: 2,
-      photos: roomPhotos("r-garden-double", "Garden Double"),
+      photos: [shot("room-garden-double-bed", "r-garden-double-1", "room", "Garden Double: a double bed in a wooden room", "Garden Double: uburiri bunini mu cyumba cy'ibiti")],
       amenities: [a("bed", "Queen", "Uburiri bunini"), a("people", "2 guests", "abantu 2"), a("desk", "Desk", "Ameza yo kwandikiraho"), a("wifi", "Wi-Fi")],
     },
     {
@@ -124,7 +135,10 @@ export const demoLodge: SiteData = {
       line: { en: "Our favourite. A private balcony facing Sabyinyo and Bisoke at sunrise." },
       price: { rwf: 80000, usd: 60 },
       maxGuests: 2,
-      photos: roomPhotos("r-volcano-view", "Volcano View Double"),
+      photos: [
+        shot("room-volcano-view", "r-volcano-view-1", "room", "Volcano View Double: three volcanoes at sunset", "Volcano View Double: ibirunga bitatu izuba rirenga"),
+        shot("room-volcano-view-2", "r-volcano-view-2", "room", "Volcano View Double: the volcanoes over the fields", "Volcano View Double: ibirunga hejuru y'imirima"),
+      ],
       amenities: [a("bed", "Queen", "Uburiri bunini"), a("people", "2 guests", "abantu 2"), a("view", "View", "Ahantu heza ho kureba"), a("wifi", "Wi-Fi")],
     },
     {
@@ -133,7 +147,7 @@ export const demoLodge: SiteData = {
       line: { en: "Two bedrooms around a fireplace, for families or a small trekking group." },
       price: { rwf: 100000, usd: 75 },
       maxGuests: 4,
-      photos: roomPhotos("r-family-cottage", "Family Cottage"),
+      photos: [shot("room-cottage-fire", "r-family-cottage-1", "room", "Family Cottage: a wood fire in the fireplace", "Family Cottage: umuriro w'inkwi mu ziko")],
       amenities: [a("bed", "2 rooms", "Ibyumba 2"), a("people", "4 guests", "abantu 4"), a("fire", "Fireplace", "Iziko"), a("wifi", "Wi-Fi")],
     },
   ],
@@ -149,7 +163,7 @@ export const demoLodge: SiteData = {
   },
   dining: {
     name: { en: "the fireside room" },
-    photo: photo("dining", "dining", "The fireside dining room"),
+    photo: shot("dining-fireside", "dining", "dining", "The fireside, where dinner is served", "Hafi y'iziko, aho ifunguro rya nimugoroba ritangirwa"),
     dishes: [
       { id: "brochettes", name: { en: "Goat brochettes" }, price: { rwf: 7000, usd: 5 }, icon: "grill", photo: photo("d-brochettes", "dish", "Goat brochettes") },
       { id: "isombe", name: { en: "Isombe & rice" }, price: { rwf: 6000, usd: 4.5 }, icon: "stew", photo: photo("d-isombe", "dish", "Isombe and rice") },
@@ -157,10 +171,10 @@ export const demoLodge: SiteData = {
     ],
   },
   activities: [
-    { id: "gorillas", name: { en: "Gorilla trekking" }, distance: { en: "15'" }, icon: "trek", arrange: true, line: { en: "Permits from the park. We book your driver and packed lunch." } },
+    { photo: shot("around-gorillas", "a-gorillas", "gallery", "Mountain gorillas resting in the forest", "Ingagi zo mu misozi ziruhukira mu ishyamba"), id: "gorillas", name: { en: "Gorilla trekking" }, distance: { en: "15'" }, icon: "trek", arrange: true, line: { en: "Permits from the park. We book your driver and packed lunch." } },
     { id: "golden-monkeys", name: { en: "Golden monkeys" }, distance: { en: "15'" }, icon: "monkey", arrange: true, line: { en: "A shorter, playful trek in the bamboo forest." } },
     { id: "caves", name: { en: "Musanze Caves" }, distance: { en: "25'" }, icon: "cave", arrange: true, line: { en: "A 2 km walk through old lava tunnels." } },
-    { id: "twin-lakes", name: { en: "Twin Lakes" }, distance: { en: "40'" }, icon: "lake", arrange: true, line: { en: "Canoe on Burera and Ruhondo, lunch by the water." } },
+    { photo: shot("around-lakes", "a-twin-lakes", "gallery", "Lake Ruhondo and its islands", "Ikiyaga cya Ruhondo n'ibirwa byacyo"), id: "twin-lakes", name: { en: "Twin Lakes" }, distance: { en: "40'" }, icon: "lake", arrange: true, line: { en: "Canoe on Burera and Ruhondo, lunch by the water." } },
     { id: "village", name: { en: "Cultural village" }, distance: { en: "10'" }, icon: "village", arrange: true, line: { en: "Dance, drums and banana beer with local families." } },
   ],
   host: {

@@ -46,7 +46,8 @@ $$;
 create function tests.files(prefix text) returns bigint language sql as $$
   select count(*) from storage.objects where bucket_id = 'business-media' and name like prefix || '%'
 $$;
-grant execute on all functions in schema tests to authenticated, anon;
+grant usage on schema tests to service_role;
+grant execute on all functions in schema tests to authenticated, anon, service_role;
 
 -- Storage blocks direct SQL deletes unless this is set (the Storage API sets it); policies still apply.
 select set_config('storage.allow_delete_query', 'true', true);
@@ -130,6 +131,36 @@ select '00000000-0000-0000-0000-00000000000a', 'gallery', '{"en": "x"}'
 from generate_series(1, 60 - (select count(*) from public.media where business_id = '00000000-0000-0000-0000-00000000000a'));
 select throws_ok($$ insert into public.media (business_id, place, alt) values ('00000000-0000-0000-0000-00000000000a', 'gallery', '{"en": "61st"}') $$,
   '23514', null, 'the 61st photo is refused');
+
+-- ---------- Static photos are seed-only (demo-photos.md) ----------
+-- As postgres (migrations, seed): allowed. Any request with a JWT: refused, even the service role.
+select set_config('request.jwt.claims', '', true);
+insert into public.site_settings (business_id, moments) values
+  ('00000000-0000-0000-0000-00000000000a', '[{"id": "seed", "photo": {"source": "static", "path": "demo-photos/life-coffee"}}]')
+  on conflict (business_id) do update set moments = excluded.moments;
+delete from public.media where id = (select id from public.media where business_id = '00000000-0000-0000-0000-00000000000a' and storage_path is null limit 1);
+insert into public.media (id, business_id, place, alt, storage_path, source, credit) values
+  ('00000000-0000-0000-0000-0000000005a1', '00000000-0000-0000-0000-00000000000a', 'hero', '{"en": "Volcanoes"}', 'demo-photos/hero-volcanoes', 'static',
+   '{"title": "Volcanoes", "author": "A. Photographer", "source_url": "https://commons.wikimedia.org/wiki/File:X.jpg", "licence": "cc-by-4.0"}');
+select throws_ok($$ insert into public.media (business_id, place, alt, storage_path, source) values ('00000000-0000-0000-0000-00000000000a', 'hero', '{"en": "x"}', 'elsewhere/x', 'static') $$,
+  '23514', null, 'a static photo must live under demo-photos/');
+select throws_ok($$ insert into public.media (business_id, place, alt, credit) values ('00000000-0000-0000-0000-00000000000a', 'hero', '{"en": "x"}', '{"title": "x", "author": "y", "source_url": "https://e.x/1", "licence": "cc-by-sa-4.0"}') $$,
+  '23514', null, 'CC BY-SA (and any other licence) is refused');
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000a1", "role": "authenticated", "aal": "aal1"}', true);
+select is(tests.exec_count($$ insert into public.media (business_id, place, alt, storage_path, source) values ('00000000-0000-0000-0000-00000000000a', 'hero', '{"en": "x"}', 'demo-photos/sneaky', 'static') $$), -1::bigint, 'an owner cannot create a static photo');
+select is(tests.exec_count($$ update public.media set source = 'static', storage_path = 'demo-photos/x' where business_id = '00000000-0000-0000-0000-00000000000a' and source = 'storage' $$), -1::bigint, 'an owner cannot turn a photo static');
+select is(tests.exec_count($$ update public.media set storage_path = 'demo-photos/other' where id = '00000000-0000-0000-0000-0000000005a1' $$), -1::bigint, 'an owner cannot repoint a static photo');
+select is(tests.exec_count($$ update public.media set alt = '{"en": "The volcanoes"}' where id = '00000000-0000-0000-0000-0000000005a1' $$), 1::bigint, 'an owner may still edit a static photo''s alt text');
+select is(tests.exec_count($$ update public.site_settings set moments = '[{"id": "m", "photo": {"source": "static", "path": "demo-photos/x"}}]' where business_id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'an owner cannot add a static photo inside the settings JSON');
+select is(tests.exec_count($$ update public.site_settings set contacts = '{"phone": "+250 700 000 009"}' where business_id = '00000000-0000-0000-0000-00000000000a' $$), 1::bigint, 'an owner may edit other settings while the seed''s static photos stay');
+reset role;
+set local role service_role;
+select set_config('request.jwt.claims', '{"role": "service_role"}', true);
+select is(tests.exec_count($$ insert into public.media (business_id, place, alt, storage_path, source) values ('00000000-0000-0000-0000-00000000000a', 'hero', '{"en": "x"}', 'demo-photos/sneaky', 'static') $$), -1::bigint, 'not even the service role creates a static photo');
+select is(tests.exec_count($$ update public.site_settings set hero = '{"photo": {"source": "static", "path": "demo-photos/y"}}' where business_id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'not even the service role adds a static photo to the settings JSON');
+reset role;
+select set_config('request.jwt.claims', '', true);
 
 select * from finish();
 rollback;

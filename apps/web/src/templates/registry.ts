@@ -3,6 +3,7 @@ import type { PageId, TemplateId } from "@getkaze/core";
 import type { TemplateProps } from "./types";
 import FieldJournalBook from "./field-journal/book";
 import FieldJournalContact from "./field-journal/contact";
+import FieldJournalCredits from "./field-journal/credits";
 import FieldJournalHome from "./field-journal/home";
 import FieldJournalPrivacy from "./field-journal/privacy";
 import FieldJournalRooms from "./field-journal/rooms";
@@ -24,6 +25,7 @@ export const templates: Record<TemplateId, TemplatePages> = {
     contact: FieldJournalContact,
     book: FieldJournalBook,
     privacy: FieldJournalPrivacy,
+    credits: FieldJournalCredits,
   },
 };
 

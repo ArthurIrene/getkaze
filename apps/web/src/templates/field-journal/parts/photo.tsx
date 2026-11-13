@@ -1,5 +1,6 @@
 import type { IconKey, PhotoView } from "@getkaze/core";
 import { Drawing } from "./icons";
+import { LazyImg } from "./lazy-img";
 
 /**
  * A photo spot: the owner's photo (sizes from the device, plain srcset,
@@ -19,8 +20,7 @@ export function PhotoSpot({
   sizes?: string;
 }) {
   if (photo.src) {
-    // eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035)
-    return <img src={photo.src} srcSet={photo.srcset} sizes={photo.srcset ? sizes : undefined} alt={photo.alt} loading="lazy" decoding="async" className={`fj-photo ${className}`} />;
+    return <LazyImg src={photo.src} srcset={photo.srcset} sizes={sizes} alt={photo.alt} className={`fj-photo ${className}`} />;
   }
   return (
     <div role="img" aria-label={photo.alt} className={`fj-photo fj-ph ${className}`}>

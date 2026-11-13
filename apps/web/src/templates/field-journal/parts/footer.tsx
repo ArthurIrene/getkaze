@@ -6,7 +6,7 @@ import { pageHref } from "./links";
 export async function Footer({ site, locale, pages }: { site: SiteView; locale: Locale; pages: PageId[] }) {
   const t = await getTranslations("FieldJournal");
   const n = await getTranslations("Nav");
-  const links = (["contact", "privacy"] as const).filter((id) => pages.includes(id));
+  const links = (["contact", "privacy", "credits"] as const).filter((id) => pages.includes(id));
   return (
     <footer className="fj-footer">
       <span className="fj-footer-name">{site.name}</span>
