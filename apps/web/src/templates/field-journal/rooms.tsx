@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { whatsAppLink, type AmenityIcon } from "@getkaze/core";
 import type { TemplateProps } from "../types";
 import { FieldJournalPage } from "./parts/page";
+import { LazyImg } from "./parts/lazy-img";
 import { pageHref } from "./parts/links";
 import { Price } from "./parts/price";
 
@@ -50,8 +51,7 @@ export default async function FieldJournalRooms(props: TemplateProps) {
                 {(room.photos.length ? room.photos : [{ id: `${room.id}-ph`, alt: room.name, src: undefined }]).map((p, j) => (
                   <li key={p.id} className="fj-frame">
                     {p.src ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- plain img: no Vercel image optimizer (D-035)
-                      <img src={p.src} srcSet={"srcset" in p ? p.srcset : undefined} sizes="(min-width: 760px) 40vw, 85vw" alt={p.alt} loading="lazy" decoding="async" className="fj-photo" />
+                      <LazyImg src={p.src} srcset={"srcset" in p ? p.srcset : undefined} sizes="(min-width: 760px) 40vw, 85vw" alt={p.alt} className="fj-photo" />
                     ) : (
                       <div role="img" aria-label={p.alt} className="fj-photo fj-ph">
                         <svg viewBox="0 0 64 64" width="96" height="96" aria-hidden="true">

@@ -1,36 +1,38 @@
 # Demo photos: shot list (Kinigi Hills Lodge demo, Field Journal)
 
-Source: Unsplash (unsplash.com) or Pexels (pexels.com). Both are free for commercial use, no attribution required (we still record it in CREDITS.md). Don't use photos that show another real hotel's name or logo, and avoid close-up faces where possible.
+Status: built (branch `feature/demo-photos`, specs/demo-photos.md). This list matches what is in the repo.
 
-Pick photos that look like a mid-range Musanze lodge, not a luxury resort: wood, stone, green hills, simple rooms.
+## Sources and licences
+- Openverse (api.openverse.org), Wikimedia Commons source only; each licence and author checked on the Commons file page.
+- **Only CC0, Public Domain Mark or CC BY.** Never CC BY-SA, NC or ND. CC0 and Public Domain preferred.
+- No identifiable faces (guests, staff, trackers or visitors, wildlife photos included), no brand logos, no photo that shows a specific real hotel or lodge (the demo lodge is fake).
+- Every photo is listed in CREDITS.md and, on the site, on the "Photo credits" page (CC BY needs visible credit).
 
-| # | File name | Search terms | Used on | Size |
-|---|---|---|---|---|
-| 1 | hero-volcanoes.webp | "Rwanda volcanoes", "Virunga mountains", "Musanze" | Home hero | 1280 px wide |
-| 2 | terrace-view.webp | "lodge terrace mountains", "veranda hills Africa" | Home taped photo | 1000 px |
-| 3 | room1-bed.webp | "simple single bed room wood" | Garden Single | 1000 px |
-| 4 | room1-view.webp | "garden view window Africa" | Garden Single | 1000 px |
-| 5 | room1-bath.webp | "simple bathroom shower stone" | Garden Single | 800 px |
-| 6 | room2-bed.webp | "double bed room wooden lodge" | Garden Double | 1000 px |
-| 7 | room3-bed.webp | "lodge room view mountains bed" | Volcano View Double | 1000 px |
-| 8 | room3-view.webp | "balcony view volcano sunrise" | Volcano View Double | 1000 px |
-| 9 | room4-fireplace.webp | "cottage fireplace cozy room" | Family Cottage | 1000 px |
-| 10 | dining-room.webp | "rustic restaurant interior Africa evening" | At our table / fireside room | 1000 px |
-| 11 | breakfast.webp | "breakfast eggs coffee African" | Menu: trekker's breakfast | 800 px |
-| 12 | brochettes.webp | "brochettes grilled skewers" | Menu: goat brochettes | 800 px |
-| 13 | tilapia.webp | "grilled tilapia fish" | Menu | 800 px |
-| 14 | isombe.webp | "cassava leaves stew", "African vegetable stew" | Menu: isombe | 800 px |
-| 15 | coffee.webp | "Rwanda coffee cup" | Menu: coffee | 800 px |
-| 16 | gorilla.webp | "mountain gorilla" | Around us: gorilla trekking | 800 px |
-| 17 | golden-monkey.webp | "golden monkey" | Around us | 800 px |
-| 18 | twin-lakes.webp | "Lake Burera", "Lake Ruhondo", "lake canoe Rwanda" | Around us | 800 px |
-| 19 | garden.webp | "lodge garden flowers hills" | Life at the lodge | 800 px |
-| 20 | evening-fire.webp | "campfire evening lodge" | Life at the lodge | 800 px |
-| 21 | host.webp | "hotel host portrait smiling" (no famous faces) | Your host | 600 px |
+## Files
+- Folder: `apps/web/public/demo-photos/<name>/<width>.webp` (served by the app; seed data refers to it as a static photo, `media.source = 'static'`, seed-only).
+- Sizes: the editor's rules from `packages/core` (`photoLimits`, `widthsFor`): 480, 960 and 1440 px WebP, no upscaling, quality stepped down to 40 / 80 / 160 KB, every file under 300 KB, EXIF dropped. The hero comes from a 1920 px source (all three widths); the others from 1280 px sources (480 and 960), which is all they ever show at.
+- Made by `node scripts/demo-photos.mjs <originals> <manifest.json>`, which also writes `apps/web/src/data/demo-photos.ts`.
 
-## Shrinking (target under ~150 KB each)
-- Easiest: squoosh.app → WebP, quality ~75, resize to the width above.
-- Or on Ubuntu: `sudo apt install webp` then `cwebp -q 75 -resize 1000 0 input.jpg -o output.webp`
+| # | Name | Used on | Licence |
+|---|---|---|---|
+| 1 | hero-volcanoes | Home hero | CC BY 2.0 |
+| 2 | life-coffee | Life at the lodge: 5 a.m. coffee | CC0 |
+| 3 | life-fire | Life at the lodge: evening fire | CC0 |
+| 4 | life-garden | Life at the lodge: the garden | CC BY 2.0 |
+| 5 | life-trail | Life at the lodge: the forest trail (was "Bisoke stars") | CC BY 2.0 |
+| 6 | room-garden-single-bed | Garden Single | CC BY 2.0 |
+| 7 | room-garden-single-view | Garden Single | CC BY 2.0 |
+| 8 | room-garden-double-bed | Garden Double | CC BY 2.0 |
+| 9 | room-volcano-view | Volcano View Double | CC BY 4.0 |
+| 10 | room-volcano-view-2 | Volcano View Double | CC BY 2.0 |
+| 11 | room-cottage-fire | Family Cottage | CC BY 4.0 |
+| 12 | dining-fireside | At our table / the fireside room | CC BY 4.0 |
+| 13 | around-gorillas | Around us: gorilla trekking | CC BY 2.0 |
+| 14 | around-lakes | Around us: Twin Lakes | CC BY 4.0 |
 
-## Where they go
-`seed/demo-photos/` in the getkaze repo, plus `CREDITS.md` in the same folder.
+## Skipped (and why)
+- Host portrait (old #21): it would show a face. The host keeps the drawing.
+- Menu dishes (old #11–15: breakfast, brochettes, tilapia, isombe, coffee): no menu page yet. Dishes keep their drawings.
+- Golden monkeys, Musanze Caves, cultural village: no suitable CC0 / PD / CC BY photo without people; they keep their drawings.
+- Room bathrooms: no suitable photo; rooms show one or two photos.
+- Gallery: photos are stored, not shown (no gallery section).

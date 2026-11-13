@@ -685,3 +685,4 @@
 .fj-credits li { display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--line); padding-top: 10px; }
 .fj-credit-shows { font-weight: 600; }
 .fj-credits a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+

@@ -96,3 +96,22 @@ Rules:
 | Support team (who changed it) | Itsinda ry'abafasha | Changes.actor.support | draft |
 | Support read this change log | Abafasha basomye izi mpinduka | Changes.event.log_read | draft |
 | Older changes | Impinduka za kera | Changes.older | draft |
+
+### Demo photos (alt texts and the credits page; all draft)
+| English | Kinyarwanda (draft) | Used in | Status |
+|---|---|---|---|
+| Photo credits | Abafashe amafoto | Nav.credits, Credits.title | draft |
+| Volcanoes above green fields near Kinigi | Ibirunga hejuru y'imirima itoshye hafi ya Kinigi | demo hero alt | draft |
+| Coffee brewing on a wooden table | Ikawa itegurwa ku meza y'igiti | demo life alt | draft |
+| Flames of the evening fire | Umuriro wa nimugoroba | demo life alt | draft |
+| Wild flowers on the green hillside | Indabo zo ku musozi utoshye | demo life alt | draft |
+| A misty forest trail | Inzira yo mu ishyamba ririmo igihu | demo life alt | draft |
+| A bed in a wooden room | Uburiri mu cyumba cy'ibiti | demo room alt | draft |
+| Green hills and clouds | Imisozi itoshye n'ibicu | demo room alt | draft |
+| A double bed in a wooden room | Uburiri bunini mu cyumba cy'ibiti | demo room alt | draft |
+| Three volcanoes at sunset | Ibirunga bitatu izuba rirenga | demo room alt | draft |
+| The volcanoes over the fields | Ibirunga hejuru y'imirima | demo room alt | draft |
+| A wood fire in the fireplace | Umuriro w'inkwi mu ziko | demo room alt | draft |
+| The fireside, where dinner is served | Hafi y'iziko, aho ifunguro rya nimugoroba ritangirwa | demo dining alt | draft |
+| Mountain gorillas resting in the forest | Ingagi zo mu misozi ziruhukira mu ishyamba | demo around-us alt | draft |
+| Lake Ruhondo and its islands | Ikiyaga cya Ruhondo n'ibirwa byacyo | demo around-us alt | draft |

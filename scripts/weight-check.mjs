@@ -72,7 +72,7 @@ function kind(type, mime, url) {
   return "Other";
 }
 
-async function measure(browser, path, deviceScaleFactor = 1) {
+async function measure(browser, path, deviceScaleFactor = Number(process.env.WEIGHT_DPR ?? 1)) {
   const context = await browser.newContext({ viewport: { width: 360, height: 800 }, deviceScaleFactor, isMobile: true, hasTouch: true });
   const page = await context.newPage();
   const cdp = await context.newCDPSession(page);
@@ -179,6 +179,12 @@ async function heroFixture(browser) {
   if (!demo) throw new Error("the demo lodge is not in the database (seed)");
   const [b] = await sb("/rest/v1/businesses", { method: "POST", body: JSON.stringify({ slug: HERO_SLUG, name: "Weight Hero Lodge", legal_name: "Weight Hero Lodge", preset: "hotel_lodge", style: "lodge", languages: ["en", "rw"] }) });
   const { businesses: _b, business_id: _id, updated_at: _u, ...settings } = demo;
+  // The demo's own (static, seed-only) photos stay out of the copy: the database refuses them from any request with a key.
+  const noPhoto = ({ photo: _p, ...rest }) => rest;
+  settings.hero = noPhoto(settings.hero ?? {});
+  settings.dining = noPhoto(settings.dining ?? {});
+  settings.host = noPhoto(settings.host ?? {});
+  settings.moments = (settings.moments ?? []).map(noPhoto);
   await sb("/rest/v1/site_settings", { method: "POST", body: JSON.stringify({ ...settings, business_id: b.id }) });
   const folder = `${b.id}/${crypto.randomUUID()}`;
   const files = await heroFiles(browser);

@@ -44,3 +44,19 @@ describe("publicMediaUrl", () => {
     expect(publicMediaUrl(`${A}/${P}/480.webp`, "http://127.0.0.1:25321/")).toBe(`http://127.0.0.1:25321/storage/v1/object/public/business-media/${A}/${P}/480.webp`);
   });
 });
+
+describe("static demo photos and credits", () => {
+  it("builds the same srcset as uploads, from the app's own folder", async () => {
+    const { staticPhotoUrls, licenceLabel, needsAttribution } = await import("./media");
+    expect(staticPhotoUrls("demo-photos/hero-volcanoes", "webp", 1440)).toEqual({
+      src: "/demo-photos/hero-volcanoes/1440.webp",
+      srcset: "/demo-photos/hero-volcanoes/480.webp 480w, /demo-photos/hero-volcanoes/960.webp 960w, /demo-photos/hero-volcanoes/1440.webp 1440w",
+    });
+    expect(staticPhotoUrls("demo-photos/x", "webp", 960).srcset).toBe("/demo-photos/x/480.webp 480w, /demo-photos/x/960.webp 960w");
+    expect(() => staticPhotoUrls("../etc", "webp", 960)).toThrow();
+    expect(licenceLabel("cc-by-4.0")).toBe("CC BY 4.0");
+    expect(licenceLabel("cc0")).toBe("CC0 1.0");
+    expect(needsAttribution("cc-by-2.0")).toBe(true);
+    expect(needsAttribution("cc0")).toBe(false);
+  });
+});

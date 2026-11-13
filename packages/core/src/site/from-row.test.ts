@@ -98,3 +98,19 @@ describe("uploaded photos", () => {
     expect(bare.ok && bare.site.dining.photo.src).toBeUndefined();
   });
 });
+
+describe("static photos and credits", () => {
+  const credit = { title: "Volcanoes", author: "Nina R", source_url: "https://commons.wikimedia.org/wiki/File:V.jpg", licence: "cc-by-2.0", licence_url: "https://creativecommons.org/licenses/by/2.0/" };
+  it("a static photo gets app-relative URLs and its credit; a bad credit is dropped", () => {
+    const r = rowToSiteData({ ...row, media: [...row.media, { id: "h", itemId: null, place: "hero", position: 0, path: "demo-photos/hero-volcanoes", source: "static", format: "webp", alt: { en: "V" }, width: 1440, height: 960, credit }] }, "x", "https://s.example");
+    if (!r.ok) throw new Error(r.errors.join());
+    expect(r.site.hero.photo.src).toBe("/demo-photos/hero-volcanoes/1440.webp");
+    expect(r.site.hero.photo.credit).toEqual(credit);
+    const bad = rowToSiteData({ ...row, media: [...row.media, { id: "h", itemId: null, place: "hero", position: 0, path: "demo-photos/a", source: "static", alt: { en: "V" }, width: 960, credit: { ...credit, licence: "cc-by-sa-4.0" } }] }, "x");
+    expect(bad.ok && bad.site.hero.photo.credit).toBeUndefined();
+  });
+  it("a static path outside demo-photos/ is not a photo", () => {
+    const r = rowToSiteData({ ...row, media: [...row.media, { id: "h", itemId: null, place: "hero", position: 0, path: "../secret", source: "static", alt: { en: "V" } }] }, "x");
+    expect(r.ok && r.site.hero.photo.src).toBeUndefined();
+  });
+});

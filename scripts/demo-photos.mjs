@@ -15,7 +15,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
-import { photoLimits, widthsFor, photoLicences } from "../packages/core/src/media.ts";
+import { existsSync } from "node:fs";
+import { photoLimits, widthsFor, photoLicences, staticPhotoUrls } from "../packages/core/src/media.ts";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const [srcDir, manifestPath] = process.argv.slice(2);
@@ -31,6 +32,7 @@ const result = {};
 for (const [name, item] of Object.entries(manifest)) {
   if (!/^[a-z0-9](-?[a-z0-9])*$/.test(name)) throw new Error(`bad photo name ${name}`);
   if (!photoLicences.includes(item.credit.licence)) throw new Error(`${name}: licence ${item.credit.licence} is not allowed`);
+  if (!existsSync(join(srcDir, item.file))) throw new Error(`${name}: ${item.file} not found`);
   const original = readFileSync(join(srcDir, item.file)).toString("base64");
   // widthsFor needs the original width: read it first, then encode.
   const size = await page.evaluate(async (b64) => {
@@ -87,9 +89,10 @@ const lines = [
   " */",
   'import type { PhotoCredit } from "@getkaze/core";',
   "",
-  "export type DemoPhoto = { path: string; width: number; height: number; bytes: number; credit: PhotoCredit };",
+  "/** src and srcset come from core staticPhotoUrls (same rule as the guest site). */",
+  "export type DemoPhoto = { path: string; width: number; height: number; bytes: number; src: string; srcset: string; credit: PhotoCredit };",
   "",
-  `export const demoPhotos = ${JSON.stringify(Object.fromEntries(Object.entries(result).map(([k, v]) => [k, { path: v.path, width: v.width, height: v.height, bytes: v.bytes, credit: v.credit }])), null, 2)} as const satisfies Record<string, DemoPhoto>;`,
+  `export const demoPhotos = ${JSON.stringify(Object.fromEntries(Object.entries(result).map(([k, v]) => [k, { path: v.path, width: v.width, height: v.height, bytes: v.bytes, ...staticPhotoUrls(v.path, "webp", v.width), credit: v.credit }])), null, 2)} as const satisfies Record<string, DemoPhoto>;`,
   "",
   "export type DemoPhotoName = keyof typeof demoPhotos;",
   "",

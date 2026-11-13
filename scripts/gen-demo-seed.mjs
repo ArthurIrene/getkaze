@@ -8,9 +8,17 @@
  */
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
+import { register } from "node:module";
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const OUT = `${ROOT}supabase/seed.sql`;
+// demo-lodge.ts imports "./demo-photos" without an extension (as Next does); resolve such relative imports to .ts here.
+register(
+  "data:text/javascript," +
+    encodeURIComponent(
+      'export async function resolve(s, c, next) { try { return await next(s, c); } catch (e) { if (/^\\.\\.?\\//.test(s) && !/\\.[a-z]+$/.test(s)) return next(s + ".ts", c); throw e; } }',
+    ),
+);
 const { demoLodge: d } = await import(`${ROOT}apps/web/src/data/demo-lodge.ts`);
 
 const SLUG = "kinigi-hills";
@@ -68,20 +76,27 @@ lines.push(
   "",
 );
 
+/** A media row: placeholders (no path) or a static demo photo (seed-only, demo-photos.md). */
+const mediaRow = (p, item, position) => ({
+  id: id(`photo:${p.id}`), item, place: p.place, position, alt: p.alt,
+  source: p.source === "static" ? "static" : "storage", path: p.path ?? null, format: p.format ?? "webp",
+  width: p.width ?? null, height: p.height ?? null, credit: p.credit ?? null,
+});
 const items = [];
 const media = [];
 d.rooms.forEach((r, i) => {
   const iid = id(`room:${r.id}`);
   items.push({ id: iid, kind: "room_type", handle: r.id, position: i, name: r.name, line: r.line, rwf: r.price.rwf, usd: r.price.usd, maxGuests: r.maxGuests, amenities: r.amenities });
-  r.photos.forEach((p, k) => media.push({ id: id(`photo:${p.id}`), item: iid, place: p.place, position: k, alt: p.alt }));
+  r.photos.forEach((p, k) => media.push(mediaRow(p, iid, k)));
 });
 d.dining.dishes.forEach((x, i) => {
   const iid = id(`dish:${x.id}`);
   items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon });
-  media.push({ id: id(`photo:${x.photo.id}`), item: iid, place: x.photo.place, position: 0, alt: x.photo.alt });
+  media.push(mediaRow(x.photo, iid, 0));
 });
 d.activities.forEach((a, i) => {
   items.push({ id: id(`activity:${a.id}`), kind: "activity", handle: a.id, position: i, name: a.name, line: a.line, distance: a.distance, icon: a.icon, arrange: a.arrange });
+  if (a.photo) media.push(mediaRow(a.photo, id(`activity:${a.id}`), 0));
 });
 
 lines.push(
@@ -96,9 +111,12 @@ lines.push(
   `  price_rwf = excluded.price_rwf, price_usd = excluded.price_usd, max_guests = excluded.max_guests, amenities = excluded.amenities,`,
   `  icon = excluded.icon, distance = excluded.distance, arrange = excluded.arrange;`,
   "",
-  `insert into public.media (id, business_id, item_id, place, position, alt) values`,
-  media.map((m) => `  (${q(m.id)}, ${q(BID)}, ${q(m.item)}, ${q(m.place)}, ${m.position}, ${j(m.alt)})`).join(",\n"),
-  `on conflict (id) do update set item_id = excluded.item_id, place = excluded.place, position = excluded.position, alt = excluded.alt;`,
+  "-- The demo's own photo rows only: rows no longer in demo-lodge.ts go (fake demo data).",
+  `delete from public.media where business_id = ${q(BID)} and id not in (${media.map((m) => q(m.id)).join(", ")});`,
+  `insert into public.media (id, business_id, item_id, place, position, alt, source, storage_path, format, width, height, credit) values`,
+  media.map((m) => `  (${q(m.id)}, ${q(BID)}, ${q(m.item)}, ${q(m.place)}, ${m.position}, ${j(m.alt)}, ${q(m.source)}, ${q(m.path)}, ${q(m.format)}, ${m.width ?? "null"}, ${m.height ?? "null"}, ${j(m.credit)})`).join(",\n"),
+  `on conflict (id) do update set item_id = excluded.item_id, place = excluded.place, position = excluded.position, alt = excluded.alt,`,
+  `  source = excluded.source, storage_path = excluded.storage_path, format = excluded.format, width = excluded.width, height = excluded.height, credit = excluded.credit;`,
   "",
 );
 
