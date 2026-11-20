@@ -34,7 +34,7 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Decision:** Two service models: Managed and Owned (handover of code, data, hosting, domain, and logins, plus a fixed support window).
 - **Replaces:** none
 - **Reason:** Clients choose between low cost and full ownership.
-- **Status:** Confirmed (support window set by D-026)
+- **Status:** Confirmed (support window set by D-026; models restated by D-064)
 
 ## D-006 | 2026-11-07
 - **Decision:** Domains are registered in the client's name. Clients can export their data any time.
@@ -160,7 +160,7 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Decision:** Owned: quoted per client (guideline 1.5M to 3M RWF), 3 months support included, then optional paid maintenance plan.
 - **Replaces:** open support window (3 to 6 months) in D-005
 - **Reason:** Free support on a copy without our updates is costly for a solo builder.
-- **Status:** Confirmed (maintenance plan price open)
+- **Status:** Replaced by D-064
 
 ## D-027 | 2026-11-07
 - **Decision:** Guests always pay the business directly; we never hold guest money. Launch: show the business's own payment details, staff confirm by hand. Later: one licensed aggregator with per-business sub-merchant accounts and direct payout. Gateway choice postponed until a client needs it.
@@ -265,13 +265,13 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Decision:** Three templates: **Field Journal** (sketch-led scrapbook, one long story), **Imigongo** (bold poster, clear order, Rwandan geometric patterns, two colors + clay accent), **Cinematic** (full-screen photo scenes with an "All info" list fallback). Each has its own structure and motion; the action flows (booking, ordering, My booking, payment) are shared and only restyled.
 - **Replaces:** template names in D-007 and PROJECT.md §7 (warm lodge, modern/minimal, bold safari).
 - **Reason:** Original, Rwanda-rooted looks that still work with weak photos; one set of flows to maintain.
-- **Status:** Confirmed
+- **Status:** Amended by D-063 (Luxe added as a fourth template id; Imigongo and Cinematic unchanged)
 
 ## D-040 | 2026-11-10
 - **Decision:** Launch with **one template (Field Journal)** for hotels and lodges. Imigongo is built when we approach restaurants (Phase 2); Cinematic with the first client who buys the photo shoot. Variety until then comes from color sets, night mode and sections. Remaining pages of later templates can be generated after the first product is done.
 - **Replaces:** G1 requirement of 3 templates (BUILD_GUIDE §8). D-007 (neighbours get different templates) applies once all 3 exist.
 - **Reason:** Faster first sale, fewer bugs, sales target hotels first.
-- **Status:** Confirmed
+- **Status:** Amended by D-063 (Field Journal remains the default; Luxe is selectable per business)
 
 ## D-041 | 2026-11-10
 - **Decision:** Light motion kit for guest pages: CSS and native browser motion only (scroll-driven animation, View Transitions), transform and opacity only, about 2 KB of script, off for reduced motion and data saver, no scroll hijacking. Each template has its own motion language. Photo backgrounds allowed in all templates (shrunk, lazy-loaded). Optional hero video only: hero only, 5–8 s, muted, under ~600 KB, loads after the page, never on slow connections or data saver, never on menu/order/booking pages; mainly for Cinematic with the photo shoot.
@@ -411,3 +411,39 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Replaces:** the `<slug>.getkaze.rw` example in specs/business-by-host.md; refines D-051 ("temporary hosting under altavision.rw").
 - **Reason:** One company domain for every client site until clients bring their own (D-006); settings keep a later move cheap.
 - **Status:** Confirmed. Open: the list of subdomains Altavision already uses.
+
+## D-063 | 2026-11-20
+- **Decision:** Second guest template id **`luxe`**: photo-led, quiet luxury, for Hotel/Lodge. It sits beside Field Journal (`apps/web/src/templates/luxe/`), reads the same `SiteData`, and is chosen by `businesses.template` after host-based routing finds the business. Imigongo (restaurants) and Cinematic (photo-shoot clients) stay later. Home pages add none of our JavaScript. System font stacks first; a self-hosted heading subset only if the weight check still passes. Luxe-only home section ids, filtered by template in the editor. Photo cap **120**. No rating field. Real `/gallery` page. Stay plan: GET `/my-stay` and POST `/my-stay/send` (303 to `wa.me` only); optional vanilla script ≤ 2 KB; `localStorage` key `stay:<businessId>`; nothing about the plan is stored or logged. Spec: `specs/luxe-template.md`.
+- **Replaces:** amends D-039 (template set) and D-040 (Field Journal only at launch).
+- **Reason:** A paying-style second look without a client-specific front end (D-018) and without waiting for Imigongo or Cinematic.
+- **Status:** Confirmed
+
+## D-064 | 2026-11-20
+- **Decision:** All clients start **Managed** on the shared backbone with **3 months support**, then stay Managed or are ejected to an **independent system** (own database, hosting, logins) with an optional maintenance plan. The **eject script** copies all rows with that `business_id`, photos, owner login, template and domain into the client's own project. Templates and the owner editor share one data schema, so the copy keeps working. The ejection and handover **price is open** (the old guideline was 1.5M to 3M RWF).
+- **Replaces:** D-026 (Owned as a one-time quoted product with handover from day one).
+- **Reason:** One codebase and one database until a client leaves; handover is an exit, not a sales track.
+- **Status:** Confirmed (ejection, handover and maintenance plan prices open)
+
+## D-065 | 2026-11-20
+- **Decision:** Prospect demos may be **standalone generated pages**, sales tools only, never a client's live site. Conditions: **data only**, no client-specific logic; **nothing stored**; **noindex**; **deleted if the prospect declines**; **only the lodge's own public photos**. A demo admin with sample data may be shown ("Demo data, nothing is saved").
+- **Replaces:** the plan for personalized prospect demos on `altavision.rw` subdomains (EXECUTION_PLAN "Then" / day 14; ROADMAP after the demo client).
+- **Reason:** Live sites are real businesses on the platform. A pitch page must not share that routing, data or DNS.
+- **Status:** Confirmed
+
+## D-066 | 2026-11-20
+- **Decision:** Guest first view fails over 300 KB transferred (D-058). Guest JavaScript over 160 KB gzipped per page also FAILS the weight check (agreed in Chat 3, replaces the FLAG-only practice). Home pages add zero of our JavaScript; any of our script on other guest pages stays inside D-041 (about 2 KB, CSS/native motion, off for reduced motion and data saver). The Next.js/React runtime on guest pages counts toward the 160 KB. Current: 145.4 KB. `scripts/weight-check` is updated to enforce it in Batch 3b.
+- **Replaces:** D-058 "JS is reported but not enforced until the JS budget is set"; the Batch 0–3a FLAG-only practice for JS over 160 KB.
+- **Reason:** A cheap phone on slow 3G is the real guest (FEATURES.md §5). Failing at 160 KB stops the framework payload from growing; 145.4 KB today leaves a small margin.
+- **Status:** Confirmed
+
+## D-067 | 2026-11-20
+- **Decision:** **Zod is optional.** Specs may name it; the code uses plain checks in `packages/core` until Zod is explicitly approved as a dependency (version, exact pin, 14-day rule).
+- **Replaces:** none (clarifies D-035 listing Zod in the stack).
+- **Reason:** The stack list is a direction, not an install. Adding a library is a stop-and-ask item (D-052).
+- **Status:** Confirmed
+
+## D-068 | 2026-11-20
+- **Decision:** Guest photos are **three widths — 480, 960 and 1440 px** — made on the owner's device (WebP, JPEG fallback), served with a plain `<img srcset>`, no image optimizer. Targets about 40 / 80 / 160 KB; hard cap 300 KB per file. Hero on a 2× phone uses the 960 file (~80 KB).
+- **Replaces:** none (records the Batch 3a editor approval).
+- **Reason:** Predictable weight on 3G without a runtime image service (no Vercel-only optimizer).
+- **Status:** Confirmed

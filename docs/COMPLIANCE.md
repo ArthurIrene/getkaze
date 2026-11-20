@@ -18,6 +18,7 @@ Status: v1.0 (7 Nov 2026). Law No. 058/2021 on the protection of personal data a
    - Wording of the controller and processor roles for Managed clients (section 6).
    - Do server access logs at the hosting provider count as storage outside Rwanda here?
    - Review the draft privacy notice text (`apps/web/messages/en.json`, `Privacy`); the Kinyarwanda body is translated from the approved English.
+   - Do `/book/send` and `/my-stay/send` (a server step that only redirects to `wa.me`, nothing stored or logged) count as processing under Law No. 058/2021?
 
 ### Hosting countries
 - Supabase staging: Frankfurt, Germany (eu-central-1)

@@ -38,7 +38,7 @@ One core, many modules, switched on or off per business.
 - Discounts agreed per client, floor about 70% of list, discount setup before monthly, every discount recorded. 3 to 5 founding clients may get discounts or a free shoot for testimonials and photos.
 - Setup paid 50% at signing, 50% at go-live. Monthly fee starts at go-live (D-030).
 - Billing monthly, or yearly with 2 months free. Clients pay us by our MoMo/Airtel merchant code; invoices by WhatsApp. Domain billed yearly at cost, in the client's name.
-- **Owned:** quoted per client (guideline 1.5M to 3M RWF), 3 months support included, then optional paid maintenance plan (D-026).
+- **Owned** is an eject from Managed (D-064), not a separate product at signing. Ejection and handover price is open (old guideline 1.5M to 3M RWF); optional maintenance plan after.
 - Price review after the first 5 clients.
 
 ## 4. Core rules (default architecture)
@@ -48,7 +48,7 @@ One core, many modules, switched on or off per business.
 4. Templates only read data. No client-specific code, ever. Paid custom requests become general modules (on for that client first, offered to others later), or go to Owned or a paid custom front end (D-018).
 5. Customization order: settings first, then templates, then paid custom work.
 6. Clients own their domain and their data (export on request). We never hold domain or data hostage.
-7. Two service models: **Managed** (we host, recurring fee) and **Owned** (one-time price, handover, 3-month support window).
+7. Two service models: **Managed** (we host, recurring fee; every client starts here, with 3 months support) and **Owned** (an eject from Managed after that window, into the client's own database, hosting and logins, created by the eject script from their rows) (D-064).
 8. Roles are permission settings, not fixed code. One person can hold several roles.
 9. Mobile-first, light, and fast. Web (PWA) first for everyone. Native staff app (Expo) later, when time allows (D-037). Guests always use the web, never an app.
 10. WhatsApp and MTN MoMo / Airtel Money are first-class.
@@ -77,8 +77,8 @@ Owner, manager, receptionist, housekeeping, waiter, kitchen, bar, plus our platf
 - Shared database and backend, one monorepo, one folder per template.
 - Each client has its own domain in their name, pointed to our system; the system identifies the business by domain. Free subdomain fallback for demos and before a domain is bought.
 - Prices in RWF and USD, both entered manually. Online payments, when added, charge RWF.
-- **Managed:** full data access in the app with an export button. No direct database access.
-- **Owned:** separate database and deployment in their own account, built by copying their rows. No automatic platform updates.
+- **Managed:** full data access in the app with an export button. No direct database access. Every client starts here (D-064).
+- **Owned:** an eject from Managed after the 3-month support window, into the client's own database, hosting and logins, created by the eject script from their rows (`business_id`, photos, owner login, template and domain). Templates and the owner editor share one data schema. No automatic platform updates. Ejection and handover price is open.
 - **Data location:** personal data stored in Rwanda, or with NCSA authorization naming Supabase and Cloudflare. Phase 1 stores only owner logins. Stack kept portable so the database and app can move to a Rwanda host behind Cloudflare Tunnel (D-033, D-035).
 - Daily backups (30 days), monthly restore test, staging and live environments, demo client with fake data.
 
