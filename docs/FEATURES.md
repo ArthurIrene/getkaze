@@ -7,8 +7,9 @@ Status: v1.0 (7 Nov 2026). P1 = first milestone, P2 = after first paying client,
 |---|---|---|
 | Business settings | Name, logo, colors, fonts, contacts, map location, hours, languages, currency display, guest payment details | P1 |
 | Templates | 3 templates reading the same data; sections on or off | P1 |
-| Content editor | Phone-friendly forms: info, photos, items, prices (RWF and USD), translations, sections, template and colors; photo compression; safe limits; change log | P1 |
+| Content editor | Phone-friendly forms: info, photos, items, prices (RWF and USD), translations, sections, template and colors; photo compression; safe limits; change log; experiences; services; menu groups; several photos per item; Luxe flags (`signature`, `arranged_by`, optional `airport`) | P1 |
 | Platform admin (ours) | Create businesses, preset, module switches, subdomain and domain, billing record, discounts, grace period per client, overdue list with one-tap WhatsApp reminders, logged support access | P1 (billing and overdue list P1/P2) |
+| Eject | Copy a Managed business (`business_id` rows, photos, owner login, template, domain) into the client's own project (D-064) | P3 |
 | Module switches | On or off per business; locked modules shown as upgrades | P1 |
 | Click stats | Calls, WhatsApp taps, direction requests; monthly summary | P1 |
 | Languages | English required; Kinyarwanda and French optional; English fallback; a language gets its own indexed pages only when translated. Platform wording: Wording editor in platform admin (Batch 3): English beside Kinyarwanda per key, draft/checked status, database override → messages file → English (D-061) | P1 |

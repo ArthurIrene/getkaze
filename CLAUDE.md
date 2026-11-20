@@ -11,7 +11,7 @@ Source of truth: docs/PROJECT.md. If they differ, PROJECT.md wins.
 4. Templates only read data. No client-specific code, ever. Paid custom requests become general modules (on for that client first, offered to others later), or go to Owned or a paid custom front end (D-018).
 5. Customization order: settings first, then templates, then paid custom work.
 6. Clients own their domain and their data (export on request). We never hold domain or data hostage.
-7. Two service models: **Managed** (we host, recurring fee) and **Owned** (one-time price, handover, 3-month support window).
+7. Two service models: **Managed** (we host, recurring fee; every client starts here, with 3 months support) and **Owned** (an eject from Managed after that window, into the client's own database, hosting and logins, created by the eject script from their rows) (D-064).
 8. Roles are permission settings, not fixed code. One person can hold several roles.
 9. Mobile-first, light, and fast. Web (PWA) first for everyone. Native staff app (Expo) later, when time allows (D-037). Guests always use the web, never an app.
 10. WhatsApp and MTN MoMo / Airtel Money are first-class.
