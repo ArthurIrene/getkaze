@@ -15,7 +15,6 @@ export function PhotoSpot({
   }
   return (
     <img
-      src={photo.src}
       srcSet={photo.srcset}
       sizes={sizes}
       alt={photo.alt}
