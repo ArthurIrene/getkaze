@@ -51,3 +51,4 @@ export * from "./media";
 export * from "./editor";
 export * from "./editor-items";
 export * from "./change-log";
+export * from "./stay";
