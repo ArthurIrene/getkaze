@@ -35,13 +35,32 @@ export async function renderPage(page: PageId, locale: Locale, siteKey: string, 
   const { site, view } = await loadSite(siteKey, locale);
   let Page: ComponentType<TemplateProps> | undefined;
   if (site.template === "luxe") {
-    // Function-level dynamic import: Field Journal sites never load Luxe code.
-    const mod = await import("@/templates/luxe/home");
-    Page = mod.default as ComponentType<TemplateProps>;
+    // Function-level dynamic import: Field Journal sites never load Luxe code,
+    // and each Luxe page loads only its own module (zero Luxe JS on other pages).
+    const mod = await importPage(page);
+    Page = mod?.default as ComponentType<TemplateProps> | undefined;
   } else {
     Page = templates[site.template]?.[page];
   }
   const pages = availablePages(site.template, view);
   if (!Page || !pages.includes(page)) notFound();
   return <Page site={view} locale={locale} page={page} pages={pages} query={query} />;
+}
+
+/** One dynamic import per Luxe page, keyed by page id. Each page is its own chunk. */
+async function importPage(page: PageId): Promise<{ default: unknown } | undefined> {
+  switch (page) {
+    case "home":
+      return await import("@/templates/luxe/home");
+    case "rooms":
+      return await import("@/templates/luxe/rooms");
+    case "contact":
+      return await import("@/templates/luxe/contact");
+    case "book":
+      return await import("@/templates/luxe/book");
+    case "privacy":
+      return await import("@/templates/luxe/privacy");
+    default:
+      return undefined;
+  }
 }
