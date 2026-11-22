@@ -1,6 +1,6 @@
 -- Isolation test, storage part (specs/media-storage.md). Runs with `supabase test db`.
 -- Business A can never add, list or remove business B's photo files; names must be
--- <business_id>/<photo_id>/<480|960|1440>.<webp|jpg>; at most 60 photos (180 files);
+-- <business_id>/<photo_id>/<480|960|1440>.<webp|jpg>; at most 120 photos (360 files);
 -- admins need aal2 and an open support session. Rolled back at the end.
 begin;
 create extension if not exists pgtap with schema extensions;
@@ -118,19 +118,19 @@ update public.support_access set ended_at = now() where business_id = '00000000-
 select is(tests.put('00000000-0000-0000-0000-00000000000b/00000000-0000-0000-0000-0000000000f7/480.webp'), -1::bigint, 'admin after the session ended cannot add');
 reset role;
 
--- ---------- Count limit: 60 photos (180 files, 60 rows) ----------
+-- ---------- Count limit: 120 photos (360 files, 120 rows) ----------
 insert into storage.objects (bucket_id, name)
 select 'business-media', format('00000000-0000-0000-0000-00000000000a/%s/480.webp', gen_random_uuid())
-from generate_series(1, 180 - tests.files('00000000-0000-0000-0000-00000000000a/'));
+from generate_series(1, 360 - tests.files('00000000-0000-0000-0000-00000000000a/'));
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000a1", "role": "authenticated", "aal": "aal1"}', true);
-select is(tests.put('00000000-0000-0000-0000-00000000000a/00000000-0000-0000-0000-0000000000f8/480.webp'), -1::bigint, 'the 181st file is refused');
+select is(tests.put('00000000-0000-0000-0000-00000000000a/00000000-0000-0000-0000-0000000000f8/480.webp'), -1::bigint, 'the 361st file is refused');
 reset role;
 insert into public.media (business_id, place, alt)
 select '00000000-0000-0000-0000-00000000000a', 'gallery', '{"en": "x"}'
-from generate_series(1, 60 - (select count(*) from public.media where business_id = '00000000-0000-0000-0000-00000000000a'));
-select throws_ok($$ insert into public.media (business_id, place, alt) values ('00000000-0000-0000-0000-00000000000a', 'gallery', '{"en": "61st"}') $$,
-  '23514', null, 'the 61st photo is refused');
+from generate_series(1, 120 - (select count(*) from public.media where business_id = '00000000-0000-0000-0000-00000000000a'));
+select throws_ok($$ insert into public.media (business_id, place, alt) values ('00000000-0000-0000-0000-00000000000a', 'gallery', '{"en": "121st"}') $$,
+  '23514', null, 'the 121st photo is refused');
 
 -- ---------- Static photos are seed-only (demo-photos.md) ----------
 -- As postgres (migrations, seed): allowed. Any request with a JWT: refused, even the service role.
