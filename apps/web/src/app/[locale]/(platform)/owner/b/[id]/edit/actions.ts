@@ -8,7 +8,7 @@
  */
 import { redirect } from "next/navigation";
 import {
-  fullSections, moveItem, parseLook, parseMove, parseRoom, parseSections, roomHandle, roomTexts, type ModuleId, type RoomInput, type SectionSetting,
+  fullSections, moveItem, parseLook, parseMove, parseRoom, parseSections, parseTemplate, roomHandle, roomTexts, type ModuleId, type RoomInput, type SectionSetting,
   infoTexts, mediaBucket, mediaFile, mediaFolder, nextChecks, parseBusinessInfo, parseLanguages, parsePhotoDetails,
   photoLimits, photoProblems, widthsFor, type BusinessInfo, type LocalizedText, type PhotoType, type TranslationChecks,
 } from "@getkaze/core";
@@ -234,8 +234,15 @@ export async function saveSections(form: FormData) {
 // ---------- Look & colors ----------
 export async function saveLook(form: FormData) {
   const { locale, supabase, business } = await editor(form);
+  const back = (q: string) => redirect(`${editorHref(locale, business.id, "/look")}?${q}`);
   const look = parseLook(getter(form));
+  const template = parseTemplate(form.get("template"));
   const { error } = await supabase.from("site_settings").update({ look }).eq("business_id", business.id);
+  if (!error) {
+    const { error: tError } = await supabase.from("businesses").update({ template }).eq("id", business.id);
+    if (tError) back(`error=${tError.code}`);
+  }
+  if (error) back("error=save");
   refreshSite(business);
   redirect(`${editorHref(locale, business.id, "/look")}?${error ? "error=save" : "saved=1"}`);
 }
