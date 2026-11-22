@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { rowToSiteData, siteBaseUrl, type SiteData, type SiteKey } from "@getkaze/core";
 import { hostConfig, hostSettings } from "@/lib/hosts";
@@ -46,7 +47,7 @@ function guestClient(tag: string) {
   });
 }
 
-export async function getSite(key: Pick<SiteKey, "slug" | "host">): Promise<SiteData | null> {
+export const getSite = cache(async function getSite(key: Pick<SiteKey, "slug" | "host">): Promise<SiteData | null> {
   if (!key.slug && !key.host) return null;
   if (!supabaseConfigured()) return demoSite(key);
   const tag = `site:${key.slug ?? key.host}`;
@@ -57,7 +58,7 @@ export async function getSite(key: Pick<SiteKey, "slug" | "host">): Promise<Site
   const mapped = rowToSiteData(data, siteBaseUrl({ slug }, hostConfig()), supabaseEnv().url);
   if (!mapped.ok) throw new Error(`The published site "${slug}" is incomplete: ${mapped.errors.join("; ")}`);
   return mapped.site;
-}
+});
 
 /**
  * Sites to pre-render at build time. The database is never read during a

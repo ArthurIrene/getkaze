@@ -1,10 +1,9 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { platform } from "@getkaze/core";
 import { routing } from "@/i18n/routing";
-import { templateThemes } from "@/templates/registry";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -18,20 +17,6 @@ export const metadata: Metadata = {
   // (see CLAUDE.md "Never do" and specs/field-journal-template.md).
   robots: { index: false, follow: false },
 };
-
-/**
- * Browser bar colour per scheme: the template's paper colours (pwa-manifest.md).
- * Field Journal is the only template; per-business colours arrive with the editor.
- */
-export async function generateViewport(): Promise<Viewport> {
-  const theme = templateThemes["field-journal"]!;
-  return {
-    themeColor: [
-      { media: "(prefers-color-scheme: light)", color: theme.paper },
-      { media: "(prefers-color-scheme: dark)", color: theme.paperDark },
-    ],
-  };
-}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
