@@ -437,6 +437,8 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Tests: `pnpm typecheck` PASS; `pnpm lint` PASS (0 errors, 2 pre-existing warnings); `pnpm test` PASS (4 web); `pnpm build` PASS; `e2e/luxe-pages.spec.ts` PASS (7/7); `e2e/luxe-isolation.spec.ts` PASS.
 - Playwright at 360x800: Luxe home 3 image requests (hero + first room + first activity, all 480w), hero fetched once at 480w (no double-fetch), page height 3992px.
 - RWF/USD switch: pure CSS `:has()` on `data-cur` attribute, no JavaScript; verified `data-cur="usd"` on Luxe home, prices toggle via radio selection.
+- Polish (this session): cards without a photo render as text cards with no empty photo slot, equal heights, surface background + hairline border (`.tl-room`, `.tl-activity`); Around us uses a 2-3 column grid (3 desktop / 2 below 760px); all photo slots have aspect-ratio 4/3 with object-fit: cover (no stretching); section headings get `scroll-margin-top` to clear the 4rem sticky header; removed unused `PhotoSpot` import from `table.tsx`. 3-photo rule preserved.
+- luxe.css: 19216 B -> 19717 B.
 - Deviations: none.
 - Next: Luxe L4 (after L3c merges; L3c is in progress).
 

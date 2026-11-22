@@ -14,7 +14,7 @@ export async function Rooms({ site }: TemplateProps) {
           const [first] = room.photos;
           return (
             <li key={room.id} className="tl-room">
-              {i === 0 && first ? <PhotoSpot photo={first} sizes="(min-width: 760px) 50vw, 100vw" /> : <div className="tl-ph" aria-label={room.name} style={{ height: 180 }} />}
+              {i === 0 && first ? <PhotoSpot photo={first} sizes="(min-width: 760px) 50vw, 100vw" /> : null}
               <span className="tl-tag"><Price price={room.price} /></span>
               <h3 className="tl-room-name">{room.name}</h3>
               <p className="tl-room-line">{room.line}</p>

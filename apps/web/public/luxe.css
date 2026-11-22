@@ -195,6 +195,7 @@ html {
   margin: 0 0 12px;
   border-bottom: 1px solid var(--border);
   padding-bottom: 6px;
+  scroll-margin-top: calc(var(--tl-header-h) + 1rem);
 }
 .tl-grid {
   display: grid;
@@ -213,10 +214,13 @@ html {
     linear-gradient(90deg, var(--tl-line) 1px, transparent 1px);
   background-size: 48px 48px;
   border-radius: 2px;
+  aspect-ratio: 4 / 3;
 }
 .tl-img {
   display: block;
   border-radius: 2px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 /* Focus ring. */
@@ -432,21 +436,25 @@ html {
   gap: 16px;
 }
 .tl-room {
-  position: relative;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--tl-surface);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  background: var(--tl-surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
 }
 .tl-room .tl-img {
   width: 100%;
-  height: 200px;
+  height: auto;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
 }
 .tl-room .tl-ph {
-  height: 200px;
+  height: auto;
+  aspect-ratio: 4 / 3;
 }
 .tl-tag {
   position: absolute;
@@ -493,10 +501,23 @@ html {
 }
 
 /* Around: activities with name, line, distance. */
+.tl-around .tl-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 760px) {
+  .tl-around .tl-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 .tl-activity {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  height: 100%;
+  background: var(--tl-surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
 }
 .tl-activity-name {
   font-size: 1rem;
