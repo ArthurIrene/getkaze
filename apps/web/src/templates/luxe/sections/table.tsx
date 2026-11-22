@@ -1,5 +1,4 @@
 import type { TemplateProps } from "../../types";
-import { PhotoSpot } from "../parts/photo";
 import { Price } from "../parts/price";
 
 /** Table: the dining name and dishes with prices. */

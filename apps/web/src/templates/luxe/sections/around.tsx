@@ -11,7 +11,7 @@ export async function Around({ site }: TemplateProps) {
       <ul className="tl-grid">
         {site.activities.map((a, i) => (
           <li key={a.id} className="tl-activity">
-            {i === 0 && a.photo ? <PhotoSpot photo={a.photo} sizes="(min-width: 760px) 50vw, 100vw" /> : <div className="tl-ph" aria-label={a.name} style={{ height: 160 }} />}
+            {i === 0 && a.photo ? <PhotoSpot photo={a.photo} sizes="(min-width: 760px) 50vw, 100vw" /> : null}
             <h3 className="tl-activity-name">{a.name}</h3>
             <p className="tl-activity-line">{a.line}</p>
             <span className="tl-activity-distance">{a.distance}</span>
