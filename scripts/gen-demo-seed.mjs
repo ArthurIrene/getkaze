@@ -24,9 +24,12 @@ const { demoLodge, demoLuxe } = await import(`${ROOT}apps/web/src/data/demo-lodg
 const PUBLISHED_AT = "2026-11-12T00:00:00Z";
 const DOLLAR = "$" + "json" + "$";
 
-/** A stable UUID from a name (same input, same id), so re-running updates rows instead of adding them. */
-function id(name) {
-  const h = createHash("sha1").update(`getkaze-demo:${name}`).digest("hex");
+/** A stable UUID from a name (same input, same id), so re-running updates rows instead of adding them.
+ *  A `scope` (business key) is mixed into the hash so the same logical id is unique per business.
+ *  Kinigi Hills keeps scope undefined so its block stays byte-identical; Luxe Musanze passes its bidKey. */
+function id(name, scope) {
+  const input = scope ? `getkaze-demo:${scope}:${name}` : `getkaze-demo:${name}`;
+  const h = createHash("sha1").update(input).digest("hex");
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-5${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`;
 }
 const q = (v) => (v === null || v === undefined ? "null" : `'${String(v).replace(/'/g, "''")}'`);
@@ -45,6 +48,8 @@ const businesses = [
 function businessLines(d, slug, bidKey) {
   const style = styleOf[d.propertyStyle];
   const bid = id(bidKey);
+  // Kinigi Hills keeps scope undefined (byte-identical block); Luxe Musanze mixes its bidKey in.
+  const scope = bidKey === "business" ? undefined : bidKey;
   const lines = [
     `insert into public.businesses (id, slug, name, legal_name, preset, style, template, status, default_currency, languages)`,
     `values (${q(bid)}, ${q(slug)}, ${q(d.name)}, ${q(d.legalName)}, 'hotel_lodge', ${q(style)}, ${q(d.template)}, 'active', ${q(d.defaultCurrency)}, ${arr(d.languages)})`,
@@ -82,25 +87,25 @@ function businessLines(d, slug, bidKey) {
 
   /** A media row: placeholders (no path) or a static demo photo (seed-only, demo-photos.md). */
   const mediaRow = (p, item, position) => ({
-    id: id(`photo:${p.id}`), item, place: p.place, position, alt: p.alt,
+    id: id(`photo:${p.id}`, scope), item, place: p.place, position, alt: p.alt,
     source: p.source === "static" ? "static" : "storage", path: p.path ?? null, format: p.format ?? "webp",
     width: p.width ?? null, height: p.height ?? null, credit: p.credit ?? null,
   });
   const items = [];
   const media = [];
   d.rooms.forEach((r, i) => {
-    const iid = id(`room:${r.id}`);
+    const iid = id(`room:${r.id}`, scope);
     items.push({ id: iid, kind: "room_type", handle: r.id, position: i, name: r.name, line: r.line, rwf: r.price.rwf, usd: r.price.usd, maxGuests: r.maxGuests, amenities: r.amenities });
     r.photos.forEach((p, k) => media.push(mediaRow(p, iid, k)));
   });
   d.dining.dishes.forEach((x, i) => {
-    const iid = id(`dish:${x.id}`);
+    const iid = id(`dish:${x.id}`, scope);
     items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon });
     media.push(mediaRow(x.photo, iid, 0));
   });
   d.activities.forEach((a, i) => {
-    items.push({ id: id(`activity:${a.id}`), kind: "activity", handle: a.id, position: i, name: a.name, line: a.line, distance: a.distance, icon: a.icon, arrange: a.arrange });
-    if (a.photo) media.push(mediaRow(a.photo, id(`activity:${a.id}`), 0));
+    items.push({ id: id(`activity:${a.id}`, scope), kind: "activity", handle: a.id, position: i, name: a.name, line: a.line, distance: a.distance, icon: a.icon, arrange: a.arrange });
+    if (a.photo) media.push(mediaRow(a.photo, id(`activity:${a.id}`, scope), 0));
   });
 
   lines.push(
