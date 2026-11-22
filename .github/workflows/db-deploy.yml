@@ -35,7 +35,6 @@ jobs:
     timeout-minutes: 15
     environment: supabase-staging
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
       SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
@@ -45,10 +44,10 @@ jobs:
         id: settings
         run: |
           missing=()
-          for v in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD SUPABASE_PROJECT_REF; do
+          for v in SUPABASE_DB_PASSWORD SUPABASE_PROJECT_REF; do
             if [ -z "${!v}" ]; then missing+=("$v"); fi
           done
-          if [ ${#missing[@]} -eq 3 ]; then
+          if [ ${#missing[@]} -eq 2 ]; then
             echo "::notice title=DB deploy skipped::staging not configured (no secrets or variables in the supabase-staging environment). See specs/db-testing-and-migrations.md."
             echo "configured=false" >> "$GITHUB_OUTPUT"
           elif [ ${#missing[@]} -gt 0 ]; then
@@ -78,18 +77,26 @@ jobs:
         if: steps.settings.outputs.configured == 'true'
         run: node scripts/check-migrations.mjs
 
-      - name: Link the staging project
+      - name: Build database URL for session pooler (Frankfurt, eu-central-1)
         if: steps.settings.outputs.configured == 'true'
-        run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+        id: dburl
+        run: |
+          # Session pooler endpoint for eu-central-1 (Frankfurt)
+          # Format: postgresql://postgres.<project_ref>:<password>@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
+          db_url="postgresql://postgres.${SUPABASE_PROJECT_REF}:${SUPABASE_DB_PASSWORD}@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+          # Mask the password in the URL for logs
+          masked_url="postgresql://postgres.${SUPABASE_PROJECT_REF}:****@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+          echo "db_url=${db_url}" >> "$GITHUB_OUTPUT"
+          echo "::notice title=Database URL built::Using session pooler (eu-central-1): ${masked_url}"
 
       - name: Dry run (what would be applied)
         if: steps.settings.outputs.configured == 'true'
-        run: supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"
+        run: supabase db push --dry-run --db-url "${{ steps.dburl.outputs.db_url }}"
 
       - name: Apply new migrations
         if: steps.settings.outputs.configured == 'true'
-        run: supabase db push --password "$SUPABASE_DB_PASSWORD"
+        run: supabase db push --db-url "${{ steps.dburl.outputs.db_url }}"
 
       - name: Apply the demo seed (manual runs only, when asked)
         if: steps.settings.outputs.configured == 'true' && github.event_name == 'workflow_dispatch' && inputs.seed_demo
-        run: supabase db push --include-seed --password "$SUPABASE_DB_PASSWORD"
+        run: supabase db push --include-seed --db-url "${{ steps.dburl.outputs.db_url }}"
