@@ -464,3 +464,11 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Migration: None (no stored data).
 - Next session starts here: L5-2 `/my-stay/send` route + optional script.
 
+## Luxe L5-2: /my-stay/send route (POST to WhatsApp) | 2026-11-22
+- Built: `apps/web/src/app/[locale]/site/[site]/my-stay/send/route.ts` (server action, no JS); `packages/core/src/stay.ts` with `parseStayRequest`, `stayTarget` (wa.me from stored WhatsApp only, no open redirect), `stayMessage` (i18n en/rw/fr, capped: name 80, note 500, message 1,200 chars, body 8 KB). Form on my-stay page posts to this route.
+- Core: added `stay` export to core index.
+- Tests: `pnpm typecheck`, `pnpm lint`, `pnpm test` (135 core + 4 web), `pnpm build` — all green.
+- Weight-check: Not run (requires local Supabase).
+- Migration: None (no stored data).
+- Next session starts here: L4-1 Experiences list page.
+
