@@ -430,7 +430,7 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Tests: `pnpm typecheck`, `pnpm lint` (0 errors; 2 intentional warnings), `pnpm build` green; `pnpm test` (4 web + 135 core); `e2e/luxe-pages.spec.ts` PASS; `e2e/luxe-isolation.spec.ts` PASS.
 - Luxe runtime check: RUN green — local Supabase seeded with demoLuxe; Luxe pages return 200, hero fetches one 480w file, plain srcSet, zero next/image; Field Journal `/` unchanged.
 
-## Luxe template L3c: demo visual look ported (in progress, rebased onto L3b) | 2026-11-22
+## Luxe template L3c: demo visual look ported | 2026-11-22
 - Rebased `feature/luxe-l3c` onto `origin/staging` (L3b merged, PR #15). Squashed L3c look changes into commits on top of L3b; all L3b behaviour preserved: rooms/contact/book/privacy pages from SiteView, e2e tests, Luxe namespace messages, hero single-fetch, home photos trimmed to hero/first room/first activity.
 - Built: `apps/web/public/luxe.css` tokens/base + header/footer/sticky-bar/hero/rooms/sections CSS (all `.tl`-scoped, hand-written plain CSS, demo palette `#efece6` paper, `#1f1e1c` ink, `#4a5a44` accent), plus L3b subpage CSS (`.tl-subpage-*`, `.tl-room-block`, `.tl-contact-btn`, `.tl-book`, `.tl-field`, `.tl-choice`, `.tl-step`, `.tl-send`, `.tl-legal`) restyled in L3c palette/fonts. `message/en.json` and `messages/rw.json` use L3b's Luxe namespace keys (including `contactCallUs`/`contactEmailUs`). `apps/web/src/templates/luxe/theme.ts` updated to demo palette; `theme.test.ts` updated. `PhotoSpot` gained `fetchPriority` prop, uses srcset+sizes only (no `src`). Hero: cover image + scrim + copy overlay, `fetchPriority="high"`, `loading="lazy"`, no eager/preload. Header: Rooms/Contact menu only; Book in sticky bar; Privacy in footer. `registry.ts`, `/book/send`, migrations untouched.
 - Weight-check (local Supabase, env exported): Field Journal `/` PASS — CSS 10.2 KB (2 files), JS 145.4 KB (7 files), total 206.0 KB (unchanged). Luxe home `/s/luxe-musanze` PASS — CSS 13.5 KB (3 files), JS 145.4 KB (7 files), Images 118.0 KB (3), total 284.1 KB (under 300 KB budget). luxe.css: 19,216 B (was 13,880 B before subpage CSS).
@@ -441,4 +441,17 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - luxe.css: 19216 B -> 19717 B.
 - Deviations: none.
 - Next: Luxe L4 (after L3c merges; L3c is in progress).
+
+## Luxe L4/L5 Step 0: Extend Luxe demo data with L1 fields | 2026-11-22
+- Built: Extended `demoLuxe` in `apps/web/src/data/demo-lodge.ts` with all L1 fields:
+  - Activities: `category` (wildlife/hiking/culture), `duration`, `whatToBring`, `arrangedBy`, `goodToKnow`, `photos[]` with `place: "activity"` using existing demo photo handles
+  - Dining: `groups` (CatalogGroup with handles `starters`, `mains`, `drinks`), `groupId` on dishes, `signature` flag
+  - Rooms: `body`, `size` fields
+  - Site settings: `featuredRoomIds`, `intro`, `closing`
+  - Updated `scripts/gen-demo-seed.mjs` to emit `catalog_groups`, extra `catalog_items` fields, `site_settings` extras, activity photos with `place: "activity"`
+  - Regenerated `supabase/seed.sql` (idempotent, Kinigi Hills block byte-identical)
+- Tests: `pnpm typecheck`, `pnpm lint`, `pnpm test` (135 core + 4 web), `pnpm build` — all green. `node scripts/gen-demo-seed.mjs --check` passes.
+- Weight-check: Not run (data-only change, no guest UI affected).
+- Migration: None (seed only).
+- Next session starts here: L5-1 `/my-stay` GET form.
 
