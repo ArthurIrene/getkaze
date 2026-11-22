@@ -7,7 +7,6 @@ export async function Table({ site }: TemplateProps) {
   return (
     <section className="tl-section tl-table" aria-labelledby="tl-table">
       <h2 id="tl-table" className="tl-section-title">{site.dining.name}</h2>
-      {site.dining.photo.src ? <PhotoSpot photo={site.dining.photo} /> : <div className="tl-ph" aria-label={site.dining.photo.alt} style={{ height: 240 }} />}
       <ul className="tl-grid">
         {site.dining.dishes.map((d) => (
           <li key={d.id} className="tl-dish">
