@@ -1,11 +1,13 @@
+import { getTranslations } from "next-intl/server";
 import type { TemplateProps } from "../../types";
 import { PhotoSpot } from "../parts/photo";
 
 /** Around: activities with name, line, distance and optional photo. */
 export async function Around({ site }: TemplateProps) {
+  const t = await getTranslations("Luxe");
   return (
     <section className="tl-section tl-around">
-      <h2 className="tl-section-title">Around us</h2>
+      <h2 className="tl-section-title">{t("around")}</h2>
       <ul className="tl-grid">
         {site.activities.map((a) => (
           <li key={a.id} className="tl-activity">
