@@ -68,22 +68,43 @@ function businessLines(d, slug, bidKey) {
       address: d.location.address,
     },
     dining: { name: d.dining.name, photo: d.dining.photo },
+    // L1 extra settings fields
+    featured_room_handles: d.featuredRoomHandles ?? [],
+    intro: d.intro ?? null,
+    closing: d.closing ?? null,
   };
   lines.push(
-    `insert into public.site_settings (business_id, contacts, location, hours, payment, booking_payments, stay, sections, hero, facts, moments, dining, host, reviews, rooms_line, seo_description, published_at)`,
+    `insert into public.site_settings (business_id, contacts, location, hours, payment, booking_payments, stay, sections, hero, facts, moments, dining, host, reviews, rooms_line, seo_description, published_at, featured_room_handles, intro, closing)`,
     `values (${q(bid)}, ${j(settings.contacts)}, ${j(settings.location)}, ${j(d.hours)}, ${j(d.payment)}, ${arr(d.bookingPayments)},`,
     `  ${j(d.stay)}, ${j(d.sections)}, ${j(d.hero)}, ${j(d.facts)}, ${j(d.moments)}, ${j(settings.dining)},`,
-    `  ${j(d.host)}, ${j(d.reviews)}, ${j(d.roomsLine ?? null)}, ${j(d.seoDescription ?? null)}, ${q(PUBLISHED_AT)})`,
+    `  ${j(d.host)}, ${j(d.reviews)}, ${j(d.roomsLine ?? null)}, ${j(d.seoDescription ?? null)}, ${q(PUBLISHED_AT)},`,
+    `  ${j(settings.featured_room_handles)}, ${j(settings.intro)}, ${j(settings.closing)})`,
     `on conflict (business_id) do update set contacts = excluded.contacts, location = excluded.location, hours = excluded.hours, payment = excluded.payment,`,
     `  booking_payments = excluded.booking_payments, stay = excluded.stay, sections = excluded.sections, hero = excluded.hero, facts = excluded.facts,`,
     `  moments = excluded.moments, dining = excluded.dining, host = excluded.host, reviews = excluded.reviews, rooms_line = excluded.rooms_line,`,
-    `  seo_description = excluded.seo_description, published_at = excluded.published_at;`,
+    `  seo_description = excluded.seo_description, published_at = excluded.published_at,`,
+    `  featured_room_handles = excluded.featured_room_handles, intro = excluded.intro, closing = excluded.closing;`,
     "",
     `insert into public.business_modules (business_id, module_id, enabled)`,
     `select ${q(bid)}, m.id, m.id = any (${arr(d.modulesOn)}) from public.modules m where 'hotel_lodge' = any (m.presets)`,
     `on conflict (business_id, module_id) do update set enabled = excluded.enabled;`,
     "",
   );
+
+  // catalog_groups (L1)
+  if (d.groups && d.groups.length > 0) {
+    lines.push(
+      `insert into public.catalog_groups (id, business_id, kind, handle, position, name, visible) values`,
+      d.groups
+        .map(
+          (g) =>
+            `  (${q(id(`group:${g.id}`, scope))}, ${q(bid)}, ${q(g.kind)}, ${q(g.handle)}, ${g.position}, ${j(g.name)}, true)`,
+        )
+        .join(",\n"),
+      `on conflict (id) do update set handle = excluded.handle, position = excluded.position, name = excluded.name, visible = excluded.visible;`,
+      "",
+    );
+  }
 
   /** A media row: placeholders (no path) or a static demo photo (seed-only, demo-photos.md). */
   const mediaRow = (p, item, position) => ({
@@ -95,30 +116,56 @@ function businessLines(d, slug, bidKey) {
   const media = [];
   d.rooms.forEach((r, i) => {
     const iid = id(`room:${r.id}`, scope);
-    items.push({ id: iid, kind: "room_type", handle: r.id, position: i, name: r.name, line: r.line, rwf: r.price.rwf, usd: r.price.usd, maxGuests: r.maxGuests, amenities: r.amenities });
+    items.push({ id: iid, kind: "room_type", handle: r.id, position: i, name: r.name, line: r.line, body: r.body, size: r.size, rwf: r.price.rwf, usd: r.price.usd, maxGuests: r.maxGuests, amenities: r.amenities });
     r.photos.forEach((p, k) => media.push(mediaRow(p, iid, k)));
   });
   d.dining.dishes.forEach((x, i) => {
     const iid = id(`dish:${x.id}`, scope);
-    items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon });
+    items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, line: x.line ?? null, body: x.body ?? null, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon, groupId: x.groupId ?? null, signature: x.signature ?? false });
     media.push(mediaRow(x.photo, iid, 0));
+    if (x.photos) {
+      x.photos.forEach((p, k) => media.push(mediaRow(p, iid, k)));
+    }
   });
   d.activities.forEach((a, i) => {
-    items.push({ id: id(`activity:${a.id}`, scope), kind: "activity", handle: a.id, position: i, name: a.name, line: a.line, distance: a.distance, icon: a.icon, arrange: a.arrange });
-    if (a.photo) media.push(mediaRow(a.photo, id(`activity:${a.id}`, scope), 0));
+    const actId = id(`activity:${a.id}`, scope);
+    items.push({ 
+      id: actId, 
+      kind: "activity", 
+      handle: a.id, 
+      position: i, 
+      name: a.name, 
+      line: a.line, 
+      distance: a.distance, 
+      icon: a.icon, 
+      arrange: a.arrange,
+      category: a.category ?? null,
+      duration: a.duration ?? null,
+      body: a.body ?? null,
+      whatToBring: a.whatToBring ?? null,
+      arrangedBy: a.arrangedBy ?? null,
+      goodToKnow: a.goodToKnow ?? null,
+      signature: a.signature ?? false,
+    });
+    if (a.photo) media.push(mediaRow(a.photo, actId, 0));
+    if (a.photos) {
+      a.photos.forEach((p, k) => media.push(mediaRow(p, actId, k)));
+    }
   });
 
   lines.push(
-    `insert into public.catalog_items (id, business_id, kind, handle, position, name, line, price_rwf, price_usd, max_guests, amenities, icon, distance, arrange) values`,
+    `insert into public.catalog_items (id, business_id, kind, handle, position, name, line, body, size, rwf, usd, max_guests, amenities, icon, distance, arrange, category, duration, what_to_bring, arranged_by, good_to_know, signature, airport, group_id) values`,
     items
       .map(
         (x) =>
-          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"})`,
+          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line)}, ${j(x.body ?? null)}, ${j(x.size ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"}, ${j(x.category ?? null)}, ${j(x.duration ?? null)}, ${j(x.whatToBring ?? null)}, ${q(x.arrangedBy ?? null)}, ${j(x.goodToKnow ?? null)}, ${x.signature ? "true" : "false"}, ${x.airport ? "true" : "false"}, ${q(x.groupId ?? null)})`,
       )
       .join(",\n"),
     `on conflict (id) do update set handle = excluded.handle, position = excluded.position, name = excluded.name, line = excluded.line,`,
-    `  price_rwf = excluded.price_rwf, price_usd = excluded.price_usd, max_guests = excluded.max_guests, amenities = excluded.amenities,`,
-    `  icon = excluded.icon, distance = excluded.distance, arrange = excluded.arrange;`,
+    `  body = excluded.body, size = excluded.size, price_rwf = excluded.price_rwf, price_usd = excluded.price_usd, max_guests = excluded.max_guests, amenities = excluded.amenities,`,
+    `  icon = excluded.icon, distance = excluded.distance, arrange = excluded.arrange, category = excluded.category, duration = excluded.duration,`,
+    `  what_to_bring = excluded.what_to_bring, arranged_by = excluded.arranged_by, good_to_know = excluded.good_to_know,`,
+    `  signature = excluded.signature, airport = excluded.airport, group_id = excluded.group_id;`,
     "",
     `-- The demo's own photo rows only: rows no longer in demo-lodge.ts go (fake demo data).`,
     `delete from public.media where business_id = ${q(bid)} and id not in (${media.map((m) => q(m.id)).join(", ")});`,

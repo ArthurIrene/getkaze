@@ -233,7 +233,18 @@ export const demoLuxe: SiteData = {
     },
   ],
   moments: demoLodge.moments,
-  rooms: demoLodge.rooms.slice(0, 2),
+  rooms: [
+    {
+      ...demoLodge.rooms[0],
+      body: { en: "A quiet single room with a comfortable bed, private shower and a window onto the garden. Ideal for solo trekkers who value an early night." },
+      size: { en: "18 m²" },
+    },
+    {
+      ...demoLodge.rooms[1],
+      body: { en: "A spacious double with a queen bed, writing desk and morning sun on the garden. Perfect for a restful stay before an early trek." },
+      size: { en: "24 m²" },
+    },
+  ],
   roomsLine: { en: "two rooms, one view", rw: "ibyumba bine, ahantu hamwe ho kureba" },
   stay: {
     checkIn: "15:00",
@@ -244,8 +255,71 @@ export const demoLuxe: SiteData = {
   dining: {
     ...demoLodge.dining,
     name: { en: "the mountain table" },
+    dishes: [
+      { ...demoLodge.dining.dishes[0], groupId: "starters", signature: true },
+      { ...demoLodge.dining.dishes[1], groupId: "mains" },
+      { ...demoLodge.dining.dishes[2], groupId: "drinks", signature: true },
+    ],
   },
-  activities: demoLodge.activities,
+  groups: [
+    { id: "grp-1", kind: "dish", name: { en: "Starters" }, position: 0 },
+    { id: "grp-2", kind: "dish", name: { en: "Mains" }, position: 1 },
+    { id: "grp-3", kind: "drink", name: { en: "Drinks" }, position: 2 },
+  ],
+  activities: [
+    {
+      ...demoLodge.activities[0],
+      category: "wildlife",
+      duration: { en: "Full day (6–8 hours)" },
+      whatToBring: [{ en: "Sturdy hiking boots" }, { en: "Rain jacket" }, { en: "Long trousers" }, { en: "Gloves" }],
+      arrangedBy: "own_guides",
+      goodToKnow: { en: "Permits must be booked months in advance. We handle the booking for you." },
+      photos: [
+        shot("around-gorillas", "a-gorillas-1", "activity", "Mountain gorillas resting in the forest", "Ingagi zo mu misozi ziruhukira mu ishyamba"),
+      ],
+    },
+    {
+      ...demoLodge.activities[1],
+      category: "wildlife",
+      duration: { en: "Half day (3–4 hours)" },
+      whatToBring: [{ en: "Light hiking shoes" }, { en: "Rain jacket" }],
+      arrangedBy: "own_guides",
+      goodToKnow: { en: "Less strenuous than gorilla trekking. Great for families." },
+      photos: [],
+    },
+    {
+      ...demoLodge.activities[2],
+      category: "culture",
+      duration: { en: "2 hours" },
+      whatToBring: [{ en: "Comfortable shoes" }, { en: "Headlamp (provided)" }],
+      arrangedBy: "licensed_partner",
+      goodToKnow: { en: "The caves are dark and uneven underfoot. A guide is required." },
+      photos: [],
+    },
+    {
+      ...demoLodge.activities[3],
+      category: "hiking",
+      duration: { en: "Half day (3–4 hours)" },
+      whatToBring: [{ en: "Sun hat" }, { en: "Water bottle" }, { en: "Light shoes" }],
+      arrangedBy: "own_guides",
+      goodToKnow: { en: "Canoe trip is optional; you can also just enjoy the lakeside lunch." },
+      photos: [
+        shot("around-lakes", "a-twin-lakes-1", "activity", "Lake Ruhondo and its islands", "Ikiyaga cya Ruhondo n'ibirwa byacyo"),
+      ],
+    },
+    {
+      ...demoLodge.activities[4],
+      category: "culture",
+      duration: { en: "Evening (2–3 hours)" },
+      whatToBring: [{ en: "An open mind" }],
+      arrangedBy: "own_guides",
+      goodToKnow: { en: "Hosted by a local family. Includes traditional food and drink." },
+      photos: [],
+    },
+  ],
+  featuredRoomIds: ["garden-double"],
+  intro: { en: "Welcome to Luxe Musanze, where quiet luxury meets the volcanoes." },
+  closing: { en: "We look forward to hosting you." },
   host: {
     ...demoLodge.host,
     name: "Grace",
