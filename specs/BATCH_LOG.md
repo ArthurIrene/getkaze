@@ -397,3 +397,14 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Runtime checks not performed: local Supabase process is running but no psql/supabase CLI is available to seed the Luxe business or hit the server, so the Luxe demo page loading luxe.css at runtime could not be verified (code path is correct: LuxePage renders `<link rel="stylesheet" href="/luxe.css" />`). Typecheck, lint (0 errors, 1 intentional no-css-tags warning), unit tests (4 web + 135 core), and build all green.
 - Template locked (this step): saveLook no longer touches businesses.template (only createBusiness/admin writes it at creation). Look page shows a read-only template line; the Luxe radio and platform-admin conditional are removed. DB test (editor.test.sql): owner of a business and a non-member both cannot change its template (RLS refuses; zero rows changed). `pnpm db:test` PASS (273 tests, 8 files). Added D-069 to docs/DECISIONS.md ("Template is chosen at setup and locked") and updated the L2b batch line in specs/luxe-template.md.
 
+## Luxe L2 template test fix | 2026-11-22
+- Built: the column guard locks `businesses.template` (only `createBusiness`/admin writes it; `saveLook` and owners are refused by RLS), admin at aal2 can change it at setup, and `db:test` 274 passes.
+- Tests: `pnpm db:test` PASS (273 tests, 8 files); `pnpm db:check` green.
+- Deviations: none.
+
+## Luxe L3a shell + full home | 2026-11-22
+- Built: LuxePage shell (skip link, header, nav, footer, sticky contact bar) all from SiteView; full home sections (hero, facts, rooms, table, around, host, findUs) from SiteView with plain ` srcset` (480/960/1440), no `next/image`, zero Luxe JS; viewport/theme colour in `[locale]/site/[site]/layout.tsx` is template-aware via React-cached `getSite` (one DB read, shared with the page — Field Journal `/` unchanged: CSS 10.2 KB / 2 files, JS 145.4 KB / 7 files); new `Luxe` namespace in en.json and rw.json (Kinyarwanda drafts flagged for D-048); `e2e/luxe-isolation.spec.ts` asserts Luxe CSS/JS never load on Field Journal pages.
+- Tests: `pnpm typecheck`, `pnpm lint` (0 errors; 2 intentional warnings: no-css-tags for /luxe.css link, no-img-element for plain img), `pnpm test` (4 web + 135 core), `pnpm build` green; weight-check `WEIGHT_PAGES=/` PASS (CSS 10.2 KB, JS 145.4 KB < 160 KB); `e2e/luxe-isolation.spec.ts` PASS.
+- Runtime check: RUN green — local Supabase seeded with demoLuxe (`luxe-musanze`, template luxe); `/s/luxe-musanze` returns 200, loads `/luxe.css`, theme-color `#fbfaf5`/`#1a1814` (Luxe paper), skip link + sticky contact bar render, no `.fj-` leakage; Field Journal `/` keeps `#f4eee3` and no luxe.css.
+- registry.ts untouched. Rooms, contact, book, privacy not built (L3b).
+
