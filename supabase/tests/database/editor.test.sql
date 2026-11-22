@@ -9,7 +9,8 @@ select no_plan();
 insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-0000000000a1', 'owner-a@example.test'),
   ('00000000-0000-0000-0000-0000000000b1', 'owner-b@example.test'),
-  ('00000000-0000-0000-0000-0000000000ad', 'admin@example.test');
+  ('00000000-0000-0000-0000-0000000000ad', 'admin@example.test'),
+  ('00000000-0000-0000-0000-0000000000c1', 'non-member@example.test');
 insert into public.businesses (id, slug, name, preset, style, status) values
   ('00000000-0000-0000-0000-00000000000a', 'biz-a', 'Lodge A', 'hotel_lodge', 'lodge', 'draft'),
   ('00000000-0000-0000-0000-00000000000b', 'biz-b', 'Lodge B', 'hotel_lodge', 'lodge', 'draft');
@@ -46,6 +47,11 @@ select is(tests.exec_count($$ update public.businesses set languages = array['rw
 select is(tests.exec_count($$ update public.businesses set name = 'Taken' where id = '00000000-0000-0000-0000-00000000000b' $$), 0::bigint, 'owner A cannot change business B');
 select is(tests.exec_count($$ update public.site_settings set translations_checked = '{"location.area": ["rw"]}' where business_id = '00000000-0000-0000-0000-00000000000a' $$), 1::bigint, 'owner A saves checked marks');
 select is(tests.exec_count($$ update public.site_settings set contacts = '{}' where business_id = '00000000-0000-0000-0000-00000000000b' $$), 0::bigint, 'owner A cannot change B''s settings');
+
+-- ---------- Non-member ----------
+select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000c1", "role": "authenticated", "aal": "aal1"}', true);
+select is(tests.exec_count($$ update public.businesses set template = 'luxe' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'non-member cannot change A\'s template');
+reset role;
 
 -- ---------- Admin ----------
 select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000ad", "role": "authenticated", "aal": "aal1"}', true);
