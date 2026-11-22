@@ -2,7 +2,8 @@ import type { ContentLocale, LocalizedText } from "./i18n";
 import type { ModuleId } from "./modules";
 import { requiredModule, sectionIds, type SectionId, type SectionSetting } from "./sections";
 import { normalizeSlug } from "./slugs";
-import type { AmenityIcon } from "./site/types";
+import type { AmenityIcon, TemplateId } from "./site/types";
+import { templateIds } from "./site/types";
 import { editorLimits, parseLocalized, type Get, type Parsed } from "./editor";
 
 /**
@@ -148,6 +149,12 @@ export function parseLook(get: Get): Look {
     color_set: (colorSets as readonly string[]).includes(set) ? (set as ColorSet) : "auto",
     accent: accentPalette.some((a) => a.id === accent) ? (accent as AccentId) : "forest",
   };
+}
+
+/** Template id: field-journal or luxe; anything else falls back to field-journal. */
+export function parseTemplate(value: unknown): TemplateId {
+  const v = typeof value === "string" ? value : "";
+  return templateIds.includes(v as TemplateId) ? (v as TemplateId) : "field-journal";
 }
 
 /** WCAG contrast ratio of two #rrggbb colours. */
