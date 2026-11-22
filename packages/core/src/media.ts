@@ -8,7 +8,7 @@
 /** Safe limits (D-024). Sizes are made on the owner's device at upload. */
 export const photoLimits = {
   /** Photos per business. */
-  photos: 60,
+  photos: 120,
   /** Widths made for each photo, served with <img srcset>. */
   widths: [480, 960, 1440] as const,
   /** Hard limit per file (bucket file_size_limit). */

@@ -5,7 +5,7 @@ import { paymentMethods, type PaymentMethod } from "../booking";
 import type { SectionSetting } from "../sections";
 import { photoLicences, photoLimits, publicMediaUrl, staticPhotoPattern, staticPhotoUrls, type PhotoCredit, type PhotoWidth } from "../media";
 import { photoSrcset, widthsFor } from "../editor";
-import { templateIds, type Activity, type Amenity, type Dish, type IconKey, type Photo, type PropertyStyle, type Room, type SiteData } from "./types";
+import { templateIds, type Activity, type ActivityCategory, type Amenity, type ArrangedBy, type CatalogGroup, type Dish, type IconKey, type Photo, type PropertyStyle, type Room, type Service, type SiteData } from "./types";
 
 /**
  * Map the public site JSON from `get_published_site` (specs/row-level-security.md,
@@ -109,38 +109,111 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
     if (rwf === null || usd === null) errors.push(`${label}: both prices are required (D-023)`);
     return { rwf: rwf ?? 0, usd: usd ?? 0 };
   };
+  const optionalPrice = (i: Json, label: string) => {
+    const rwf = num(i.priceRwf);
+    const usd = num(i.priceUsd);
+    if (rwf === null && usd === null) return undefined;
+    if (rwf === null || usd === null) {
+      errors.push(`${label}: both prices are required (D-023)`);
+      return undefined;
+    }
+    return { rwf, usd };
+  };
+  const categories: readonly ActivityCategory[] = ["wildlife", "hiking", "culture"];
+  const arrangedByValues: readonly ArrangedBy[] = ["own_guides", "licensed_partner"];
+  const itemPhotos = (itemId: unknown, place: Photo["place"], fallbackPlace?: Photo["place"]) => {
+    const primary = photosOf(itemId, place);
+    if (primary.length) return primary;
+    return fallbackPlace ? photosOf(itemId, fallbackPlace) : [];
+  };
+
+  const groups: CatalogGroup[] = list(row.groups)
+    .filter(isObj)
+    .filter((g) => g.kind === "dish" || g.kind === "drink")
+    .sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0))
+    .map((g) => ({
+      id: str(g.handle) || str(g.id),
+      kind: g.kind as CatalogGroup["kind"],
+      name: text(g.name),
+      position: num(g.position) ?? 0,
+    }));
+  const groupHandle = (groupId: unknown) => {
+    const raw = str(groupId);
+    if (!raw) return undefined;
+    const g = list(row.groups).filter(isObj).find((x) => str(x.id) === raw);
+    return g ? str(g.handle) || str(g.id) : undefined;
+  };
 
   const rooms: Room[] = byKind("room_type").map((i) => ({
     id: str(i.handle) || str(i.id),
     name: text(i.name),
     line: text(i.line),
+    ...(textOrUndefined(i.body) ? { body: textOrUndefined(i.body) } : {}),
+    ...(textOrUndefined(i.size) ? { size: textOrUndefined(i.size) } : {}),
     price: price(i, `room ${str(i.handle) || str(i.id)}`),
     maxGuests: num(i.maxGuests) ?? 1,
     photos: photosOf(i.id, "room"),
     amenities: list(i.amenities).filter(isObj).map((a) => ({ icon: str(a.icon) as Amenity["icon"], label: text(a.label) })),
   }));
 
-  const dishes: Dish[] = byKind("dish").map((i) => {
+  const asDish = (i: Json, label: string): Dish => {
     const handle = str(i.handle) || str(i.id);
-    const [first] = photosOf(i.id, "dish");
+    const photos = photosOf(i.id, "dish");
+    const groupId = groupHandle(i.groupId);
     return {
       id: handle,
       name: text(i.name),
-      price: price(i, `dish ${handle}`),
+      price: price(i, `${label} ${handle}`),
       icon: str(i.icon) as IconKey,
-      photo: first ?? { id: `${handle}-photo`, place: "dish", alt: text(i.name) },
+      photo: photos[0] ?? { id: `${handle}-photo`, place: "dish", alt: text(i.name) },
+      ...(photos.length ? { photos } : {}),
+      ...(textOrUndefined(i.body) ? { body: textOrUndefined(i.body) } : {}),
+      ...(i.signature === true ? { signature: true } : {}),
+      ...(groupId ? { groupId } : {}),
+    };
+  };
+  const dishes: Dish[] = byKind("dish").map((i) => asDish(i, "dish"));
+  const drinks: Dish[] = byKind("drink").map((i) => asDish(i, "drink"));
+
+  const activities: Activity[] = byKind("activity").map((i) => {
+    const photos = itemPhotos(i.id, "activity", "gallery");
+    const category = categories.find((c) => c === i.category);
+    const arrangedBy = arrangedByValues.find((a) => a === i.arrangedBy);
+    const handle = str(i.handle) || str(i.id);
+    const whatToBring = list(i.whatToBring).map(text).filter((t) => t.en);
+    const extraPrice = optionalPrice(i, `activity ${handle}`);
+    return {
+      ...(photos[0] ? { photo: photos[0] } : {}),
+      ...(photos.length ? { photos } : {}),
+      id: handle,
+      name: text(i.name),
+      line: text(i.line),
+      distance: text(i.distance),
+      icon: str(i.icon) as IconKey,
+      arrange: i.arrange === true,
+      ...(category ? { category } : {}),
+      ...(textOrUndefined(i.duration) ? { duration: textOrUndefined(i.duration) } : {}),
+      ...(extraPrice ? { price: extraPrice } : {}),
+      ...(textOrUndefined(i.body) ? { body: textOrUndefined(i.body) } : {}),
+      ...(whatToBring.length ? { whatToBring } : {}),
+      ...(arrangedBy ? { arrangedBy } : {}),
+      ...(textOrUndefined(i.goodToKnow) ? { goodToKnow: textOrUndefined(i.goodToKnow) } : {}),
     };
   });
 
-  const activities: Activity[] = byKind("activity").map((i) => ({
-    ...(photosOf(i.id, "gallery")[0] ? { photo: photosOf(i.id, "gallery")[0] } : {}),
-    id: str(i.handle) || str(i.id),
-    name: text(i.name),
-    line: text(i.line),
-    distance: text(i.distance),
-    icon: str(i.icon) as IconKey,
-    arrange: i.arrange === true,
-  }));
+  const services: Service[] = byKind("service").map((i) => {
+    const handle = str(i.handle) || str(i.id);
+    const extraPrice = optionalPrice(i, `service ${handle}`);
+    return {
+      id: handle,
+      name: text(i.name),
+      ...(extraPrice ? { price: extraPrice } : {}),
+      ...(i.airport === true ? { airport: true } : {}),
+    };
+  });
+
+  const roomIds = new Set(rooms.map((r) => r.id));
+  const featuredRoomIds = list(s.featuredRoomHandles).map((h) => str(h)).filter((h) => roomIds.has(h));
 
   const stay = isObj(s.stay) ? s.stay : {};
   const dining = isObj(s.dining) ? s.dining : {};
@@ -185,16 +258,21 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
     facts: list(s.facts).filter(isObj).map((f, k) => ({ id: str(f.id, `fact-${k}`), value: text(f.value), icon: str(f.icon) as IconKey, detail: text(f.detail) })),
     moments: list(s.moments).filter(isObj).map((m, k) => ({ id: str(m.id, `moment-${k}`), caption: text(m.caption), icon: str(m.icon) as IconKey, photo: photo(m.photo, `moment-${k}`, "gallery") })),
     rooms,
+    ...(featuredRoomIds.length ? { featuredRoomIds } : {}),
     ...(textOrUndefined(s.roomsLine) ? { roomsLine: textOrUndefined(s.roomsLine) } : {}),
     ...(textOrUndefined(s.seoDescription) ? { seoDescription: textOrUndefined(s.seoDescription) } : {}),
+    ...(textOrUndefined(s.intro) ? { intro: textOrUndefined(s.intro) } : {}),
+    ...(textOrUndefined(s.closing) ? { closing: textOrUndefined(s.closing) } : {}),
     stay: {
       checkIn: str(stay.checkIn, "14:00"),
       checkOut: str(stay.checkOut, "10:00"),
       breakfastIncluded: stay.breakfastIncluded === true,
       notes: list(stay.notes).map(text),
     },
-    dining: { name: text(dining.name), photo: placed("dining", dining.photo, "dining"), dishes },
+    dining: { name: text(dining.name), photo: placed("dining", dining.photo, "dining"), dishes, ...(drinks.length ? { drinks } : {}) },
+    ...(groups.length ? { groups } : {}),
     activities,
+    ...(services.length ? { services } : {}),
     host: { name: str(host.name), greeting: text(host.greeting), note: text(host.note), photo: placed("host", host.photo, "host") },
     reviews: {
       quote: text(reviews.quote),

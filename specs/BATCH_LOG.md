@@ -251,9 +251,12 @@ Entry format:
 - Deviations: none. The unused `Nav.home` wording stays (no rename or removal needed).
 
 ## Next session starts here
-**Batch 3a (content editor, PR #8) is built and ready for review:** item 0 and features 1–4, see the Batch 3a entries at the end. Local runs need Docker: start it with `dockerd` if `docker info` fails, then the Supabase command in CLAUDE.md.
+**Luxe template L1 (data and access) is built and green — CHECKPOINT (branch `feature/luxe-l1`, the L1 entry at the end).** L0 is approved (D-052). The additive migration (template `luxe`, `catalog_groups`, new `catalog_items`/`site_settings`/`media` fields, photo cap 120), the `get_published_site` fields, `rowToSiteData`, and the isolation + locked-fields tests are in. No Luxe UI yet. Local runs need Docker: `docker info` must work, then the Supabase command in CLAUDE.md. The one L1 failure (the storage test still asserted the old 60 cap) is fixed.
 
-**Open after Batch 3a:**
+**Open after Luxe L1:**
+- `from-row.test.ts` has no case for the new fields yet (services, groups, room body/size, activity extras).
+- No DB test for the new `media.place = 'activity'` value.
+- `registry.ts`/`render-page.tsx`/`layout.tsx`/`manifest.ts`/icons route carry only type-level `Partial` guards for the `luxe` id; the real Luxe registry entry, Look radio and scoped CSS are L2.
 - Kinyarwanda checks of the editor wording (glossary, "Content editor" table, all draft).
 - The photo cleanup check (backlog).
 - Zod: specs name it, the code uses plain checks; add Zod only if you approve the dependency.
@@ -301,7 +304,7 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Where screenshots go (CI artifacts or the PR, never the repository).
 - At G2: the demo fallback (remove, or keep to the demo slug), noindex per business, the custom email sender, and a check of icons on Cloudflare.
 
-**Next batch:** Batch 3 (editor, revalidation on save, photos in Storage), after the review of PR #6.
+**Next batch:** Luxe L2 (template shell, dynamic registry, Look radio, scoped CSS), after the L1 checkpoint go.
 
 ## Batch 3a, content editor: started | 2026-11-13
 - Built: branch `feature/batch-3a-editor` from `staging` (PR #7 merged), draft PR opened.
@@ -369,3 +372,10 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Tests: database 262 (+10: static seed-only for media and settings JSON, not even the service role; owners keep editing other fields; licence list refuses CC BY-SA); unit 133 (+3); Playwright 80 (+5: hero loads at once, below-the-fold photos wait and then load, rooms photos, every file is WebP, credits page lists every CC BY photo with author, source and licence links, no-JS copy, RW title). Full local CI green; the bundled demo (no Supabase) shows the photos and the credits page.
 - Page weight (360×800, 1×): `/` 206.7 KB, `/rooms` 203.1 KB, `/contact` 161.7 KB, JS 145.4 KB (unchanged files). At 2×: `/` 242.5 KB (hero 960 file), `/rooms` 235.3 KB. Hero case `/s/weight-hero @2x` 243.9 KB. All under 300 KB.
 - Deviations: a 0.4 KB inline image loader (native `loading="lazy"` alone fetched photos up to ~1250 px below the screen: `/` was 374 KB). Golden monkeys, caves, cultural village, host and dishes keep their drawings (no suitable photo without people). Non-hero photos have 480 and 960 files only (1280 px sources; they never show wider).
+
+## Luxe template L1: data and access (checkpoint) | 2026-11-22
+- Built: branch `feature/luxe-l1` off `staging`. Additive migration `20261121100000_luxe_l1.sql`: `businesses.template` widened to `field-journal | luxe`; `catalog_groups` (RLS, triggers, unique, composite FK from `catalog_items`); `catalog_items` body/size/duration/category/what_to_bring/arranged_by/good_to_know/signature/airport with kind-fit checks; `media.place` adds `activity`; `site_settings` featured_room_handles/intro/closing; `app.media_limits` and core `photoLimits` to 120; `get_published_site` returns groups, the new item fields and settings keys (a superset of the locked list). Core `types.ts`/`from-row.ts` map the new fields (services, groups, drinks, activity extras, featured rooms filtered to existing rooms, intro/closing). `check-migrations.mjs` now finds the bucket definition across migrations.
+- Tests: DB 271 (isolation adds `catalog_groups` fixtures + read/insert-refusal; locked fields updated; storage cap raised to 120 photos / 360 files, 121st and 361st refused). Unit 133. Typecheck, lint and build green. Playwright not run (not in this session's list); the remote CI run on the PR is the first with the L1 migration. The `Partial<Record<TemplateId, …>>` guards in registry/render-page/layout/manifest/icons keep typecheck green with `luxe` in `templateIds`; no guest-visible change.
+- Page weight: not run this session (L1 is data only, no guest UI changed); Field Journal is unchanged from Batch 3a (JS 145.4 KB).
+- Deviations: the registry/render-page/layout/manifest/icons changes are type-level only (the Luxe registry entry, Look radio and scoped CSS are L2). `storage.test.sql` was the one L1 failure (old 60 cap) and is fixed.
+- Next: CHECKPOINT — isolation and locked fields green; L2 after your go.

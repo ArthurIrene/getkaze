@@ -24,7 +24,7 @@ export const metadata: Metadata = {
  * Field Journal is the only template; per-business colours arrive with the editor.
  */
 export async function generateViewport(): Promise<Viewport> {
-  const theme = templateThemes["field-journal"];
+  const theme = templateThemes["field-journal"]!;
   return {
     themeColor: [
       { media: "(prefers-color-scheme: light)", color: theme.paper },

@@ -28,7 +28,7 @@ export async function GET(_request: Request, { params }: RouteContext<"/icons/[f
   const { file } = await params;
   if (!(file in files)) return new Response("Not found", { status: 404 });
   const found = await siteForHost();
-  const theme = templateThemes[found?.site.template ?? "field-journal"];
+  const theme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
   const text = initials(found?.site.name ?? "Kaze");
   const spec = files[file as IconFile];
 

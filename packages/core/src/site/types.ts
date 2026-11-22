@@ -8,8 +8,8 @@ import type { PhotoCredit } from "../media";
 /** Property style of a Hotel/Lodge business (D-043): sets wording and structured data type. */
 export type PropertyStyle = "lodge" | "townHotel" | "guesthouse";
 
-/** Templates a business can use (D-039, D-040). Imigongo and Cinematic come later. */
-export const templateIds = ["field-journal"] as const;
+/** Templates a business can use (D-039, D-040, D-063). Imigongo and Cinematic come later. */
+export const templateIds = ["field-journal", "luxe"] as const;
 export type TemplateId = (typeof templateIds)[number];
 
 /**
@@ -33,7 +33,7 @@ export type IconKey =
   | "stew";
 
 /** Where a photo is shown (DATA.md, Photos). */
-export type PhotoPlace = "hero" | "room" | "dining" | "dish" | "host" | "gallery";
+export type PhotoPlace = "hero" | "room" | "dining" | "dish" | "host" | "gallery" | "activity";
 
 /** A photo. Without `src` the template shows a placeholder. */
 export type Photo = {
@@ -67,6 +67,10 @@ export type Room = {
   id: string;
   name: LocalizedText;
   line: LocalizedText;
+  /** Longer description (Luxe rooms). */
+  body?: LocalizedText;
+  /** Size line, e.g. "32 m²". */
+  size?: LocalizedText;
   price: Price;
   maxGuests: number;
   photos: Photo[];
@@ -81,7 +85,36 @@ export type Stay = {
   notes: LocalizedText[];
 };
 
-export type Dish = { id: string; name: LocalizedText; price: Price; icon: IconKey; photo: Photo };
+export type Dish = {
+  id: string;
+  name: LocalizedText;
+  price: Price;
+  icon: IconKey;
+  photo: Photo;
+  body?: LocalizedText;
+  signature?: boolean;
+  photos?: Photo[];
+  /** Group handle, when the item sits in a catalog_groups row. */
+  groupId?: string;
+};
+
+export type CatalogGroup = {
+  id: string;
+  kind: "dish" | "drink";
+  name: LocalizedText;
+  position: number;
+};
+
+export type Service = {
+  id: string;
+  name: LocalizedText;
+  /** Both prices, or omitted to enquire (D-023). */
+  price?: Price;
+  airport?: boolean;
+};
+
+export type ActivityCategory = "wildlife" | "hiking" | "culture";
+export type ArrangedBy = "own_guides" | "licensed_partner";
 
 export type Activity = {
   id: string;
@@ -93,6 +126,14 @@ export type Activity = {
   arrange: boolean;
   /** Optional photo on the postcard (else the drawing). */
   photo?: Photo;
+  category?: ActivityCategory;
+  duration?: LocalizedText;
+  price?: Price;
+  body?: LocalizedText;
+  whatToBring?: LocalizedText[];
+  arrangedBy?: ArrangedBy;
+  goodToKnow?: LocalizedText;
+  photos?: Photo[];
 };
 
 export type ReviewScore = { source: string; value: string };
@@ -142,13 +183,22 @@ export type SiteData = {
   facts: Fact[];
   moments: Moment[];
   rooms: Room[];
+  /** Room handles to highlight (Luxe). Unknown handles are dropped while mapping. */
+  featuredRoomIds?: string[];
   /** Owner's search description for the home page (optional; otherwise one is built). */
   seoDescription?: LocalizedText;
   /** Handwritten line under "Rooms", e.g. "four rooms, one view". */
   roomsLine?: LocalizedText;
+  /** Intro / closing copy (Luxe home). */
+  intro?: LocalizedText;
+  closing?: LocalizedText;
   stay: Stay;
-  dining: { name: LocalizedText; photo: Photo; dishes: Dish[] };
+  dining: { name: LocalizedText; photo: Photo; dishes: Dish[]; drinks?: Dish[] };
+  /** Visible dining groups (dishes and drinks). */
+  groups?: CatalogGroup[];
   activities: Activity[];
+  /** Paid extras (kind = service). Both prices or neither. */
+  services?: Service[];
   host: { name: string; greeting: LocalizedText; note: LocalizedText; photo: Photo };
   reviews: { quote: LocalizedText; scores: ReviewScore[] };
 };

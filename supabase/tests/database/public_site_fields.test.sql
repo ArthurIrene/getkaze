@@ -24,6 +24,8 @@ insert into public.site_settings (business_id, contacts, location, hero, booking
    '{"map_url": "https://maps.example.test"}', '{"title": {"en": "Welcome"}}', array['lodge'],
    '{"en": "two rooms"}', '{"en": "A lodge"}', now());
 insert into public.business_modules (business_id, module_id, enabled) values ('00000000-0000-0000-0000-00000000000a', 'menu', true);
+insert into public.catalog_groups (id, business_id, kind, handle, name) values
+  ('00000000-0000-0000-0000-0000000002a0', '00000000-0000-0000-0000-00000000000a', 'dish', 'mains', '{"en": "Mains"}');
 insert into public.catalog_items (id, business_id, kind, name, price_rwf, price_usd, max_guests) values
   ('00000000-0000-0000-0000-0000000001a0', '00000000-0000-0000-0000-00000000000a', 'room_type', '{"en": "Room"}', 1, 1, 1);
 insert into public.media (business_id, item_id, place, alt) values
@@ -33,7 +35,7 @@ create temp table site on commit drop as select public.get_published_site('field
 
 select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc) k),
-  array['business', 'items', 'media', 'modulesOn', 'settings'],
+  array['business', 'groups', 'items', 'media', 'modulesOn', 'settings'],
   'top-level fields'
 );
 select is(
@@ -43,7 +45,7 @@ select is(
 );
 select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'settings') k),
-  array['bookingPayments', 'contacts', 'dining', 'facts', 'hero', 'host', 'hours', 'location', 'look', 'moments', 'payment', 'publishedAt', 'reviews', 'roomsLine', 'sections', 'seoDescription', 'stay'],
+  array['bookingPayments', 'closing', 'contacts', 'dining', 'facts', 'featuredRoomHandles', 'hero', 'host', 'hours', 'intro', 'location', 'look', 'moments', 'payment', 'publishedAt', 'reviews', 'roomsLine', 'sections', 'seoDescription', 'stay'],
   'settings fields'
 );
 select is(
@@ -52,8 +54,13 @@ select is(
   'contact fields: only the business''s phone, WhatsApp and email (other contact keys are dropped)'
 );
 select is(
+  (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'groups' -> 0) k),
+  array['handle', 'id', 'kind', 'name', 'position'],
+  'group fields'
+);
+select is(
   (select array_agg(k order by k collate "C") from site, jsonb_object_keys(doc -> 'items' -> 0) k),
-  array['amenities', 'arrange', 'distance', 'handle', 'icon', 'id', 'kind', 'line', 'maxGuests', 'name', 'position', 'priceRwf', 'priceUsd'],
+  array['airport', 'amenities', 'arrange', 'arrangedBy', 'body', 'category', 'distance', 'duration', 'goodToKnow', 'groupId', 'handle', 'icon', 'id', 'kind', 'line', 'maxGuests', 'name', 'position', 'priceRwf', 'priceUsd', 'signature', 'size', 'whatToBring'],
   'item fields'
 );
 select is(

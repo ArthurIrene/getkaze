@@ -7,7 +7,7 @@ import { templateThemes } from "@/templates/registry";
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const found = await siteForHost();
   const name = found?.site.name ?? "Kaze";
-  const theme = templateThemes[found?.site.template ?? "field-journal"];
+  const theme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
   const description = found ? `${found.view.hero.title} ${found.view.hero.line}`.trim() : undefined;
   return {
     name,
