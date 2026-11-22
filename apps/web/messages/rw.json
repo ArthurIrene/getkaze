@@ -544,5 +544,21 @@
     "intro": "The photos on this site are openly licensed. Thank you to the photographers. Each photo was resized and compressed for the web.",
     "by": "by {author}",
     "changes": "Resized and compressed from the originals linked above."
+  },
+  "Luxe": {
+    "language": "Ururimi",
+    "currency": "Ifaranga",
+    "check": "Reba ibyumba bihari",
+    "checkMessage": "Muraho {name}, ndashaka kumenya niba hari icyumba kiboneka.",
+    "call": "Hamagara",
+    "whatsapp": "WhatsApp",
+    "welcome": "murakaza neza",
+    "copyright": "© {name}",
+    "facts": "Iby'ingenzi",
+    "rooms": "Ibyumba",
+    "around": "Hafi yacu",
+    "host": "Umusambi",
+    "findUs": "Aho turi",
+    "here": "turi hano!"
   }
 }
