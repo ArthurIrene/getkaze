@@ -557,5 +557,21 @@
     "intro": "The photos on this site are openly licensed. Thank you to the photographers. Each photo was resized and compressed for the web.",
     "by": "by {author}",
     "changes": "Resized and compressed from the originals linked above."
+  },
+  "Luxe": {
+    "language": "Language",
+    "currency": "Currency",
+    "check": "Check availability",
+    "checkMessage": "Hello {name}, I'd like to check availability.",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "welcome": "murakaza neza",
+    "copyright": "© {name}",
+    "facts": "Quick facts",
+    "rooms": "Rooms",
+    "around": "Around us",
+    "host": "Your host",
+    "findUs": "Find us",
+    "here": "we're here!"
   }
 }
