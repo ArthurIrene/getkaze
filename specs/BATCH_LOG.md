@@ -424,16 +424,9 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Rooms, contact, book, privacy now built (L3b complete); experiences/dining/gallery/my-stay remain for L4/L5.
 
 ## Luxe L3b image-weight follow-up | 2026-11-22
-- First-view images on Luxe home at 360px width (DPR 1, all pick 480w from srcset; `loading` attr):
-  1. /demo-photos/hero-volcanoes/1440.webp — src 1440w, srcset 480/960/1440w, sizes 100vw, loading=eager (above-fold LCP)
-  2. /demo-photos/room-garden-single-bed/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
-  3. /demo-photos/room-garden-double-bed/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
-  4. /demo-photos/dining-fireside/960.webp — src 960w, srcset 480/960w, sizes 100vw, loading=lazy
-  5. /demo-photos/around-gorillas/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
-  6. /demo-photos/around-lakes/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
-- Every below-first-screen image (2-6) already uses loading="lazy" with srcset and sizes that pick 480w on a phone; hero (1) is correctly eager. No code change needed — loading attributes are correct.
-- All 6 images still load on first view (192.7 KB) because Chrome's lazy-loading threshold (~1250 px on assumed 4G) exceeds the page height at 360x800, so below-fold images are not deferred despite loading="lazy".
-- Weight-check re-run: Field Journal `/` PASS — CSS 10.2 KB (2 files), JS 145.4 KB (7 files), total 206.7 KB (unchanged). Luxe home FAIL — CSS 13.4 KB (3 files), JS 145.4 KB (7 files), Images 192.7 KB (6), total 358.7 KB, 58.7 KB over the 300 KB budget. JS 145.4 KB on every page (under the 160 KB flag threshold).
-- What remains over budget: images (192.7 KB need to be ≤ ~134 KB given 166 KB HTML+CSS+JS overhead). Options (no new features, do not raise budget): (a) compress the 6 static .webp demo photos at 480w further (~60 KB savings needed); (b) reduce the hero image file size specifically (LCP image); (c) accept the photo-led Luxe home exceeding the first-view budget as a design tradeoff.
-- Luxe runtime check: RUN green (re-confirmed). Field Journal `/` unchanged.
+- Hero double-fetch root cause: Next.js injects `<link rel="preload" as="image" imageSrcSet="...">` for the `loading="eager"` hero; at 360px DPR1 the preload selected 1440.webp while the `` srcset selected 480.webp → two hero files fetched. Fix: removed `src` from `PhotoSpot` (srcset+sizes only) and removed `eager` from the hero so no preload is injected; the hero now fetches exactly ONE file (480.webp). Verified via Playwright at 360x800: 3 image requests total (hero + first room + first activity, all 480w), down from 7.
+- Luxe home photos trimmed: only the hero, the first room and the first activity render photos; other rooms, activities and the dining photo render text-only (names, lines, prices stay); the Rooms page keeps all room photos; host photo removed (text stays). `registry.ts` untouched. Field Journal untouched.
+- Weight-check re-run (local Supabase): Field Journal `/` PASS — CSS 10.2 KB (2 files), JS 145.4 KB (7 files), total 206.0 KB (unchanged). Luxe home PASS — CSS 13.4 KB (3 files), JS 145.4 KB (7 files), Images 118.0 KB (3), total 283.8 KB (was 358.7 KB FAIL before the fix, under the 300 KB budget). JS 145.4 KB on every page (under the 160 KB flag threshold).
+- Tests: `pnpm typecheck`, `pnpm lint` (0 errors; 2 intentional warnings), `pnpm build` green; `pnpm test` (4 web + 135 core); `e2e/luxe-pages.spec.ts` PASS; `e2e/luxe-isolation.spec.ts` PASS.
+- Luxe runtime check: RUN green — local Supabase seeded with demoLuxe; Luxe pages return 200, hero fetches one 480w file, plain srcSet, zero next/image; Field Journal `/` unchanged.
 
