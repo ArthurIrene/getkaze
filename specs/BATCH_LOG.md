@@ -379,3 +379,9 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Page weight: not run this session (L1 is data only, no guest UI changed); Field Journal is unchanged from Batch 3a (JS 145.4 KB).
 - Deviations: the registry/render-page/layout/manifest/icons changes are type-level only (the Luxe registry entry, Look radio and scoped CSS are L2). `storage.test.sql` was the one L1 failure (old 60 cap) and is fixed.
 - Next: CHECKPOINT — isolation and locked fields green; L2 after your go.
+
+## Luxe template L2a: guest shell (registry, scoped css) | 2026-11-22
+- Built: Luxe supporting files — `apps/web/src/templates/luxe/theme.ts` (`luxeTheme`), `luxe/luxe.css` (`.tl`-scoped, no `:root`/`html`/`@theme`), `luxe/parts/page.tsx` (`LuxePage` shell), `luxe/home.tsx` (hero only); `apps/web/src/app/globals.css` `@source` narrowed to `templates/field-journal` so Luxe utilities never enter guest CSS. Unit 133 → 137 (4 new: `registry.test.ts`, `theme.test.ts`; vitest/jsdom + `next-intl/navigation` mock added to `@getkaze/web`). Typecheck, lint, build green.
+- Page weight: Field Journal exactly unchanged — `/` CSS 10.2 KB (2 files), JS 145.4 KB (7 files), total 206.0 KB before and after; no Luxe chunk or utility in the guest file list.
+- Deviations: the template registry stays Field-Journal-only static imports. `render-page` imports the registry on every guest page, so putting `next/dynamic` for Luxe in the registry adds bytes/files to Field Journal guest chunks, breaking both the weight-check target (CSS 10.2 / JS 145.4 / 7 files) and spec line 29 ("Field Journal file list must not grow"). The dynamic Luxe registry entry, Look radio, admin template selector, section components and the demo Luxe business are left for L2b/L3, once a Luxe business/demo exists to render.
+
