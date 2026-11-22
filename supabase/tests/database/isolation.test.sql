@@ -48,6 +48,10 @@ insert into public.catalog_items (id, business_id, kind, name, price_rwf, price_
   ('00000000-0000-0000-0000-0000000001b9', '00000000-0000-0000-0000-00000000000b', 'room_type', '{"en": "Hidden B"}', 1, 1, 1);
 update public.catalog_items set visible = false where id = '00000000-0000-0000-0000-0000000001b9';
 
+insert into public.catalog_groups (id, business_id, kind, handle, name) values
+  ('00000000-0000-0000-0000-0000000002a0', '00000000-0000-0000-0000-00000000000a', 'dish', 'mains', '{"en": "Mains A"}'),
+  ('00000000-0000-0000-0000-0000000002b0', '00000000-0000-0000-0000-00000000000b', 'dish', 'mains', '{"en": "Mains B"}');
+
 insert into public.media (business_id, item_id, place, alt) values
   ('00000000-0000-0000-0000-00000000000a', '00000000-0000-0000-0000-0000000001a0', 'room', '{"en": "Room A photo"}'),
   ('00000000-0000-0000-0000-00000000000b', '00000000-0000-0000-0000-0000000001b0', 'room', '{"en": "Room B photo"}');
@@ -155,6 +159,9 @@ select throws_ok(
   $$ insert into public.media (business_id, place, alt) values ('00000000-0000-0000-0000-00000000000b', 'gallery', '{"en": "x"}') $$,
   '42501', null, 'owner A cannot insert media into B');
 select throws_ok(
+  $$ insert into public.catalog_groups (business_id, kind, handle, name) values ('00000000-0000-0000-0000-00000000000b', 'dish', 'intruder', '{"en": "Intruder"}') $$,
+  '42501', null, 'owner A cannot insert a group into B');
+select throws_ok(
   $$ insert into public.memberships (business_id, user_id, roles, status) values ('00000000-0000-0000-0000-00000000000b', '00000000-0000-0000-0000-0000000000a1', array['owner'], 'active') $$,
   '42501', null, 'owner A cannot make themselves a member of B');
 select throws_ok(
@@ -163,6 +170,7 @@ select throws_ok(
 
 -- ================= 3. Owners work on their own business =================
 select ok(tests.count_rows('catalog_items', 'business_id', '00000000-0000-0000-0000-00000000000a') = 1, 'owner A reads A''s items');
+select is(tests.count_rows('catalog_groups', 'business_id', '00000000-0000-0000-0000-00000000000a'), 1::bigint, 'owner A reads A''s groups');
 select is(tests.exec_count($$ update public.catalog_items set name = '{"en": "Room A, renamed"}' where id = '00000000-0000-0000-0000-0000000001a0' $$),
   1::bigint, 'owner A edits A''s item');
 select is(tests.exec_count($$ update public.site_settings set rooms_line = '{"en": "two rooms"}' where business_id = '00000000-0000-0000-0000-00000000000a' $$),

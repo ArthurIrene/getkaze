@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { parseSiteKey, sitePages, toSiteView, type PageId, type SiteData, type SiteView } from "@getkaze/core";
+import { parseSiteKey, sitePages, toSiteView, type PageId, type SiteData, type SiteView, type TemplateId } from "@getkaze/core";
 import { getSite } from "@/data/get-site";
 import type { Locale } from "@/i18n/routing";
 import { templates } from "@/templates/registry";
 
 /** Pages this site has that its template implements. */
-export function availablePages(template: keyof typeof templates, view: Parameters<typeof sitePages>[0]): PageId[] {
+export function availablePages(template: TemplateId, view: Parameters<typeof sitePages>[0]): PageId[] {
   const pages = templates[template];
+  if (!pages) return [];
   return sitePages(view).filter((id) => id in pages);
 }
 
@@ -25,7 +26,7 @@ export async function renderPage(page: PageId, locale: Locale, siteKey: string, 
   setRequestLocale(locale);
   const { site, view } = await loadSite(siteKey, locale);
   const pages = availablePages(site.template, view);
-  const Page = templates[site.template][page];
+  const Page = templates[site.template]?.[page];
   if (!Page || !pages.includes(page)) notFound();
   return <Page site={view} locale={locale} page={page} pages={pages} query={query} />;
 }

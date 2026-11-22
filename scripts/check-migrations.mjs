@@ -79,6 +79,7 @@ const files = readdirSync(DIR).filter((f) => f.endsWith(".sql")).sort();
 let reservedSql = [];
 let mediaSql = "";
 let lookSql = "";
+let bucketSql = "";
 for (const file of files) {
   const sql = readFileSync(join(DIR, file), "utf8");
   const found = problems(sql);
@@ -91,6 +92,7 @@ for (const file of files) {
   if (/function app\.media_limits\(\)/i.test(sql)) mediaSql = sql; // the latest definition wins
   if (/function app\.is_look\(/i.test(sql)) lookSql = sql;
   if (/insert into public\.reserved_slugs/i.test(sql)) reservedSql = reservedSql.concat(reservedFromSql(sql));
+  if (/values \('business-media', 'business-media', true, \d+,/i.test(sql)) bucketSql = sql; // the bucket definition
 }
 const reservedCore = reservedFromCore();
 reservedSql = [...new Set(reservedSql)].sort();
@@ -112,7 +114,7 @@ const core = {
   file_bytes: num(/fileBytes: ([\d *]+),/),
 };
 const limits = JSON.parse(mediaSql.match(/select '(\{"photos"[^']+)'::jsonb/)?.[1] ?? "{}");
-const bucket = mediaSql.match(/values \('business-media', 'business-media', true, (\d+),/)?.[1];
+const bucket = bucketSql.match(/values \('business-media', 'business-media', true, (\d+),/)?.[1];
 const same =
   limits.photos === core.photos &&
   JSON.stringify(limits.widths) === JSON.stringify(core.widths) &&

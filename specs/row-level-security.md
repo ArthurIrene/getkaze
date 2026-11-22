@@ -44,12 +44,13 @@ Goal: The database itself guarantees that a business sees only its own data, own
 Both public functions are `security definer` with `set search_path = ''`, and every name inside is schema-qualified (`public.…`). The test fails if any field below is added, removed or renamed.
 | Level | Fields |
 |---|---|
-| top | `business`, `settings`, `modulesOn`, `items`, `media` |
+| top | `business`, `settings`, `modulesOn`, `groups`, `items`, `media` |
 | `business` | `id`, `slug`, `name`, `legalName`, `preset`, `style`, `template`, `defaultCurrency`, `languages` |
-| `settings` | `contacts`, `location`, `hours`, `payment`, `bookingPayments`, `stay`, `sections`, `hero`, `facts`, `moments`, `dining`, `host`, `reviews`, `roomsLine`, `seoDescription`, `publishedAt` |
+| `settings` | `contacts`, `location`, `hours`, `payment`, `bookingPayments`, `stay`, `sections`, `hero`, `facts`, `moments`, `dining`, `host`, `reviews`, `roomsLine`, `seoDescription`, `look`, `featuredRoomHandles`, `intro`, `closing`, `publishedAt` |
 | `settings.contacts` | `phone`, `whatsapp`, `email`: the **business's** published contact details only. Any other key stored in `contacts` is dropped. |
-| `items[]` | `id`, `handle` (readable id for guest URLs; added in feature 8), `kind`, `position`, `name`, `line`, `priceRwf`, `priceUsd`, `maxGuests`, `amenities`, `icon`, `distance`, `arrange` (visible items only) |
-| `media[]` | `id`, `itemId`, `place`, `position`, `path`, `alt`, `width`, `height` (only for visible items, or not tied to an item) |
+| `groups[]` | `id`, `handle`, `kind`, `position`, `name` (visible dining groups only; Luxe L1) |
+| `items[]` | `id`, `handle` (readable id for guest URLs; added in feature 8), `kind`, `position`, `name`, `line`, `body`, `size`, `duration`, `category`, `whatToBring`, `arrangedBy`, `goodToKnow`, `signature`, `airport`, `groupId`, `priceRwf`, `priceUsd`, `maxGuests`, `amenities`, `icon`, `distance`, `arrange` (visible items only) |
+| `media[]` | `id`, `itemId`, `place`, `position`, `path`, `format`, `source`, `credit`, `alt`, `width`, `height` (only for visible items, or not tied to an item) |
 | `modulesOn` | the ids of enabled modules |
 
 `custom_domain`, `status`, member, user, owner, log and support data are never returned. The test also checks that an owner's email and an unlisted contact key never appear anywhere in the output.

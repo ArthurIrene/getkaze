@@ -18,7 +18,7 @@ export type TemplatePages = { home: ComponentType<TemplateProps> } & Partial<
  * Pages per template (D-039). To add a template: add its id in
  * packages/core (templateIds), a folder here, and one entry below.
  */
-export const templates: Record<TemplateId, TemplatePages> = {
+export const templates: Partial<Record<TemplateId, TemplatePages>> = {
   "field-journal": {
     home: FieldJournalHome,
     rooms: FieldJournalRooms,
@@ -32,6 +32,6 @@ export const templates: Record<TemplateId, TemplatePages> = {
 /** Colours per template for the manifest, theme-color and placeholder icons (pwa-manifest.md). */
 export type TemplateTheme = { paper: string; paperDark: string; accent: string };
 
-export const templateThemes: Record<TemplateId, TemplateTheme> = {
+export const templateThemes: Partial<Record<TemplateId, TemplateTheme>> = {
   "field-journal": fieldJournalTheme,
 };
