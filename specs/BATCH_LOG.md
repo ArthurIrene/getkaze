@@ -455,3 +455,12 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Migration: None (seed only).
 - Next session starts here: L5-1 `/my-stay` GET form.
 
+## Luxe L5-1: /my-stay GET form (no-JS) | 2026-11-22
+- Built: `apps/web/src/templates/luxe/my-stay.tsx` page component with LuxePage shell; `apps/web/src/app/[locale]/site/[site]/my-stay/page.tsx` route (force-dynamic); added `myStay` to `luxePageIds`; updated `sitePages` in core to exclude `myStay` (Luxe-only), `availablePages` in render-page adds it for Luxe; added Luxe `pageHref` entry for `/my-stay`; added messages to `Luxe` namespace in en.json and rw.json (all rw drafts for D-048); added Nav.myStay for header/footer; added CSS for my-stay form in `public/luxe.css` (L4/L5 additions block).
+- Form fields: hidden item/group, check-in/out (native date, min=today, max=+1 year), adults/children, name, note, WhatsApp submit, privacy line.
+- Core: added `myStay` to `pageIds` and `pagePaths`; updated `sitePages` to exclude `myStay` by default; updated `pageSeo` in seo.ts with myStay case; updated `pageName` in metadata.ts to handle myStay.
+- Tests: `pnpm typecheck`, `pnpm lint`, `pnpm test` (135 core + 4 web), `pnpm build` — all green.
+- Weight-check: Not run (requires local Supabase).
+- Migration: None (no stored data).
+- Next session starts here: L5-2 `/my-stay/send` route + optional script.
+
