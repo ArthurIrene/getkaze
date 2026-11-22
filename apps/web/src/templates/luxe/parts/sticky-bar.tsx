@@ -18,11 +18,16 @@ export async function StickyBar({
   const check = checkHref(site, locale, pages, t("checkMessage", { name: site.name }));
   return (
     <div className="tl-bar">
+      <a className="tl-bar-call" href={site.contacts.telHref} aria-label={t("call")}>
+        <Glyph name="call" size={20} />
+        <span className="tl-bar-label">{t("call")}</span>
+      </a>
       <a className="tl-bar-main" href={check}>
         {t("check")}
       </a>
-      <a className="tl-bar-call" href={site.contacts.telHref} aria-label={t("call")}>
-        <Glyph name="call" size={20} />
+      <a className="tl-bar-wa" href={site.contacts.whatsapp ? `https://wa.me/${site.contacts.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(t("checkMessage", { name: site.name }))}` : site.contacts.telHref} aria-label={t("whatsapp")}>
+        <Glyph name="chat" size={20} />
+        <span className="tl-bar-label">{t("whatsapp")}</span>
       </a>
     </div>
   );

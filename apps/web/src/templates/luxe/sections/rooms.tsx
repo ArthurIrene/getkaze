@@ -10,11 +10,11 @@ export async function Rooms({ site }: TemplateProps) {
     <section className="tl-section tl-rooms" aria-labelledby="tl-rooms">
       <h2 id="tl-rooms" className="tl-section-title">{t("rooms")}</h2>
       <ul className="tl-grid">
-        {site.rooms.map((room, i) => {
+        {site.rooms.map((room) => {
           const [first] = room.photos;
           return (
             <li key={room.id} className="tl-room">
-              {i === 0 && first ? <PhotoSpot photo={first} sizes="(min-width: 760px) 50vw, 100vw" /> : <div className="tl-ph" aria-label={room.name} style={{ height: 180 }} />}
+              {first ? <PhotoSpot photo={first} sizes="(min-width: 760px) 50vw, 100vw" /> : <div className="tl-ph" aria-label={room.name} style={{ height: 300 }} />}
               <span className="tl-tag"><Price price={room.price} /></span>
               <h3 className="tl-room-name">{room.name}</h3>
               <p className="tl-room-line">{room.line}</p>

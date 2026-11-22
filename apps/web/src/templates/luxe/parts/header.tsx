@@ -5,11 +5,11 @@ import { pageHref } from "./links";
 
 type HeaderProps = { site: SiteView; locale: Locale; page: PageId; pages: PageId[] };
 
-/** Name (links home), the top menu (Rooms and Contact only), language pills and the RWF/USD switch. No JavaScript. */
+/** Name (links home), Rooms + Contact nav, language pills and the RWF/USD switch. No JavaScript. */
 export async function Header({ site, locale, page, pages }: HeaderProps) {
   const t = await getTranslations("Luxe");
   const n = await getTranslations("Nav");
-  // Top menu lists only Rooms and Contact; Book lives in the sticky bar, Privacy in the footer.
+  // Header top menu lists only Rooms and Contact; Book lives in the sticky bar, Privacy in the footer.
   const menuIds: PageId[] = ["rooms", "contact"];
   const links = menuIds.filter((id) => pages.includes(id) && id !== page);
   const items = links.map((id) => (
@@ -21,6 +21,9 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
   ));
   return (
     <header className="tl-header">
+      <a href="#main" className="tl-skip">
+        Skip to content
+      </a>
       <a className="tl-logo" href={pageHref("home", locale, site.linkBase)}>
         {site.name}
       </a>
@@ -30,7 +33,7 @@ export async function Header({ site, locale, page, pages }: HeaderProps) {
         </nav>
       ) : null}
       <div className="tl-header-tools">
-        <nav aria-label={t("language")} className="tl-pills">
+        <nav aria-label={t("language")} className="tl-pills tl-lang">
           {routing.locales.map((code) => (
             <a
               key={code}
