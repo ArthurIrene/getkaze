@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accentPalette, contrast, fullSections, missingTranslations, moveItem, parseLook, parseMove, parseRoom, parseSections, roomHandle } from "./editor-items";
+import { accentPalette, contrast, fullSections, missingTranslations, moveItem, parseLook, parseMove, parseRoom, parseSections, parseTemplate, roomHandle } from "./editor-items";
 import { sectionIds } from "./sections";
 
 const form = (o: Record<string, string>) => (k: string) => o[k];
@@ -63,6 +63,19 @@ describe("look", () => {
       expect(contrast(a.day, "#f4eee3"), `${a.id} day on paper`).toBeGreaterThanOrEqual(4.5);
       expect(contrast(a.night, "#1e1b17"), `${a.id} night`).toBeGreaterThanOrEqual(4.5);
     }
+  });
+});
+
+describe("template", () => {
+  it("accepts field-journal and luxe", () => {
+    expect(parseTemplate("field-journal")).toBe("field-journal");
+    expect(parseTemplate("luxe")).toBe("luxe");
+  });
+  it("falls back to field-journal for anything else", () => {
+    expect(parseTemplate("")).toBe("field-journal");
+    expect(parseTemplate("imigongo")).toBe("field-journal");
+    expect(parseTemplate(null as unknown)).toBe("field-journal");
+    expect(parseTemplate(42 as unknown)).toBe("field-journal");
   });
 });
 

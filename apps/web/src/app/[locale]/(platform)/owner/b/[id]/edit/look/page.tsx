@@ -7,7 +7,7 @@ import { saveLook } from "../actions";
 
 const pill = "flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 px-3 text-sm has-[:checked]:border-neutral-900 has-[:checked]:ring-2 has-[:checked]:ring-neutral-900";
 
-/** Look & colors (D-040, O-Editor): template (Field Journal; others later), colour set, accent from the safe palette. */
+/** Look & colors (D-040, O-Editor): colour set and accent from the safe palette; template is set at business creation and is read-only here. */
 export default async function LookPage({ params, searchParams }: PageProps<"/[locale]/owner/b/[id]/edit/look">) {
   const { locale, id } = await params;
   setRequestLocale(locale as Locale);
@@ -16,16 +16,16 @@ export default async function LookPage({ params, searchParams }: PageProps<"/[lo
   const t = await getTranslations("Editor");
   const { data: s } = await supabase.from("site_settings").select("look").eq("business_id", id).maybeSingle();
   const look = (s?.look ?? {}) as { color_set?: string; accent?: string };
+  const current = business.template === "luxe" ? t("templateName.luxe") : t("templateName.fieldJournal");
   return (
     <EditorFrame locale={locale} path={`/owner/b/${id}/edit/look`} back={editorHref(locale, id)} title={t("row.look")} business={business.name} support={access.ok && access.as === "support"} q={q as Record<string, string>}>
       <form action={saveLook} className="flex flex-col gap-6">
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="business" value={id} />
-        <fieldset className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <legend className="mb-1 text-sm font-medium">{t("template")}</legend>
-          <label className={pill}><input type="radio" name="template" value="field-journal" defaultChecked className="sr-only" />Field Journal</label>
-          <p className="text-xs text-neutral-600">{t("templatesLater")}</p>
-        </fieldset>
+          <p className="text-sm text-neutral-700">{current}</p>
+        </div>
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-1 text-sm font-medium">{t("colorSet")}</legend>
           <div className="flex flex-wrap gap-2">

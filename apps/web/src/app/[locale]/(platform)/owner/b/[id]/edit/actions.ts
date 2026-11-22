@@ -234,8 +234,10 @@ export async function saveSections(form: FormData) {
 // ---------- Look & colors ----------
 export async function saveLook(form: FormData) {
   const { locale, supabase, business } = await editor(form);
+  const back = (q: string) => redirect(`${editorHref(locale, business.id, "/look")}?${q}`);
   const look = parseLook(getter(form));
   const { error } = await supabase.from("site_settings").update({ look }).eq("business_id", business.id);
+  if (error) back("error=save");
   refreshSite(business);
   redirect(`${editorHref(locale, business.id, "/look")}?${error ? "error=save" : "saved=1"}`);
 }

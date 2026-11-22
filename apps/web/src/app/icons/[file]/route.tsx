@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { initials } from "@getkaze/core";
 import { siteForHost } from "@/lib/site-for-host";
 import { templateThemes } from "@/templates/registry";
+import { luxeTheme } from "@/templates/luxe/theme";
 
 /**
  * Placeholder icons with the business's initials (pwa-manifest.md), made per
@@ -28,7 +29,8 @@ export async function GET(_request: Request, { params }: RouteContext<"/icons/[f
   const { file } = await params;
   if (!(file in files)) return new Response("Not found", { status: 404 });
   const found = await siteForHost();
-  const theme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
+  const registryTheme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
+  const theme = found?.site.template === "luxe" ? luxeTheme : registryTheme;
   const text = initials(found?.site.name ?? "Kaze");
   const spec = files[file as IconFile];
 

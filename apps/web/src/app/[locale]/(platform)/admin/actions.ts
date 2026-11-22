@@ -11,6 +11,7 @@ import {
   canSetStatus,
   looksLikeEmail,
   normalizeSlug,
+  parseTemplate,
   presetDefaults,
   presetOfStyle,
   slugProblems,
@@ -54,6 +55,7 @@ export async function createBusiness(form: FormData) {
   const preset = presetOfStyle(style) as Preset;
   const currency = text(form, "currency", 3) === "usd" ? "usd" : "rwf";
   const languages = ["en", ...(form.get("rw") ? ["rw"] : [])];
+  const template = parseTemplate(form.get("template"));
   const back = (q: string) => redirect(`${platformHref("/admin/new", locale)}?${q}`);
 
   if (!name) back("error=name");
@@ -63,7 +65,7 @@ export async function createBusiness(form: FormData) {
 
   const { data, error } = await supabase
     .from("businesses")
-    .insert({ name, slug, legal_name: name, preset, style, default_currency: currency, languages })
+    .insert({ name, slug, legal_name: name, preset, style, template, default_currency: currency, languages })
     .select("id")
     .single();
   if (error || !data) back(error?.code === "23505" ? `error=slug_taken&slug=${encodeURIComponent(slug)}` : "error=failed");

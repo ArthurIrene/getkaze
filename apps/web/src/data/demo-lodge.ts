@@ -191,3 +191,69 @@ export const demoLodge: SiteData = {
     ],
   },
 };
+
+/** Second demo business: Luxe template, same demo photos, different slug. */
+export const demoLuxe: SiteData = {
+  ...demoLodge,
+  businessId: "demo-luxe-musanze",
+  name: "Luxe Musanze",
+  baseUrl: "https://getkaze.vercel.app",
+  propertyStyle: "lodge",
+  legalName: "Luxe Musanze (demo)",
+  template: "luxe",
+  defaultCurrency: "usd",
+  languages: ["en", "rw"],
+  modulesOn: ["menu"],
+  sections: [
+    { id: "hero", visible: true },
+    { id: "facts", visible: true },
+    { id: "rooms", visible: true },
+    { id: "table", visible: true },
+    { id: "around", visible: true },
+    { id: "host", visible: true },
+    { id: "findUs", visible: true },
+  ],
+  hero: {
+    ...demoLodge.hero,
+    title: { en: "Wake to the volcanoes", rw: "Byuka n'ibirunga" },
+    line: { en: "quiet luxury above Kinigi", rw: "ubuzima buneza ku musozi" },
+  },
+  facts: [
+    {
+      id: "park",
+      value: { en: "15'" },
+      icon: "park",
+      detail: { en: "15 minutes by car to Volcanoes National Park HQ." },
+    },
+    {
+      id: "breakfast",
+      value: { en: "Incl.", rw: "Birimo" },
+      icon: "breakfast",
+      detail: { en: "Breakfast is included from 5 a.m. on trek days." },
+    },
+  ],
+  moments: demoLodge.moments,
+  rooms: demoLodge.rooms.slice(0, 2),
+  roomsLine: { en: "two rooms, one view", rw: "ibyumba bine, ahantu hamwe ho kureba" },
+  stay: {
+    checkIn: "15:00",
+    checkOut: "11:00",
+    breakfastIncluded: true,
+    notes: [{ en: "Early check-in for trekkers on request" }],
+  },
+  dining: {
+    ...demoLodge.dining,
+    name: { en: "the mountain table" },
+  },
+  activities: demoLodge.activities,
+  host: {
+    ...demoLodge.host,
+    name: "Grace",
+    greeting: { en: "Muraho! I'm Grace." },
+    note: { en: "My family has welcomed trekkers for years. I'll sort your permits and driver." },
+  },
+  reviews: {
+    quote: { en: "“Quiet luxury at the foot of the volcanoes.”" },
+    scores: [{ source: "TRIPADVISOR", value: "4.8" }],
+  },
+};

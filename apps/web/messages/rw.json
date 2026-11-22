@@ -237,6 +237,11 @@
     "slug": "Izina mu aderesi (slug)",
     "slugHint": "rikorwa mu izina niba ari ubusa",
     "presetAndStyle": "Ubwoko n'imiterere",
+    "template": "Isura y'urubuga",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "currency": "Ifaranga risanzwe",
     "kinyarwandaOn": "Ikinyarwanda kirakora",
     "create": "Kora ubucuruzi",
@@ -445,7 +450,10 @@
       "booking": "Gufata ibyumba"
     },
     "template": "Isura y'urubuga",
-    "templatesLater": "Izindi sura zizaza nyuma.",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "colorSet": "Amabara",
     "colorSetName": {
       "auto": "Byikora (bikurikira telefoni)",

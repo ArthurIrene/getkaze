@@ -413,7 +413,7 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Status:** Confirmed. Open: the list of subdomains Altavision already uses.
 
 ## D-063 | 2026-11-20
-- **Decision:** Second guest template id **`luxe`**: photo-led, quiet luxury, for Hotel/Lodge. It sits beside Field Journal (`apps/web/src/templates/luxe/`), reads the same `SiteData`, and is chosen by `businesses.template` after host-based routing finds the business. Imigongo (restaurants) and Cinematic (photo-shoot clients) stay later. Home pages add none of our JavaScript. System font stacks first; a self-hosted heading subset only if the weight check still passes. Luxe-only home section ids, filtered by template in the editor. Photo cap **120**. No rating field. Real `/gallery` page. Stay plan: GET `/my-stay` and POST `/my-stay/send` (303 to `wa.me` only); optional vanilla script ≤ 2 KB; `localStorage` key `stay:<businessId>`; nothing about the plan is stored or logged. Spec: `specs/luxe-template.md`.
+- **Decision:** Second guest template id **`luxe`**: photo-led, quiet luxury, for Hotel/Lodge. It sits beside Field Journal (`apps/web/src/templates/luxe/`), reads the same `SiteData`, and is chosen by `businesses.template` after host-based routing finds the business. Imigongo (restaurants) and Cinematic (photo-shoot clients) stay later. Home pages add none of our JavaScript. System font stacks first; a self-hosted heading subset only if the weight check still passes. Luxe-only home section ids, filtered by template in the editor. Photo cap **120**. No rating field. Real `/gallery` page. Stay plan: GET `/my-stay` and POST `/my-stay/send` (303 to `wa.me` only); optional vanilla script ≤ 2 KB; `localStorage` key `stay:<businessId>`; nothing about the plan is stored or logged. Field Journal guest pages load no Luxe CSS or component code (check the built CSS chunks); Field Journal guest JS stays under 160 KB (D-066). Spec: `specs/luxe-template.md`.
 - **Replaces:** amends D-039 (template set) and D-040 (Field Journal only at launch).
 - **Reason:** A paying-style second look without a client-specific front end (D-018) and without waiting for Imigongo or Cinematic.
 - **Status:** Confirmed
@@ -446,4 +446,10 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Decision:** Guest photos are **three widths — 480, 960 and 1440 px** — made on the owner's device (WebP, JPEG fallback), served with a plain `<img srcset>`, no image optimizer. Targets about 40 / 80 / 160 KB; hard cap 300 KB per file. Hero on a 2× phone uses the 960 file (~80 KB).
 - **Replaces:** none (records the Batch 3a editor approval).
 - **Reason:** Predictable weight on 3G without a runtime image service (no Vercel-only optimizer).
+- **Status:** Confirmed
+
+## D-069 | 2026-11-22
+- **Decision:** The template is chosen **at business setup** (admin creates the business; owner Look & colors cannot change it) and is **locked afterwards**. `businesses.template` is only written by `createBusiness`; `saveLook` writes `site_settings.look` only and never touches `businesses`. RLS (`businesses_update` requiring `app.is_platform_admin()`) blocks owners from updating any business column including `template`. The Look page renders the current template as a read-only line. Spec: `specs/luxe-template.md` (L2b).
+- **Replaces:** none (refines D-063 / D-040: template is no longer editable after creation).
+- **Reason:** A template switch would require re-rendering the whole guest site (different CSS, components, sections); letting owners flip it would break the "Field Journal loads no Luxe CSS" isolation and could corrupt existing content.
 - **Status:** Confirmed

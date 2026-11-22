@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { presets } from "@getkaze/core";
+import { presets, templateIds } from "@getkaze/core";
 import { AdminBar } from "@/components/platform/admin-bar";
 import { Card, Field, Notice, Shell, Submit } from "@/components/platform/shell";
 import type { Locale } from "@/i18n/routing";
@@ -7,7 +7,9 @@ import { requireArea } from "@/lib/auth/require";
 import { loose } from "@/components/platform/loose";
 import { createBusiness } from "../actions";
 
-/** New business: name, slug (from the name if empty), preset and style, currency, languages. Starts as a draft. */
+const pill = "flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 px-3 text-sm has-[:checked]:border-neutral-900 has-[:checked]:ring-2 has-[:checked]:ring-neutral-900";
+
+/** New business: name, slug (from the name if empty), template, preset and style, currency, languages. Starts as a draft. */
 export default async function NewBusiness({ params, searchParams }: PageProps<"/[locale]/admin/new">) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
@@ -27,6 +29,17 @@ export default async function NewBusiness({ params, searchParams }: PageProps<"/
           <label className="flex flex-col gap-1 text-sm font-medium">
             {t("slug")}
             <input name="slug" defaultValue={typeof q.slug === "string" ? q.slug : ""} maxLength={40} placeholder={t("slugHint")} className="h-11 rounded-lg border border-neutral-300 px-3 font-mono text-base font-normal" />
+          </label>
+          <label className="flex flex-col gap-1 text-sm font-medium">
+            {t("template")}
+            <div className="flex flex-wrap gap-2">
+              {templateIds.map((template) => (
+                <label key={template} className={pill}>
+                  <input type="radio" name="template" value={template} defaultChecked={template === "field-journal"} className="sr-only" />
+                  {template === "field-journal" ? t("templateName.fieldJournal") : t("templateName.luxe")}
+                </label>
+              ))}
+            </div>
           </label>
           <label className="flex flex-col gap-1 text-sm font-medium">
             {t("presetAndStyle")}

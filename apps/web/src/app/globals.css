@@ -2,7 +2,7 @@
    that guest-rendered files use (so new platform screens never add weight to
    guest pages). Platform screens add app/platform.css. */
 @import "tailwindcss" source(none);
-@source "../templates";
+@source "../templates/field-journal";
 @source "../components/ui";
 @source "./**/site/**/*.tsx";
 @source "./**/not-found.tsx";

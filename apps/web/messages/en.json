@@ -250,6 +250,11 @@
     "slug": "Subdomain (slug)",
     "slugHint": "made from the name if empty",
     "presetAndStyle": "Type and style",
+    "template": "Template",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "currency": "Default currency",
     "kinyarwandaOn": "Kinyarwanda on",
     "create": "Create business",
@@ -458,7 +463,10 @@
       "booking": "Booking system"
     },
     "template": "Template",
-    "templatesLater": "More templates are coming later.",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "colorSet": "Colours",
     "colorSetName": {
       "auto": "Auto (follows the phone)",
