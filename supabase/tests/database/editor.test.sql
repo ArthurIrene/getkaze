@@ -41,8 +41,9 @@ select is(tests.exec_count($$ update public.businesses set name = 'Lodge A2', la
 select is(tests.exec_count(format($$ update public.businesses set %s where id = '00000000-0000-0000-0000-00000000000a' $$, change)), -1::bigint, 'owner A cannot change: ' || change)
 from unnest(array[
   'status = ''active''', 'slug = ''biz-a-new''', 'custom_domain = ''a.example.test''', 'legal_name = ''A Ltd''',
-  'preset = ''restaurant_bar'', style = ''bar_first''', 'style = ''guesthouse''', 'template = ''field-journal'', status = ''paused'''
+  'preset = ''restaurant_bar'', style = ''bar_first''', 'style = ''guesthouse''', 'status = ''paused'''
 ]) change;
+select is(tests.exec_count($$ update public.businesses set template = 'luxe' where id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'owner cannot change own business template (RLS refuses)');
 select is(tests.exec_count($$ update public.businesses set languages = array['rw'] where id = '00000000-0000-0000-0000-00000000000a' $$), -2::bigint, 'English stays required');
 select is(tests.exec_count($$ update public.businesses set name = 'Taken' where id = '00000000-0000-0000-0000-00000000000b' $$), 0::bigint, 'owner A cannot change business B');
 select is(tests.exec_count($$ update public.site_settings set translations_checked = '{"location.area": ["rw"]}' where business_id = '00000000-0000-0000-0000-00000000000a' $$), 1::bigint, 'owner A saves checked marks');
@@ -50,12 +51,12 @@ select is(tests.exec_count($$ update public.site_settings set contacts = '{}' wh
 
 -- ---------- Non-member ----------
 select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000c1", "role": "authenticated", "aal": "aal1"}', true);
-select is(tests.exec_count($$ update public.businesses set template = 'luxe' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'non-member cannot change A\'s template');
+select is(tests.exec_count($$ update public.businesses set template = 'luxe' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'non-member cannot change A''s template');
 reset role;
 
 -- ---------- Admin ----------
 select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000ad", "role": "authenticated", "aal": "aal1"}', true);
-select is(tests.exec_count($$ update public.businesses set slug = 'biz-a-x' where id = '00000000-0000-0000-0000-00000000000a' $$), 0::bigint, 'admin at aal1 changes nothing');
+select is(tests.exec_count($$ update public.businesses set slug = 'biz-a-x' where id = '00000000-0000-0000-0000-00000000000a' $$), -1::bigint, 'admin at aal1 changes nothing (RLS refuses)');
 select set_config('request.jwt.claims', '{"sub": "00000000-0000-0000-0000-0000000000ad", "role": "authenticated", "aal": "aal2"}', true);
 select is(tests.exec_count($$ update public.businesses set slug = 'biz-a-x', legal_name = 'A Ltd' where id = '00000000-0000-0000-0000-00000000000a' $$), 1::bigint, 'admin at aal2 changes the other columns');
 reset role;
