@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { TemplateProps } from "../../types";
 
-/** Host: the host photo, name, greeting and note. */
+/** Host: the host name, greeting and note (photo removed on home). */
 export async function Host({ site }: TemplateProps) {
   const t = await getTranslations("Luxe");
   return (

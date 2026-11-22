@@ -5,10 +5,12 @@ export function PhotoSpot({
   photo,
   sizes = "100vw",
   eager = false,
+  fetchPriority,
 }: {
   photo: PhotoView;
   sizes?: string;
   eager?: boolean;
+  fetchPriority?: "high" | "low" | "auto";
 }) {
   if (!photo.src) {
     return <div role="img" aria-label={photo.alt} className="tl-ph" style={{ height: 300 }} />;
@@ -21,6 +23,7 @@ export function PhotoSpot({
       width={photo.width}
       height={photo.height}
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={fetchPriority}
       decoding="async"
       className="tl-img"
     />
