@@ -458,7 +458,10 @@
       "booking": "Booking system"
     },
     "template": "Template",
-    "templatesLater": "More templates are coming later.",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "colorSet": "Colours",
     "colorSetName": {
       "auto": "Auto (follows the phone)",

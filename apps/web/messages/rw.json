@@ -445,7 +445,10 @@
       "booking": "Gufata ibyumba"
     },
     "template": "Isura y'urubuga",
-    "templatesLater": "Izindi sura zizaza nyuma.",
+    "templateName": {
+      "fieldJournal": "Field Journal",
+      "luxe": "Luxe"
+    },
     "colorSet": "Amabara",
     "colorSetName": {
       "auto": "Byikora (bikurikira telefoni)",

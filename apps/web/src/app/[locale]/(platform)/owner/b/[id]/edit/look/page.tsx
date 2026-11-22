@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { accentPalette, colorSets } from "@getkaze/core";
+import { accentPalette, colorSets, templateIds } from "@getkaze/core";
 import { EditorFrame, SaveBar } from "@/components/editor/frame";
 import type { Locale } from "@/i18n/routing";
 import { editorHref, requireEditor } from "@/lib/editor/access";
@@ -7,7 +7,7 @@ import { saveLook } from "../actions";
 
 const pill = "flex min-h-11 items-center gap-2 rounded-full border border-neutral-300 px-3 text-sm has-[:checked]:border-neutral-900 has-[:checked]:ring-2 has-[:checked]:ring-neutral-900";
 
-/** Look & colors (D-040, O-Editor): template (Field Journal; others later), colour set, accent from the safe palette. */
+/** Look & colors (D-040, O-Editor): template (Field Journal; Luxe when already Luxe or platform admin), colour set, accent from the safe palette. */
 export default async function LookPage({ params, searchParams }: PageProps<"/[locale]/owner/b/[id]/edit/look">) {
   const { locale, id } = await params;
   setRequestLocale(locale as Locale);
@@ -16,6 +16,8 @@ export default async function LookPage({ params, searchParams }: PageProps<"/[lo
   const t = await getTranslations("Editor");
   const { data: s } = await supabase.from("site_settings").select("look").eq("business_id", id).maybeSingle();
   const look = (s?.look ?? {}) as { color_set?: string; accent?: string };
+  const canSwitch = business.template === "luxe" || access.as === "support";
+  const current = business.template === "luxe" ? "luxe" : "field-journal";
   return (
     <EditorFrame locale={locale} path={`/owner/b/${id}/edit/look`} back={editorHref(locale, id)} title={t("row.look")} business={business.name} support={access.ok && access.as === "support"} q={q as Record<string, string>}>
       <form action={saveLook} className="flex flex-col gap-6">
@@ -23,8 +25,16 @@ export default async function LookPage({ params, searchParams }: PageProps<"/[lo
         <input type="hidden" name="business" value={id} />
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-1 text-sm font-medium">{t("template")}</legend>
-          <label className={pill}><input type="radio" name="template" value="field-journal" defaultChecked className="sr-only" />Field Journal</label>
-          <p className="text-xs text-neutral-600">{t("templatesLater")}</p>
+          {templateIds.map((template) => {
+            const shown = template === "field-journal" || canSwitch;
+            if (!shown) return null;
+            return (
+              <label key={template} className={pill}>
+                <input type="radio" name="template" value={template} defaultChecked={current === template} className="sr-only" />
+                {template === "field-journal" ? t("templateName.fieldJournal") : t("templateName.luxe")}
+              </label>
+            );
+          })}
         </fieldset>
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-1 text-sm font-medium">{t("colorSet")}</legend>

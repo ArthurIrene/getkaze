@@ -8,7 +8,7 @@ import { platformClient } from "@/lib/supabase/server";
 
 export type EditorBusiness = {
   id: string; name: string; slug: string; custom_domain: string | null; preset: string; status: string;
-  languages: ContentLocale[]; default_currency: "rwf" | "usd";
+  languages: ContentLocale[]; default_currency: "rwf" | "usd"; template: string;
 };
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -29,7 +29,7 @@ export async function requireEditor(businessId: string, locale: string) {
     facts.isPlatformAdmin
       ? supabase.from("support_access").select("id").eq("business_id", businessId).eq("admin_id", facts.userId).is("ended_at", null).limit(1)
       : Promise.resolve({ data: [] }),
-    supabase.from("businesses").select("id, name, slug, custom_domain, preset, status, languages, default_currency").eq("id", businessId).maybeSingle(),
+    supabase.from("businesses").select("id, name, slug, custom_domain, preset, status, languages, default_currency, template").eq("id", businessId).maybeSingle(),
   ]);
   const access = canEditSite(member as { roles: string[]; status: string } | null, {
     isPlatformAdmin: facts.isPlatformAdmin,
