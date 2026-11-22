@@ -423,3 +423,17 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Luxe runtime check: RUN — local Supabase seeded with demoLuxe (`luxe-musanze`, template `luxe`); `/s/luxe-musanze`, `/rooms`, `/contact`, `/book`, `/privacy` all return 200 with sections rendered, `luxe.css` loads, theme-color `#fbfaf5`, plain `srcSet`, zero `next/image`; `/experiences` and `/my-stay` return 404. Field Journal `/` unchanged.
 - Rooms, contact, book, privacy now built (L3b complete); experiences/dining/gallery/my-stay remain for L4/L5.
 
+## Luxe L3b image-weight follow-up | 2026-11-22
+- First-view images on Luxe home at 360px width (DPR 1, all pick 480w from srcset; `loading` attr):
+  1. /demo-photos/hero-volcanoes/1440.webp — src 1440w, srcset 480/960/1440w, sizes 100vw, loading=eager (above-fold LCP)
+  2. /demo-photos/room-garden-single-bed/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
+  3. /demo-photos/room-garden-double-bed/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
+  4. /demo-photos/dining-fireside/960.webp — src 960w, srcset 480/960w, sizes 100vw, loading=lazy
+  5. /demo-photos/around-gorillas/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
+  6. /demo-photos/around-lakes/960.webp — src 960w, srcset 480/960w, sizes (min-width: 760px) 50vw, 100vw, loading=lazy
+- Every below-first-screen image (2-6) already uses loading="lazy" with srcset and sizes that pick 480w on a phone; hero (1) is correctly eager. No code change needed — loading attributes are correct.
+- All 6 images still load on first view (192.7 KB) because Chrome's lazy-loading threshold (~1250 px on assumed 4G) exceeds the page height at 360x800, so below-fold images are not deferred despite loading="lazy".
+- Weight-check re-run: Field Journal `/` PASS — CSS 10.2 KB (2 files), JS 145.4 KB (7 files), total 206.7 KB (unchanged). Luxe home FAIL — CSS 13.4 KB (3 files), JS 145.4 KB (7 files), Images 192.7 KB (6), total 358.7 KB, 58.7 KB over the 300 KB budget. JS 145.4 KB on every page (under the 160 KB flag threshold).
+- What remains over budget: images (192.7 KB need to be ≤ ~134 KB given 166 KB HTML+CSS+JS overhead). Options (no new features, do not raise budget): (a) compress the 6 static .webp demo photos at 480w further (~60 KB savings needed); (b) reduce the hero image file size specifically (LCP image); (c) accept the photo-led Luxe home exceeding the first-view budget as a design tradeoff.
+- Luxe runtime check: RUN green (re-confirmed). Field Journal `/` unchanged.
+
