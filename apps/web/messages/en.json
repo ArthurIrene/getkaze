@@ -42,7 +42,8 @@
     "contact": "Contact",
     "book": "Check availability",
     "privacy": "Privacy",
-    "credits": "Photo credits"
+    "credits": "Photo credits",
+    "myStay": "Your stay plan"
   },
   "Rooms": {
     "title": "Rooms",
@@ -603,6 +604,31 @@
     "bookPrivacy": "Privacy",
     "privacyTitle": "Privacy notice",
     "privacyDraft": "Draft, pending legal review",
-    "privacyUpdated": "Last updated {date}"
+    "privacyUpdated": "Last updated {date}",
+    "myStayTitle": "Your stay plan",
+    "myStayLine": "review and send",
+    "myStayItems": "Your selections",
+    "myStayNoItems": "No items selected yet. Pick a room, experience or dining option first.",
+    "myStayItemRoom": "Room: {name}",
+    "myStayItemExperience": "Experience: {name}",
+    "myStayItemDining": "Dining: {name}",
+    "myStayDates": "Dates",
+    "myStayCheckIn": "Check-in",
+    "myStayCheckOut": "Check-out",
+    "myStayGuests": "Guests",
+    "myStayAdults": "Adults",
+    "myStayChildren": "Children",
+    "myStayDetails": "Your details",
+    "myStayName": "Your name",
+    "myStayNote": "Note (optional)",
+    "myStayNotePlaceholder": "Special requests, arrival time, dietary needs...",
+    "myStaySend": "Send plan",
+    "myStayPrivacy": "This plan stays on your phone until you send it.",
+    "myStaySendNote": "Goes straight to {name} from your own WhatsApp. Nothing to pay now.",
+    "myStayErrorTitle": "Something to fix",
+    "myStayErrorDates": "Check-out must be after check-in, from today on, for at most 30 nights.",
+    "myStayErrorGuests": "This room sleeps up to {n}.",
+    "myStayErrorMissing": "Please pick dates, guests, and your name.",
+    "myStayErrorBack": "Use your browser's back button to fix it; your answers are kept."
   }
 }

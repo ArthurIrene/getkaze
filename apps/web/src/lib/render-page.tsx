@@ -15,7 +15,10 @@ export function availablePages(template: TemplateId, view: Parameters<typeof sit
     return sitePages(view).filter((id) => id in pages);
   }
   if (template === "luxe") {
-    return sitePages(view).filter((id) => luxePageIds.includes(id));
+    const base = sitePages(view).filter((id) => luxePageIds.includes(id));
+    // myStay is Luxe-only but not in sitePages (added here)
+    if (luxePageIds.includes("myStay")) return [...base, "myStay"];
+    return base;
   }
   return [];
 }

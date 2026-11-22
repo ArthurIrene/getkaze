@@ -123,6 +123,10 @@ export function pageSeo(
       description = labels.creditsDescription({ name });
       title = labels.pageTitle({ page: labels.pageName(page), name });
       break;
+    case "myStay":
+      description = "Review and send your stay plan via WhatsApp.";
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
   }
 
   const shownLocale = indexed.includes(locale) ? locale : "en";

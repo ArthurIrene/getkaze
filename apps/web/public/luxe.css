@@ -948,3 +948,17 @@ html {
 .tl-legal h2 { font-size: 1.1rem; margin: 16px 0 6px; color: var(--ink); }
 .tl-legal p { margin: 0 0 10px; font-size: 0.95rem; color: var(--ink); line-height: 1.6; }
 .tl-draft { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.tl-book-error { border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin: 0 16px 24px; }
+
+/* Utilities. */
+.tl-rise { transition: transform 0.12s ease; }
+.tl-rise:not(.tl-contact-btn):hover { transform: translateY(-2px); }
+
+/* L4/L5 additions */
+/* My Stay page */
+.tl-my-stay { margin: 0 16px 24px; display: flex; flex-direction: column; gap: 14px; }
+.tl-my-stay-items { display: flex; flex-direction: column; gap: 8px; }
+.tl-my-stay-item { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--paper); }
+.tl-my-stay-privacy { font-size: 0.85rem; margin-top: 8px; }
+.tl-field-error { display: block; color: #c0392b; font-size: 0.8rem; margin-top: 4px; }

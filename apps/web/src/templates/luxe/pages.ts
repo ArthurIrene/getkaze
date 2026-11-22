@@ -4,4 +4,4 @@ import type { PageId } from "@getkaze/core";
  *  safe to load on every guest page without adding weight to Field Journal.
  *  Extended only as each page component is built, so no link points to an
  *  unbuilt page. */
-export const luxePageIds: PageId[] = ["home", "rooms", "contact", "book", "privacy"];
+export const luxePageIds: PageId[] = ["home", "rooms", "contact", "book", "privacy", "myStay"];

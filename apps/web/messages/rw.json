@@ -42,7 +42,8 @@
     "contact": "Twandikire",
     "book": "Reba ibyumba bihari",
     "privacy": "Ubuzima bwite",
-    "credits": "Abafashe amafoto"
+    "credits": "Abafashe amafoto",
+    "myStay": "Itegerezo ryawe ry'ijoro"
   },
   "Rooms": {
     "title": "Ibyumba",
@@ -590,6 +591,31 @@
     "bookPrivacy": "Ubuzima bwite",
     "privacyTitle": "Itangazo ryerekeye ubuzima bwite",
     "privacyDraft": "Inyandiko y'agateganyo, itegereje isuzuma ry'umunyamategeko",
-    "privacyUpdated": "Byavuguruwe ku wa {date}"
+    "privacyUpdated": "Byavuguruwe ku wa {date}",
+    "myStayTitle": "Itegerezo ryawe ry'ijoro",
+    "myStayLine": "reba kandi uhereze",
+    "myStayItems": "Ibyo wahitamoye",
+    "myStayNoItems": "Nta ibyo wahitamoye binyuze. Hitamo icyumba, ikorwa cyangwa kurya mbere.",
+    "myStayItemRoom": "Icyumba: {name}",
+    "myStayItemExperience": "Ikorwa: {name}",
+    "myStayItemDining": "Kurya: {name}",
+    "myStayDates": "Amatariki",
+    "myStayCheckIn": "Kwinjira",
+    "myStayCheckOut": "Kugenda",
+    "myStayGuests": "Abashyitsi",
+    "myStayAdults": "Abakuru",
+    "myStayChildren": "Abana",
+    "myStayDetails": "Umwirondoro wawe",
+    "myStayName": "Izina ryawe",
+    "myStayNote": "Icyitonderwa (si ngombwa)",
+    "myStayNotePlaceholder": "Ibibazo byishingiye, igihe cyo kwinjira, ibyo wangiriye...",
+    "myStaySend": "Ohereza itegerezo",
+    "myStayPrivacy": "Iyi teregezo iria mu telefoni yawe gushika uyihereze.",
+    "myStaySendNote": "Bijya kuri {name} biturutse kuri WhatsApp yawe. Nta kwishyura ubu.",
+    "myStayErrorTitle": "Hari icyo gukosora",
+    "myStayErrorDates": "Itariki yo kugenda igomba kuba nyuma y'iyo kwinjira, uhereye uyu munsi, amajoro atarenze 30.",
+    "myStayErrorGuests": "Iki cyumba cyakira abantu bagera kuri {n}.",
+    "myStayErrorMissing": "Hitamo amatariki, abashyitsi, n'izina ryawe.",
+    "myStayErrorBack": "Kanda \"subira inyuma\" muri mushakisha yawe; ibyo wujuje biracyahari."
   }
 }

@@ -18,7 +18,11 @@ export async function pageMetadata(page: PageId, locale: Locale, siteKey: string
     style: (style) => t(`style.${style}`),
     homeTitle: (v) => t("homeTitle", v),
     pageTitle: (v) => t("pageTitle", v),
-    pageName: (id) => (id === "privacy" ? p("title") : n(id)),
+    pageName: (id) => {
+      if (id === "privacy") return p("title");
+      if (id === "myStay") return "Your stay plan";
+      return n(id);
+    },
     homeDescription: (v) => t("homeDescription", v),
     roomsDescription: (v) => t("roomsDescription", { ...v, breakfast: v.breakfast ? "yes" : "no" }),
     contactDescription: (v) => t("contactDescription", v),
