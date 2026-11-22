@@ -18,7 +18,6 @@ import {
   supportReasonProblems,
   type BusinessStatus,
   type Preset,
-  type TemplateId,
 } from "@getkaze/core";
 import { platformHref, requestOrigin } from "@/lib/auth/paths";
 import { requireArea } from "@/lib/auth/require";
