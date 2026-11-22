@@ -26,7 +26,7 @@ Host-based routing is unchanged (`parseHost` → slug or custom domain → `get_
 - Every Luxe rule is under **`.tl`** (same idea as `.fj`). No `:root`, `html` or `@theme` leaks.
 - Do not `@source` Luxe from guest `globals.css`. `luxe.css` is imported only from Luxe page shells.
 - Viewport, manifest and placeholder icons use `templateThemes[site.template]`.
-- After L2, Field Journal `/` CSS and JS file list must not grow by Luxe utilities or chunks. Playwright: a Luxe demo and Kinigi differ in computed background/fonts; Luxe JS is absent on the Field Journal first view.
+- After L2, **no Luxe CSS or Luxe component code loads on Field Journal pages** — check the built CSS chunks (no `.tl-` / `luxe` class names) and the Field Journal guest JS chunks. Field Journal guest JS stays under 160 KB (D-066). Playwright: a Luxe demo and Kinigi differ in computed background/fonts; Luxe JS is absent on the Field Journal first view.
 
 ## Routes (under `/[locale]/site/[site]`, same proxy rewrite)
 | Public path | PageId | When it exists |
@@ -113,14 +113,14 @@ Imigongo, Cinematic, client-specific Maison Musanze code, storing plans, a ratin
 |---|---|---|
 | **L0** | This spec (and D-063… in DECISIONS.md). | Approved once. |
 | **L1** | Additive migrations, RLS, photo cap 120, `get_published_site` fields, `rowToSiteData`, isolation + locked-fields tests. | **CHECKPOINT.** Stop for go. |
-| **L2** | `templates/luxe` shell, dynamic registry, Look radio, scoped CSS, a second seeded/demo business or slug. | Field Journal weight/CSS/JS unchanged. |
+| **L2** | `templates/luxe` shell, dynamic registry, Look radio, scoped CSS, a second seeded/demo business or slug. | No Luxe CSS or Luxe component code loads on Field Journal pages (check the built CSS and chunks); Field Journal guest JS stays under 160 KB (D-066). |
 | **L3** | Restyle home, rooms, contact, book, privacy from shared `SiteView`. Zero extra JS on home. | Luxe home within 300 KB; JS FAIL over 160 KB; no our JS on home. |
 | **L4** | Routes: experiences, `[slug]`, dining, gallery; template-aware nav; Playwright; weight-check list. | New pages work with JS off. |
 | **L5** | `/my-stay` GET form, `POST /my-stay/send`, optional ≤2 KB script, privacy line. | Same send rules as `/book/send`. |
 | **L6** | Editor: experiences, services, dining groups/items, Luxe sections/copy, rooms extras. | Owner save appears on the guest site after revalidate. |
 | **L7** | Seed, credits if needed, speed/weight, `BATCH_LOG` wrap-up. | CI green. |
 
-Do not start L3 until L1 isolation is green and L2 proves Field Journal CSS/JS did not grow.
+Do not start L3 until L1 isolation is green and L2 proves no Luxe CSS or component code loads on Field Journal pages (check the built CSS and chunks) and Field Journal guest JS stays under 160 KB (D-066).
 
 ## Definition of Done
 Spec approved; isolation test passed after L1; each later batch has unit and Playwright coverage as listed; `pnpm weight-check` includes Luxe pages (fail > 300 KB, FAIL JS > 160 KB); no guest plan storage; no client-specific code; Kinyarwanda drafts listed for D-048.
