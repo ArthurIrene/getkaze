@@ -2,12 +2,14 @@ import type { MetadataRoute } from "next";
 import { shortName } from "@getkaze/core";
 import { siteForHost } from "@/lib/site-for-host";
 import { templateThemes } from "@/templates/registry";
+import { luxeTheme } from "@/templates/luxe/theme";
 
 /** /manifest.webmanifest per business (pwa-manifest.md). No service worker in Batch 1. */
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const found = await siteForHost();
   const name = found?.site.name ?? "Kaze";
-  const theme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
+  const registryTheme = templateThemes[found?.site.template ?? "field-journal"] ?? templateThemes["field-journal"]!;
+  const theme = found?.site.template === "luxe" ? luxeTheme : registryTheme;
   const description = found ? `${found.view.hero.title} ${found.view.hero.line}`.trim() : undefined;
   return {
     name,
