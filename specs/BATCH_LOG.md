@@ -408,3 +408,10 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Runtime check: RUN green — local Supabase seeded with demoLuxe (`luxe-musanze`, template luxe); `/s/luxe-musanze` returns 200, loads `/luxe.css`, theme-color `#fbfaf5`/`#1a1814` (Luxe paper), skip link + sticky contact bar render, no `.fj-` leakage; Field Journal `/` keeps `#f4eee3` and no luxe.css.
 - registry.ts untouched. Rooms, contact, book, privacy not built (L3b).
 
+## Luxe L3a follow-up fixes | 2026-11-22
+- Seed id uniqueness (gen-demo-seed.mjs): `id()` now mixes an optional business-key scope into the hash; Kinigi Hills keeps scope undefined so its block is byte-identical (0 lines changed in seed.sql), Luxe Musanze passes its bidKey so catalog item and media ids are unique per business (no more id collisions across the two demo businesses). regenerated supabase/seed.sql (`node scripts/gen-demo-seed.mjs`, `--check` ok).
+- Message namespace: the around section title moved from hardcoded English ("Around us") to the Luxe namespace (`t("around")`; en "Around us", rw "Hafi yacu") in sections/around.tsx. table.tsx already used data-driven `site.dining.name`.
+- Re-seeded local Supabase from new seed.sql; `/s/luxe-musanze` returns 200 and renders rooms (Garden Single, Garden Double with prices), dining (the mountain table + dishes), and around (activities) with plain `<img src srcSet>` (480/960/1440, eager hero, lazy below the fold) and zero `next/image`; `/luxe.css` loads; theme-color `#fbfaf5`/`#1a1814`.
+- Re-verified weight-check Field Journal `/`: CSS 10.2 KB (2 files), JS 145.4 KB (7 files), PASS — unchanged by the follow-up fixes.
+- Tests re-run: `pnpm typecheck`, `pnpm lint` (0 errors; 2 intentional warnings), `pnpm build` green.
+
