@@ -447,3 +447,9 @@ Entry format: ID / Date, Decision, Replaces, Reason, Status.
 - **Replaces:** none (records the Batch 3a editor approval).
 - **Reason:** Predictable weight on 3G without a runtime image service (no Vercel-only optimizer).
 - **Status:** Confirmed
+
+## D-069 | 2026-11-22
+- **Decision:** The template is chosen **at business setup** (admin creates the business; owner Look & colors cannot change it) and is **locked afterwards**. `businesses.template` is only written by `createBusiness`; `saveLook` writes `site_settings.look` only and never touches `businesses`. RLS (`businesses_update` requiring `app.is_platform_admin()`) blocks owners from updating any business column including `template`. The Look page renders the current template as a read-only line. Spec: `specs/luxe-template.md` (L2b).
+- **Replaces:** none (refines D-063 / D-040: template is no longer editable after creation).
+- **Reason:** A template switch would require re-rendering the whole guest site (different CSS, components, sections); letting owners flip it would break the "Field Journal loads no Luxe CSS" isolation and could corrupt existing content.
+- **Status:** Confirmed

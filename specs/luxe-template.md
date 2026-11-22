@@ -113,7 +113,7 @@ Imigongo, Cinematic, client-specific Maison Musanze code, storing plans, a ratin
 |---|---|---|
 | **L0** | This spec (and D-063… in DECISIONS.md). | Approved once. |
 | **L1** | Additive migrations, RLS, photo cap 120, `get_published_site` fields, `rowToSiteData`, isolation + locked-fields tests. | **CHECKPOINT.** Stop for go. |
-| **L2** | `templates/luxe` shell, dynamic registry, Look radio, scoped CSS, a second seeded/demo business or slug. | No Luxe CSS or Luxe component code loads on Field Journal pages (check the built CSS and chunks); Field Journal guest JS stays under 160 KB (D-066). |
+| **L2** | `templates/luxe` shell, dynamic registry, Look radio, scoped CSS, template choice at setup (locked afterwards), a second seeded/demo business or slug. | No Luxe CSS or Luxe component code loads on Field Journal pages (check the built CSS and chunks); Field Journal guest JS stays under 160 KB (D-066). |
 | **L3** | Restyle home, rooms, contact, book, privacy from shared `SiteView`. Zero extra JS on home. | Luxe home within 300 KB; JS FAIL over 160 KB; no our JS on home. |
 | **L4** | Routes: experiences, `[slug]`, dining, gallery; template-aware nav; Playwright; weight-check list. | New pages work with JS off. |
 | **L5** | `/my-stay` GET form, `POST /my-stay/send`, optional ≤2 KB script, privacy line. | Same send rules as `/book/send`. |
