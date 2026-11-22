@@ -1,0 +1,97 @@
+/* Luxe guest template. Every rule is scoped under .tl so Luxe never leaks onto
+   Field Journal pages. No :root, html or @theme. No Tailwind utilities here. */
+.tl {
+  --paper: #fbfaf5;
+  --paper-dark: #1a1814;
+  --ink: #231f19;
+  --muted: #6e6658;
+  --accent: #4a5d4a;
+  --accent-dark: #8fb08f;
+  --border: #d9d2c6;
+  color-scheme: light;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  min-height: 100vh;
+  overflow-x: clip;
+  line-height: 1.55;
+}
+
+.tl h1,
+.tl h2,
+.tl h3,
+.tl h4 {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.tl a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .tl:not([data-look="day"]) {
+    --paper: #1a1814;
+    --paper-dark: #12100e;
+    --ink: #eae6dc;
+    --muted: #b8ae9d;
+    --border: #3a352d;
+    background: var(--paper);
+    color: var(--ink);
+  }
+}
+
+.tl[data-look="night"] {
+  --paper: #1a1814;
+  --paper-dark: #12100e;
+  --ink: #eae6dc;
+  --muted: #b8ae9d;
+  --border: #3a352d;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.tl[data-accent="clay"] {
+  --accent: #9e5530;
+  --accent-dark: #c98255;
+}
+.tl[data-accent="ochre"] {
+  --accent: #7a5d26;
+  --accent-dark: #b39650;
+}
+.tl[data-accent="slate"] {
+  --accent: #2b3a4a;
+  --accent-dark: #7a90a0;
+}
+.tl[data-accent="bark"] {
+  --accent: #5b4636;
+  --accent-dark: #a68568;
+}
+
+.tl-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.tl-footer {
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.tl-hero {
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.tl-hero-title {
+  font-size: 2rem;
+  margin: 0 0 8px;
+}
+
+.tl-hero-line {
+  font-size: 1.125rem;
+  color: var(--muted);
+  margin: 0;
+}
