@@ -7,7 +7,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   return pageMetadata("gallery", locale as Locale, site);
 }
 
-export default async function Page({ params }: { params: Promise<{ locale: Locale; site: string }> }) {
+export default async function Page({ params, searchParams }: { params: Promise<{ locale: Locale; site: string }>; searchParams: Promise<{ page?: string }> }) {
   const { locale, site } = await params;
-  return renderPage("gallery", locale as Locale, site);
+  const { page } = await searchParams;
+  return renderPage("gallery", locale as Locale, site, { page });
 }
