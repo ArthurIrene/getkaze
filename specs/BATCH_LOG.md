@@ -501,3 +501,19 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Migration: None (seed only).
 - Next session starts here: L4-3 dining page, then L4-4 gallery page.
 
+## Luxe L4-3: /dining page | 2026-11-23
+- Built: `apps/web/src/templates/luxe/dining.tsx` page component; `apps/web/src/templates/luxe/sections/dining.tsx` section (dish cards grouped by catalog group by position; flat fallback when no groups; each item: photo `srcset` via `PhotoSpot` with `loading="lazy"`, name, description, price, signature badge; "Reserve a table" → `/my-stay?group=<groupHandle>&item=<dishId>`); `apps/web/src/app/[locale]/site/[site]/dining/page.tsx` route (SSG).
+- Core: added `groups`, `groupId`, `body`, `signature`, `priceValue` to `SiteView` dining dish type in `packages/core/src/site/view.ts`; `toSiteView` maps these fields from `SiteData`.
+- `apps/web/src/templates/luxe/pages.ts`: `luxePageIds` = [`home`, `rooms`, `contact`, `book`, `privacy`, `myStay`, `experiences`, `experienceDetail`, `dining`] — only built pages, no `gallery`.
+- `apps/web/src/lib/render-page.tsx`: added `case "dining"` to `importPage()` switch.
+- `apps/web/public/luxe.css`: added `.tl-dining`, `.tl-dining-group`, `.tl-dish-grid`, `.tl-dish-card`, `.tl-dish-name`, `.tl-dish-desc`, `.tl-dish-price`, `.tl-badge--signature`, `.tl-dish-reserve` styles (L4/L5 additions block).
+- Messages: added `diningLine`, `diningReserve`, `diningSignature`, `diningOther` to `Luxe` namespace in en.json and rw.json (rw drafts).
+- Photo budget: `PhotoSpot` shown for first 4 dishes with a `photo.src`, text cards for the rest (demo has 0 photos with src, so all render as text cards).
+- E2e: `e2e/luxe-dining.spec.ts` — /dining and /rw/dining return 200 with all 3 real seed dishes (Goat brochettes, Isombe & rice, Rwandan coffee); Kinyarwanda renders ("Fata ameza"); Reserve links use `/my-stay?group=<id>&item=<id>`.
+- `e2e/luxe-pages.spec.ts`: `/dining` moved from `notBuilt` to `built`; `/experience-detail` removed from `notBuilt` (now built).
+- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 3 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-dining.spec.ts` PASS (3 tests); `e2e/luxe-isolation.spec.ts` PASS; `e2e/luxe-pages.spec.ts` PASS; `e2e/luxe-experience-detail.spec.ts` PASS.
+- Weight-check: PASS — /s/luxe-musanze/dining 164.2 KB (JS 145.4 KB), /s/luxe-musanze/rw/dining 164.3 KB, /s/luxe-musanze 284.6 KB, / (Field Journal) 206.0 KB CSS 10.2 KB JS 145.4 KB.
+- availablePages for Field Journal unchanged (only Luxe branch in render-page.tsx modified; Field Journal uses templates[template] path).
+- Migration: None (seed only).
+- Next session starts here: L4-4 gallery page.
+
