@@ -102,6 +102,10 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
     const m = media.filter((x) => x.place === place && !x.itemId && str(x.path)).sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0))[0];
     return m ? photo(m, str(m.id), place, mediaBase) : photo(fallback, id, place);
   };
+  const galleryMedia = media
+    .filter((m) => m.place === "gallery" && !m.itemId && str(m.path))
+    .sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0))
+    .map((m) => photo(m, str(m.id), "gallery", mediaBase));
   const byKind = (kind: string) => items.filter((i) => i.kind === kind).sort((x, y) => (num(x.position) ?? 0) - (num(y.position) ?? 0));
   const price = (i: Json, label: string) => {
     const rwf = num(i.priceRwf);
@@ -271,6 +275,7 @@ export function rowToSiteData(row: unknown, baseUrl: string, mediaBase?: string)
     },
     dining: { name: text(dining.name), photo: placed("dining", dining.photo, "dining"), dishes, ...(drinks.length ? { drinks } : {}) },
     ...(groups.length ? { groups } : {}),
+    ...(galleryMedia.length ? { media: galleryMedia } : {}),
     activities,
     ...(services.length ? { services } : {}),
     host: { name: str(host.name), greeting: text(host.greeting), note: text(host.note), photo: placed("host", host.photo, "host") },

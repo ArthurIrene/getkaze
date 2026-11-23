@@ -57,6 +57,7 @@ export type SiteView = {
   roomsLine: string;
   stay: { checkIn: string; checkOut: string; breakfastIncluded: boolean; notes: string[] };
   groups: { id: string; name: string; position: number }[];
+  media: PhotoView[];
   dining: {
     name: string;
     photo: PhotoView;
@@ -168,6 +169,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
     roomsLine: site.roomsLine ? t(site.roomsLine) : "",
     stay: { ...site.stay, notes: site.stay.notes.map(t) },
     groups: (site.groups ?? []).map((g) => ({ id: g.id, name: t(g.name), position: g.position })),
+    media: (site.media ?? []).map(photo),
     dining: {
       name: t(site.dining.name),
       photo: photo(site.dining.photo),

@@ -266,6 +266,13 @@ export const demoLuxe: SiteData = {
     { id: "grp-2", kind: "dish", name: { en: "Mains" }, position: 1 },
     { id: "grp-3", kind: "drink", name: { en: "Drinks" }, position: 2 },
   ],
+  media: [
+    shot("hero-volcanoes", "gallery-volcanoes-1", "gallery", "Volcanoes at sunrise over Kinigi", "Ibirunga byiza mu isanamu mu Kinigi"),
+    shot("life-garden", "gallery-garden-1", "gallery", "Garden path at the lodge", "Urugero rw'ibiti mu byumba"),
+    shot("life-trail", "gallery-trail-1", "gallery", "Trekking trail through the forest", "Umuhanda mu nyenyeri"),
+    shot("life-coffee", "gallery-coffee-1", "gallery", "Fresh Rwandan coffee", "Ikawa ya Rwanda"),
+    shot("life-fire", "gallery-fire-1", "gallery", "Evening fire by the lounge", "Umuriro mu kwigarura"),
+  ],
   activities: [
     {
       ...demoLodge.activities[0],

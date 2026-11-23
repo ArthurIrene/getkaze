@@ -201,4 +201,6 @@ export type SiteData = {
   services?: Service[];
   host: { name: string; greeting: LocalizedText; note: LocalizedText; photo: Photo };
   reviews: { quote: LocalizedText; scores: ReviewScore[] };
+  /** Photos placed in the gallery (media rows with place='gallery', no item). */
+  media?: Photo[];
 };
