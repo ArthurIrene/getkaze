@@ -5,9 +5,9 @@ import { PhotoSpot } from "../parts/photo";
 import { pageHref } from "../parts/links";
 
 const categoryKeys: Record<string, string> = {
-  wildlife: "experienceCategoryWildlife",
-  hiking: "experienceCategoryHiking",
-  culture: "experienceCategoryCulture",
+  wildlife: "experiencesCategoryWildlife",
+  hiking: "experiencesCategoryHiking",
+  culture: "experiencesCategoryCulture",
 };
 
 const arrangedByKeys: Record<string, string> = {
@@ -44,12 +44,12 @@ export async function ExperienceDetail({ site, locale, query }: TemplateProps) {
         )}
         {activity.category && (
           <span className="tl-badge tl-badge--category">
-            {t(categoryKeys[activity.category] as keyof typeof categoryKeys)}
+            {t(categoryKeys[activity.category] as "experiencesCategoryWildlife" | "experiencesCategoryHiking" | "experiencesCategoryCulture")}
           </span>
         )}
         {activity.arrangedBy && (
           <span className="tl-badge tl-badge--arranged-by">
-            {t(arrangedByKeys[activity.arrangedBy] as keyof typeof arrangedByKeys)}
+            {t(arrangedByKeys[activity.arrangedBy] as "experienceArrangedByOwn" | "experienceArrangedByPartner")}
           </span>
         )}
         {activity.price ? (
