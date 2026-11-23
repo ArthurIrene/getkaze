@@ -23,7 +23,6 @@ export function PhotoSpot({
       width={photo.width}
       height={photo.height}
       loading={eager ? "eager" : "lazy"}
-      fetchPriority={fetchPriority}
       decoding="async"
       fetchPriority={fetchPriority}
       className="tl-img"
