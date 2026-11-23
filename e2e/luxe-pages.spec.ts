@@ -4,10 +4,10 @@ import { expect, test } from "@playwright/test";
 const LUXE = "/s/luxe-musanze";
 
 /** Page ids Luxe builds (mirrors templates/luxe/pages.ts). */
-const built = ["", "/rooms", "/contact", "/book", "/privacy", "/experiences"];
+const built = ["", "/rooms", "/contact", "/book", "/privacy", "/experiences", "/dining"];
 
 /** Page ids Luxe does not build (must return a clean 404). */
-const notBuilt = ["/credits", "/dining", "/gallery", "/not-a-page"];
+const notBuilt = ["/credits", "/gallery", "/not-a-page"];
 
 test("each built Luxe page returns 200 on the Luxe demo", async ({ page }) => {
   for (const path of built) {
