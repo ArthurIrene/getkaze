@@ -71,6 +71,8 @@ async function importPage(page: PageId): Promise<{ default: unknown } | undefine
       return await import("@/templates/luxe/experiences");
     case "experienceDetail":
       return await import("@/templates/luxe/experience-detail");
+    case "dining":
+      return await import("@/templates/luxe/dining");
     default:
       return undefined;
   }

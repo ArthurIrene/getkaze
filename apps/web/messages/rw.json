@@ -638,6 +638,10 @@
     "experienceArrangedByOwn": "N'abahangamyi bacu",
     "experienceArrangedByPartner": "N'umushayashya wemewe",
     "experienceWhatToBring": "Icyo ukwiye kugira",
-    "experienceGoodToKnow": "Byiza kubizi"
+    "experienceGoodToKnow": "Byiza kubizi",
+    "diningLine": "ku meza yacu",
+    "diningReserve": "Fata ameza",
+    "diningSignature": "Iby'ingenzi",
+    "diningOther": "Byinshi"
   }
 }

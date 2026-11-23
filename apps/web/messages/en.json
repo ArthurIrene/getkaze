@@ -651,6 +651,10 @@
     "experienceArrangedByOwn": "With our guides",
     "experienceArrangedByPartner": "With a licensed partner",
     "experienceWhatToBring": "What to bring",
-    "experienceGoodToKnow": "Good to know"
+    "experienceGoodToKnow": "Good to know",
+    "diningLine": "at our table",
+    "diningReserve": "Reserve a table",
+    "diningSignature": "Signature",
+    "diningOther": "Other"
   }
 }
