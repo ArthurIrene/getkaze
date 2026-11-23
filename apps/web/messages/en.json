@@ -655,6 +655,13 @@
     "diningLine": "at our table",
     "diningReserve": "Reserve a table",
     "diningSignature": "Signature",
-    "diningOther": "Other"
+    "diningOther": "Other",
+    "galleryTitle": "Gallery",
+    "galleryLine": "Our place in pictures",
+    "galleryEmpty": "No gallery photos yet.",
+    "galleryPagination": "Gallery pagination",
+    "galleryPrev": "Previous",
+    "galleryNext": "Next",
+    "galleryPage": "Page {page} of {pages}"
   }
 }

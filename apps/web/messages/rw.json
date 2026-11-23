@@ -642,6 +642,13 @@
     "diningLine": "ku meza yacu",
     "diningReserve": "Fata ameza",
     "diningSignature": "Iby'ingenzi",
-    "diningOther": "Byinshi"
+    "diningOther": "Byinshi",
+    "galleryTitle": "Galeriya",
+    "galleryLine": "Byumba byacu bye",
+    "galleryEmpty": "Nta ifoto bifite mu gallery.",
+    "galleryPagination": "Kwigira ryagallery",
+    "galleryPrev": "Yateye",
+    "galleryNext": "Yakeneje",
+    "galleryPage": "Pejji {page} ku {pages}"
   }
 }

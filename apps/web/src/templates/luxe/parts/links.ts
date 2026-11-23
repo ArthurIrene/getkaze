@@ -7,6 +7,7 @@ const luxePagePaths: Record<string, string> = {
   ...pagePaths,
   myStay: "/my-stay",
   experiences: "/experiences",
+  gallery: "/gallery",
 };
 
 /** Localised path of a page inside the current Luxe site. Links only to pages Luxe renders. */
