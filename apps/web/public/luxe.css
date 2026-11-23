@@ -982,3 +982,18 @@ html {
 .tl-activity-distance { margin: 0 12px 8px; font-size: 0.8rem; color: var(--accent); }
 .tl-activity-plan { display: block; margin: auto 12px 12px; padding: 8px 12px; background: var(--ink); color: var(--paper); text-decoration: none; text-align: center; border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
 .tl-empty { padding: 24px; text-align: center; color: var(--muted); }
+
+/* Experience detail page */
+.tl-experience-detail { margin: 0 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+.tl-experience-hero { margin: 0 -16px 16px; overflow: hidden; }
+.tl-experience-hero .tl-img { width: 100%; height: 320px; object-fit: cover; display: block; }
+.tl-experience-meta { display: flex; flex-direction: column; gap: 6px; margin: 0 16px; }
+.tl-experience-distance { margin: 0; font-size: 0.8rem; color: var(--accent); }
+.tl-experience-duration { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.tl-experience-price { margin: 4px 0 0; font-size: 1rem; font-weight: 700; }
+.tl-experience-body { margin: 0 16px 16px; }
+.tl-experience-body p { margin: 0 0 12px; line-height: 1.5; }
+.tl-experience-list { margin: 0 16px 16px; }
+.tl-experience-list ul { margin: 8px 0 0; padding-left: 20px; }
+.tl-experience-list li { margin-bottom: 4px; }
+.tl-experience-heading { margin: 0 0 6px; font-size: 1rem; }

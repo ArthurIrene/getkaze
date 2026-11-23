@@ -631,6 +631,13 @@
     "experiencesCategoryWildlife": "Ibisokozo",
     "experiencesCategoryHiking": "Guhinga",
     "experiencesCategoryCulture": "Umuco",
-    "experiencesEmpty": "Nta bikorwa bihari."
+    "experiencesEmpty": "Nta bikorwa bihari.",
+    "experienceDuration": "Igihe: {duration}",
+    "experiencePrice": "Igiciro: {price}",
+    "experienceEnquire": "Buza",
+    "experienceArrangedByOwn": "N'abahangamyi bacu",
+    "experienceArrangedByPartner": "N'umushayashya wemewe",
+    "experienceWhatToBring": "Icyo ukwiye kugira",
+    "experienceGoodToKnow": "Byiza kubizi"
   }
 }

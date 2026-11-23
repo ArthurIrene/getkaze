@@ -644,6 +644,13 @@
     "experiencesCategoryWildlife": "Wildlife",
     "experiencesCategoryHiking": "Hiking",
     "experiencesCategoryCulture": "Culture",
-    "experiencesEmpty": "No experiences available yet."
+    "experiencesEmpty": "No experiences available yet.",
+    "experienceDuration": "Duration: {duration}",
+    "experiencePrice": "Price: {price}",
+    "experienceEnquire": "Enquire",
+    "experienceArrangedByOwn": "With our guides",
+    "experienceArrangedByPartner": "With a licensed partner",
+    "experienceWhatToBring": "What to bring",
+    "experienceGoodToKnow": "Good to know"
   }
 }

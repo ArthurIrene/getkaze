@@ -25,6 +25,7 @@ export function PhotoSpot({
       loading={eager ? "eager" : "lazy"}
       fetchPriority={fetchPriority}
       decoding="async"
+      fetchPriority={fetchPriority}
       className="tl-img"
     />
   );

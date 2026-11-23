@@ -69,6 +69,8 @@ async function importPage(page: PageId): Promise<{ default: unknown } | undefine
       return await import("@/templates/luxe/my-stay");
     case "experiences":
       return await import("@/templates/luxe/experiences");
+    case "experienceDetail":
+      return await import("@/templates/luxe/experience-detail");
     default:
       return undefined;
   }
