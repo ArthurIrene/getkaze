@@ -472,3 +472,18 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Migration: None (no stored data).
 - Next session starts here: L4-1 Experiences list page.
 
+## Luxe L4-1: Experiences list page | 2026-11-23
+- Built: `apps/web/src/templates/luxe/experiences.tsx` page component; `apps/web/src/templates/luxe/sections/experiences.tsx` section (activity cards with category badge, distance, Plan link to /my-stay); `apps/web/src/app/[locale]/site/[site]/experiences/page.tsx` route (force-dynamic).
+- Core: added `experiences`, `experienceDetail`, `dining`, `gallery` to `pageIds`/`pagePaths` in `packages/core/src/pages.ts`; new page SEO cases in `packages/core/src/seo.ts`; expanded `activities` view fields in `packages/core/src/site/view.ts` (category, duration, price, body, whatToBring, arrangedBy, goodToKnow, photos).
+- render-page: moved `template === "luxe"` branch before `templates[template]` early return in `availablePages()` (Luxe-only block was unreachable); added `case "experiences"` to `importPage()` switch.
+- `apps/web/src/templates/luxe/pages.ts`: `luxePageIds` = [`home`, `rooms`, `contact`, `book`, `privacy`, `myStay`, `experiences`] — only built pages, no `experienceDetail`/`dining`/`gallery`.
+- `apps/web/src/templates/luxe/parts/links.ts`: `pageHref` entries for `myStay` and `experiences`.
+- Messages: added `experiencesTitle`, `experiencesLine`, `experiencesFilterAll`, `experiencesFilterWildlife`, `experiencesFilterHiking`, `experiencesFilterCulture`, `experiencesPlan`, `experiencesEmpty`, `experiencesCategoryWildlife/Hiking/Culture` to `Luxe` namespace in en.json and rw.json (rw drafts).
+- CSS: activity card styles in `public/luxe.css` (L4/L5 additions block).
+- Seed fixes (pre-existing bugs found during clean db reset): `gen-demo-seed.mjs` — `price_rwf`/`price_usd` column names (was `rwf`/`usd`), `airport: null` instead of `false` for non-service items, `group handle` fall back to `id`, `group_id` resolved from handle to group UUID, `category` as plain text `q()` instead of JSONB `j()` (was storing `"wildlife"` with quotes, breaking `categories.find(c => c === i.category)` in `from-row.ts`).
+- DB running state earlier: dropped `catalog_items_category_fits_kind`, stripped quotes from activity categories via `replace(category, '"', '')`, recreated constraint with unquoted values — all reverted by clean schema drop/recreate; DB now matches migrations + regenerated seed.sql exactly.
+- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 4 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-pages.spec.ts` PASS (all 8 tests including /experiences 200 + activity cards, /dining /gallery 404); `e2e/luxe-isolation.spec.ts` PASS.
+- Weight-check: PASS — /s/luxe-musanze/experiences 204.5 KB (JS 145.4 KB), /rw/s/luxe-musanze/experiences 134.7 KB, /s/luxe-musanze 284.3 KB, / (Field Journal) 206.0 KB CSS 10.2 KB JS 145.4 KB.
+- Migration: None (seed only).
+- Next session starts here: L4-2 experience detail page, then L4-3 dining, L4-4 gallery.
+
