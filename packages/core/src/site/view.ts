@@ -56,10 +56,11 @@ export type SiteView = {
   }[];
   roomsLine: string;
   stay: { checkIn: string; checkOut: string; breakfastIncluded: boolean; notes: string[] };
+  groups: { id: string; name: string; position: number }[];
   dining: {
     name: string;
     photo: PhotoView;
-    dishes: { id: string; name: string; price: PriceView; icon: IconKey; photo: PhotoView }[];
+    dishes: { id: string; name: string; price: PriceView; priceValue: Price; icon: IconKey; photo: PhotoView; body?: string; signature?: boolean; groupId?: string }[];
   };
   activities: {
     id: string;
@@ -166,6 +167,7 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
     })),
     roomsLine: site.roomsLine ? t(site.roomsLine) : "",
     stay: { ...site.stay, notes: site.stay.notes.map(t) },
+    groups: (site.groups ?? []).map((g) => ({ id: g.id, name: t(g.name), position: g.position })),
     dining: {
       name: t(site.dining.name),
       photo: photo(site.dining.photo),
@@ -173,8 +175,12 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
         id: d.id,
         name: t(d.name),
         price: prices(d.price),
+        priceValue: d.price,
         icon: d.icon,
         photo: photo(d.photo),
+        ...(d.body ? { body: t(d.body) } : {}),
+        ...(d.signature ? { signature: true } : {}),
+        ...(d.groupId ? { groupId: d.groupId } : {}),
       })),
     },
     activities: site.activities.map((a) => ({

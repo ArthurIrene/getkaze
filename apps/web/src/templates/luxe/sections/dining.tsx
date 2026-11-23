@@ -20,8 +20,6 @@ export async function Dining({ site, locale }: TemplateProps) {
     }
   }
 
-  // Photo budget: show PhotoSpot for the first 4 dishes that have a photo src,
-  // text cards for the rest.
   let photoShown = 0;
   const photoFor = (d: typeof dishes[number]) => {
     if (d.photo && d.photo.src && photoShown < 4) {
@@ -43,9 +41,7 @@ export async function Dining({ site, locale }: TemplateProps) {
         )}
         <h3 className="tl-dish-name">{d.name}</h3>
         {d.body && <p className="tl-dish-desc">{d.body}</p>}
-        <p className="tl-dish-price">
-          {`${d.price.rwf} RWF / ${d.price.usd.toFixed(2)} USD`}
-        </p>
+        <p className="tl-dish-price">{d.price.rwf} RWF / {d.price.usd} USD</p>
         {d.signature && <span className="tl-badge tl-badge--signature">{t("diningSignature")}</span>}
         <a href={`${pageHref("myStay", locale)}?group=${groupId}&item=${d.id}`} className="tl-dish-reserve">
           {t("diningReserve")}
@@ -62,8 +58,8 @@ export async function Dining({ site, locale }: TemplateProps) {
         <>
           {groups
             .slice()
-            .sort((a, b) => a.position - b.position)
-            .map((g) => {
+            .sort((a: { position: number }, b: { position: number }) => a.position - b.position)
+            .map((g: { id: string; name: string; position: number }) => {
               const items = dishesByGroup.get(g.id) ?? [];
               if (items.length === 0) return null;
               return (
