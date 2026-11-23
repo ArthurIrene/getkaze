@@ -20,35 +20,36 @@ export async function Dining({ site, locale }: TemplateProps) {
     }
   }
 
-  let photoShown = 0;
-  const photoFor = (d: typeof dishes[number]) => {
-    if (d.photo && d.photo.src && photoShown < 4) {
-      photoShown += 1;
-      return true;
+  // Photo budget: PhotoSpot for the first 4 dishes that have a photo src,
+  // text cards for the rest. Pre-compute the set so no variable is reassigned during render.
+  const photoIds = new Set<string>();
+  let budget = 4;
+  for (const g of groups.slice().sort((a, b) => a.position - b.position)) {
+    for (const d of dishesByGroup.get(g.id) ?? []) {
+      if (budget > 0 && d.photo && d.photo.src) { photoIds.add(d.id); budget -= 1; }
     }
-    return false;
-  };
+  }
+  for (const d of ungrouped) {
+    if (budget > 0 && d.photo && d.photo.src) { photoIds.add(d.id); budget -= 1; }
+  }
 
-  const dishCard = (d: typeof dishes[number], groupId: string) => {
-    const showPhoto = photoFor(d);
-    return (
-      <li key={d.id} className="tl-dish-card">
-        {showPhoto && (
-          <PhotoSpot
-            photo={d.photo!}
-            sizes="(min-width: 760px) 50vw, (min-width: 480px) 80vw, 100vw"
-          />
-        )}
-        <h3 className="tl-dish-name">{d.name}</h3>
-        {d.body && <p className="tl-dish-desc">{d.body}</p>}
-        <p className="tl-dish-price">{d.price.rwf} RWF / {d.price.usd} USD</p>
-        {d.signature && <span className="tl-badge tl-badge--signature">{t("diningSignature")}</span>}
-        <a href={`${pageHref("myStay", locale)}?group=${groupId}&item=${d.id}`} className="tl-dish-reserve">
-          {t("diningReserve")}
-        </a>
-      </li>
-    );
-  };
+  const dishCard = (d: typeof dishes[number], groupId: string) => (
+    <li key={d.id} className="tl-dish-card">
+      {photoIds.has(d.id) && (
+        <PhotoSpot
+          photo={d.photo!}
+          sizes="(min-width: 760px) 50vw, (min-width: 480px) 80vw, 100vw"
+        />
+      )}
+      <h3 className="tl-dish-name">{d.name}</h3>
+      {d.body && <p className="tl-dish-desc">{d.body}</p>}
+      <p className="tl-dish-price">{d.price.rwf} RWF / {d.price.usd} USD</p>
+      {d.signature && <span className="tl-badge tl-badge--signature">{t("diningSignature")}</span>}
+      <a href={`${pageHref("myStay", locale)}?group=${groupId}&item=${d.id}`} className="tl-dish-reserve">
+        {t("diningReserve")}
+      </a>
+    </li>
+  );
 
   return (
     <section className="tl-section tl-dining" aria-labelledby="tl-dining">
