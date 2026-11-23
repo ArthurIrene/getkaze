@@ -1,6 +1,6 @@
 import { parseStayRequest, stayMessage, stayTarget, type ContentLocale } from "@getkaze/core";
 import { loadSite } from "@/lib/render-page";
-import { routing, type Locale } from "@/i18n/routing";
+import { type Locale } from "@/i18n/routing";
 
 export async function POST(request: Request, { params }: { params: Promise<{ locale: string; site: string }> }) {
   const { locale, site } = await params;

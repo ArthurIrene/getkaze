@@ -52,14 +52,14 @@ test("Luxe gallery page renders gallery photos", async ({ page }) => {
   const res = await page.goto(`${LUXE}/gallery`);
   expect(res?.status()).toBe(200);
   await expect(page.locator(".tl-gallery")).toBeVisible();
-  await expect(page.locator(".tl-gallery-item")).toHaveCount(4);
+  await expect(page.locator(".tl-gallery-item")).toHaveCount(3);
   await expect(page.locator(".tl-gallery-page")).toHaveText("Page 1 of 2");
 });
 
 test("Luxe gallery page 2 renders remaining photos", async ({ page }) => {
   const res = await page.goto(`${LUXE}/gallery?page=2`);
   expect(res?.status()).toBe(200);
-  await expect(page.locator(".tl-gallery-item")).toHaveCount(1);
+  await expect(page.locator(".tl-gallery-item")).toHaveCount(2);
   await expect(page.locator(".tl-gallery-page")).toHaveText("Page 2 of 2");
 });
 

@@ -3,7 +3,7 @@ import type { TemplateProps } from "../../types";
 import { PhotoSpot } from "../parts/photo";
 import { pageHref } from "../parts/links";
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 3;
 
 export async function Gallery({ site, locale, query }: TemplateProps) {
   const t = await getTranslations("Luxe");
