@@ -3,11 +3,17 @@ import { expect, test } from "@playwright/test";
 /** The Luxe demo business is served through the /s/<slug> fallback path. */
 const LUXE = "/s/luxe-musanze";
 
+/** The Field Journal demo business (kinigi-hills) is NOT Luxe. */
+const KINIGI = "/s/kinigi-hills";
+
 /** Page ids Luxe builds (mirrors templates/luxe/pages.ts). */
 const built = ["", "/rooms", "/contact", "/book", "/privacy", "/experiences", "/dining", "/gallery"];
 
 /** Page ids Luxe does not build (must return a clean 404). */
 const notBuilt = ["/credits", "/not-a-page"];
+
+/** Luxe-only routes that must return 404 (never 500) on a non-Luxe site. */
+const luxeOnlyRoutes = ["/my-stay", "/experiences", "/dining", "/gallery"];
 
 test("each built Luxe page returns 200 on the Luxe demo", async ({ page }) => {
   for (const path of built) {
@@ -81,4 +87,40 @@ test("Luxe pages not built return 404", async ({ page }) => {
     const res = await page.goto(`${LUXE}${path}`);
     expect(res?.status()).toBe(404);
   }
+});
+
+test("Luxe-only routes return 404 (never 500) on non-Luxe Kinigi site", async ({ page }) => {
+  for (const path of luxeOnlyRoutes) {
+    const res = await page.goto(`${KINIGI}${path}`);
+    expect(res?.status()).toBe(404);
+  }
+});
+
+test("POST /my-stay/send returns 404 on non-Luxe Kinigi site", async ({ page }) => {
+  const res = await page.request.post(`${KINIGI}/my-stay/send`, {
+    form: { item: "", group: "room", checkIn: "2026-12-01", checkOut: "2026-12-03", name: "Test" },
+  });
+  expect(res.status()).toBe(404);
+});
+
+test("POST /my-stay/send with missing fields returns 400 on Luxe site", async ({ page }) => {
+  const res = await page.request.post(`${LUXE}/my-stay/send`, {
+    form: { item: "", group: "room", checkIn: "", checkOut: "", name: "" },
+  });
+  expect(res.status()).toBe(400);
+});
+
+test("POST /my-stay/send with check-out before check-in returns 400 on Luxe site", async ({ page }) => {
+  const res = await page.request.post(`${LUXE}/my-stay/send`, {
+    form: { item: "101", group: "room", checkIn: "2026-12-05", checkOut: "2026-12-03", name: "Test" },
+  });
+  expect(res.status()).toBe(400);
+});
+
+test("POST /my-stay/send with valid data redirects on Luxe site", async ({ page }) => {
+  const res = await page.request.post(`${LUXE}/my-stay/send`, {
+    form: { item: "101", group: "room", checkIn: "2026-12-01", checkOut: "2026-12-03", name: "Test User" },
+    maxRedirects: 0,
+  });
+  expect(res.status()).toBe(303);
 });
