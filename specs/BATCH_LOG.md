@@ -487,3 +487,17 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Migration: None (seed only).
 - Next session starts here: L4-2 experience detail page, then L4-3 dining, L4-4 gallery.
 
+## Luxe L4-2: /experiences/[slug] detail page | 2026-11-23
+- Built: `apps/web/src/templates/luxe/experience-detail.tsx` page component; `apps/web/src/templates/luxe/sections/experience-detail.tsx` section (hero photo, name, line, distance, duration, category badge, arranged_by badge, price or Enquire, body, what_to_bring list, good_to_know, Plan link to /my-stay); `apps/web/src/app/[locale]/site/[site]/experiences/[slug]/page.tsx` route (force-dynamic, passes slug in query).
+- `apps/web/src/templates/luxe/pages.ts`: `luxePageIds` = [`home`, `rooms`, `contact`, `book`, `privacy`, `myStay`, `experiences`, `experienceDetail`] — only built pages, no `dining`/`gallery`.
+- `apps/web/src/lib/render-page.tsx`: added `case "experienceDetail"` to `importPage()` switch.
+- `apps/web/src/templates/luxe/parts/photo.tsx`: added optional `fetchPriority` prop to `PhotoSpot`.
+- `apps/web/public/luxe.css`: added `.tl-experience-detail`, `.tl-experience-hero`, `.tl-experience-meta`, `.tl-experience-body`, `.tl-experience-list` styles (L4/L5 additions block).
+- Messages: added `experienceDuration`, `experiencePrice`, `experienceEnquire`, `experienceArrangedByOwn`, `experienceArrangedByPartner`, `experienceWhatToBring`, `experienceGoodToKnow` to `Luxe` namespace in en.json and rw.json (rw drafts). Reuses `experiencesCategoryWildlife/Hiking/Culture` and `experiencesPlan` from L4-1.
+- E2e: `e2e/luxe-experience-detail.spec.ts` — all 5 real slugs return 200 with sections + Plan link; Kinyarwanda renders; unknown slug returns clean 404.
+- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 3 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-experience-detail.spec.ts` PASS (4 tests); `e2e/luxe-isolation.spec.ts` PASS; `e2e/luxe-pages.spec.ts` PASS.
+- Weight-check: PASS — /s/luxe-musanze/experiences/gorillas 204.7 KB (JS 145.4 KB), /rw/s/luxe-musanze/experiences/gorillas 134.7 KB, /s/luxe-musanze 284.4 KB, / (Field Journal) 206.0 KB CSS 10.2 KB JS 145.4 KB.
+- availablePages for Field Journal unchanged (only Luxe branch modified; Field Journal uses templates[template] path).
+- Migration: None (seed only).
+- Next session starts here: L4-3 dining page, then L4-4 gallery page.
+
