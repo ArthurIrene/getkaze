@@ -98,7 +98,7 @@ function businessLines(d, slug, bidKey) {
       d.groups
         .map(
           (g) =>
-            `  (${q(id(`group:${g.id}`, scope))}, ${q(bid)}, ${q(g.kind)}, ${q(g.handle)}, ${g.position}, ${j(g.name)}, true)`,
+            `  (${q(id(`group:${g.id}`, scope))}, ${q(bid)}, ${q(g.kind)}, ${q(g.handle ?? g.id)}, ${g.position}, ${j(g.name)}, true)`,
         )
         .join(",\n"),
       `on conflict (id) do update set handle = excluded.handle, position = excluded.position, name = excluded.name, visible = excluded.visible;`,
@@ -114,6 +114,13 @@ function businessLines(d, slug, bidKey) {
   });
   const items = [];
   const media = [];
+  // Map group handle -> uuid for group_id references
+  const groupUuidByHandle = new Map();
+  if (d.groups && d.groups.length > 0) {
+    d.groups.forEach((g) => {
+      groupUuidByHandle.set(g.handle ?? g.id, id(`group:${g.id}`, scope));
+    });
+  }
   d.rooms.forEach((r, i) => {
     const iid = id(`room:${r.id}`, scope);
     items.push({ id: iid, kind: "room_type", handle: r.id, position: i, name: r.name, line: r.line, body: r.body, size: r.size, rwf: r.price.rwf, usd: r.price.usd, maxGuests: r.maxGuests, amenities: r.amenities });
@@ -121,7 +128,7 @@ function businessLines(d, slug, bidKey) {
   });
   d.dining.dishes.forEach((x, i) => {
     const iid = id(`dish:${x.id}`, scope);
-    items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, line: x.line ?? null, body: x.body ?? null, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon, groupId: x.groupId ?? null, signature: x.signature ?? false });
+    items.push({ id: iid, kind: "dish", handle: x.id, position: i, name: x.name, line: x.line ?? null, body: x.body ?? null, rwf: x.price.rwf, usd: x.price.usd, icon: x.icon, groupId: x.groupId ? groupUuidByHandle.get(x.groupId) ?? null : null, signature: x.signature ?? false });
     media.push(mediaRow(x.photo, iid, 0));
     if (x.photos) {
       x.photos.forEach((p, k) => media.push(mediaRow(p, iid, k)));
@@ -154,11 +161,11 @@ function businessLines(d, slug, bidKey) {
   });
 
   lines.push(
-    `insert into public.catalog_items (id, business_id, kind, handle, position, name, line, body, size, rwf, usd, max_guests, amenities, icon, distance, arrange, category, duration, what_to_bring, arranged_by, good_to_know, signature, airport, group_id) values`,
+    `insert into public.catalog_items (id, business_id, kind, handle, position, name, line, body, size, price_rwf, price_usd, max_guests, amenities, icon, distance, arrange, category, duration, what_to_bring, arranged_by, good_to_know, signature, airport, group_id) values`,
     items
       .map(
         (x) =>
-          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line)}, ${j(x.body ?? null)}, ${j(x.size ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"}, ${q(x.category ?? null)}, ${j(x.duration ?? null)}, ${j(x.whatToBring ?? null)}, ${q(x.arrangedBy ?? null)}, ${j(x.goodToKnow ?? null)}, ${x.signature ? "true" : "false"}, ${x.airport ? "true" : "false"}, ${q(x.groupId ?? null)})`,
+          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line)}, ${j(x.body ?? null)}, ${j(x.size ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"}, ${q(x.category ?? null)}, ${j(x.duration ?? null)}, ${j(x.whatToBring ?? null)}, ${q(x.arrangedBy ?? null)}, ${j(x.goodToKnow ?? null)}, ${x.signature ? "true" : "false"}, ${x.airport ? "true" : "null"}, ${q(x.groupId ?? null)})`,
       )
       .join(",\n"),
     `on conflict (id) do update set handle = excluded.handle, position = excluded.position, name = excluded.name, line = excluded.line,`,
