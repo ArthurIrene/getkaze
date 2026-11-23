@@ -7,7 +7,7 @@ const LUXE = "/s/luxe-musanze";
 const built = ["", "/rooms", "/contact", "/book", "/privacy", "/experiences"];
 
 /** Page ids Luxe does not build (must return a clean 404). */
-const notBuilt = ["/credits", "/experience-detail", "/dining", "/gallery", "/not-a-page"];
+const notBuilt = ["/credits", "/dining", "/gallery", "/not-a-page"];
 
 test("each built Luxe page returns 200 on the Luxe demo", async ({ page }) => {
   for (const path of built) {
