@@ -533,9 +533,13 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - E2e: `e2e/luxe-pages.spec.ts` — /gallery page 1 (3 items, "Page 1 of 2"), page 2 (2 items, "Page 2 of 2"), page 99 (clamps to page 2), /rw/gallery (Kinyarwanda "Pejji 1 ku 2"); /gallery moved from `notBuilt` to `built`.
 - Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 2 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-pages.spec.ts` PASS (all gallery tests); `e2e/luxe-isolation.spec.ts` PASS; `e2e/luxe-dining.spec.ts` PASS; `e2e/luxe-experience-detail.spec.ts` PASS.
 - Weight-check: PASS — /s/luxe-musanze/gallery 283.4 KB (JS 145.4 KB), /s/luxe-musanze/rw/experiences/gorillas 206.6 KB, /s/luxe-musanze 286.0 KB, / (Field Journal) 206.7 KB CSS 10.2 KB JS 145.4 KB.
-- Kinigi 404 check: /dining, /gallery, /experiences, /experiences/gorillas, /my-stay all 404; /my-stay/send 500 (POST without form data, expected).
+- Kinigi 404 check: /dining, /gallery, /experiences, /experiences/gorillas, /my-stay all 404; /my-stay/send 404 (POST without form data, was 500 before fix).
 - Kinigi sitemap: identical to origin/staging (only Field Journal pages: home, rooms, contact, book, privacy, credits).
+- Fix: POST /my-stay/send now checks site.template === 'luxe' and returns 404 for non-Luxe sites (was 500); validates required fields and date order, returns 400 for invalid data (was 500).
+- E2e: added Kinigi 404 tests for /my-stay, /experiences, /my-stay/send POST; Luxe 400 tests for missing fields and bad dates; Luxe 303 test for valid data (with maxRedirects: 0).
+- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 2 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-pages.spec.ts` PASS (all tests including new 404/4xx tests); `e2e/luxe-isolation.spec.ts` PASS; `e2e/luxe-dining.spec.ts` PASS; `e2e/luxe-experience-detail.spec.ts` PASS.
+- Weight-check: PASS — /s/luxe-musanze/gallery 283.4 KB (JS 145.4 KB), /s/luxe-musanze/rw/experiences/gorillas 206.6 KB, /s/luxe-musanze 286.0 KB, / (Field Journal) 206.0 KB CSS 10.2 KB JS 145.4 KB.
 - availablePages for Field Journal unchanged (only Luxe branch in render-page.tsx modified; Field Journal uses templates[template] path).
 - Migration: None (seed only).
-- Next session starts here: L4 is complete; next step is rebase onto origin/staging.
+- Next session starts here: push, draft PR, CI, merge, DB deploy, re-run the demo seed on staging.
 
