@@ -518,8 +518,8 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - Next session starts here: L4-4 gallery page.
 
 ## Luxe L4-4: /gallery page with pagination | 2026-11-23
-- Built: `apps/web/src/templates/luxe/gallery.tsx` page component; `apps/web/src/templates/luxe/sections/gallery.tsx` section (server-side pagination of 4 photos per page via `?page=n`, Previous/Next links, no JS, page numbers clamped to valid range, empty state when no gallery photos); `apps/web/src/app/[locale]/site/[site]/gallery/page.tsx` route (passes `searchParams.page` to `renderPage`).
-- Photos where `media.place === 'gallery'` only; 5 gallery photos added to `demoLuxe` media (volcanoes, garden, trail, coffee, fire) — 4 on page 1, 1 on page 2.
+- Built: `apps/web/src/templates/luxe/gallery.tsx` page component; `apps/web/src/templates/luxe/sections/gallery.tsx` section (server-side pagination of 3 photos per page via `?page=n`, Previous/Next links, no JS, page numbers clamped to valid range, empty state when no gallery photos); `apps/web/src/app/[locale]/site/[site]/gallery/page.tsx` route (passes `searchParams.page` to `renderPage`).
+- Photos where `media.place === 'gallery'` only; 5 gallery photos added to `demoLuxe` media (volcanoes, garden, trail, coffee, fire) — 3 on page 1, 2 on page 2.
 - `PhotoSpot` with `loading="lazy"`, no `fetchPriority` (never eager); plain `<a href>` to the 1440 file via `p.src ?? p.srcset?.split(" ")[0]`.
 - `apps/web/src/templates/luxe/pages.ts`: `luxePageIds` = [`home`, `rooms`, `contact`, `book`, `privacy`, `myStay`, `experiences`, `experienceDetail`, `dining`, `gallery`] — only built pages.
 - Core: added `media?: Photo[]` to `SiteData` in `packages/core/src/site/types.ts`; `from-row.ts` filters `place === 'gallery'` items into `galleryMedia`; `view.ts` adds `media: PhotoView[]` to `SiteView` and maps via `toSiteView`.
@@ -527,9 +527,14 @@ No special order between steps 1–3 and 4: the build never reads the database.
 - `apps/web/public/luxe.css`: added `.tl-gallery`, `.tl-gallery-empty`, `.tl-gallery-grid`, `.tl-gallery-item`, `.tl-gallery-pagination`, `.tl-gallery-prev`, `.tl-gallery-next`, `.tl-gallery-page` styles (L4/L5 additions block).
 - Messages: added `galleryTitle`, `galleryLine`, `galleryEmpty`, `galleryPagination`, `galleryPrev`, `galleryNext`, `galleryPage` to `Luxe` namespace in en.json and rw.json (rw drafts).
 - `gen-demo-seed.mjs`: added top-level gallery media generation (`d.media` → `mediaRow(m, null, k)`).
-- E2e: `e2e/luxe-pages.spec.ts` — /gallery page 1 (4 items, "Page 1 of 2"), page 2 (1 item, "Page 2 of 2"), page 99 (clamps to page 2), /rw/gallery (Kinyarwanda "Pejji 1 ku 2"); /gallery moved from `notBuilt` to `built`.
-- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 3 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-pages.spec.ts` PASS (all gallery tests); `e2e/luxe-isolation.spec.ts` PASS.
-- Weight-check: PASS — /s/luxe-musanze/gallery 299.3 KB (JS 145.4 KB), /gallery?page=2 176.9 KB, /s/luxe-musanze 284.7 KB, / (Field Journal) 206.0 KB CSS 10.2 KB JS 145.4 KB.
+- Rebased onto origin/staging (L3c look merged). Resolved conflicts: BATCH_LOG.md (kept both L3c and L4/L5 entries), luxe.css (kept L4/L5 additions block), photo.tsx (removed duplicate fetchPriority attribute).
+- Removed unused `routing` import in `my-stay/send/route.ts`.
+- Gallery changed to 3 photos per page; e2e tests updated (page 1: 3 items, page 2: 2 items).
+- E2e: `e2e/luxe-pages.spec.ts` — /gallery page 1 (3 items, "Page 1 of 2"), page 2 (2 items, "Page 2 of 2"), page 99 (clamps to page 2), /rw/gallery (Kinyarwanda "Pejji 1 ku 2"); /gallery moved from `notBuilt` to `built`.
+- Tests: `pnpm typecheck` (2 packages green), `pnpm lint` (0 errors; 2 pre-existing warnings), `pnpm test` (135 core + 4 web), `pnpm build` green; `e2e/luxe-pages.spec.ts` PASS (all gallery tests); `e2e/luxe-isolation.spec.ts` PASS; `e2e/luxe-dining.spec.ts` PASS; `e2e/luxe-experience-detail.spec.ts` PASS.
+- Weight-check: PASS — /s/luxe-musanze/gallery 283.4 KB (JS 145.4 KB), /s/luxe-musanze/rw/experiences/gorillas 206.6 KB, /s/luxe-musanze 286.0 KB, / (Field Journal) 206.7 KB CSS 10.2 KB JS 145.4 KB.
+- Kinigi 404 check: /dining, /gallery, /experiences, /experiences/gorillas, /my-stay all 404; /my-stay/send 500 (POST without form data, expected).
+- Kinigi sitemap: identical to origin/staging (only Field Journal pages: home, rooms, contact, book, privacy, credits).
 - availablePages for Field Journal unchanged (only Luxe branch in render-page.tsx modified; Field Journal uses templates[template] path).
 - Migration: None (seed only).
 - Next session starts here: L4 is complete; next step is rebase onto origin/staging.
