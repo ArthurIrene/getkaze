@@ -159,6 +159,10 @@ function businessLines(d, slug, bidKey) {
       a.photos.forEach((p, k) => media.push(mediaRow(p, actId, k)));
     }
   });
+  // Top-level gallery photos (place='gallery', no item) for the Luxe gallery page.
+  if (d.media) {
+    d.media.forEach((m, k) => media.push(mediaRow(m, null, k)));
+  }
 
   lines.push(
     `insert into public.catalog_items (id, business_id, kind, handle, position, name, line, body, size, price_rwf, price_usd, max_guests, amenities, icon, distance, arrange, category, duration, what_to_bring, arranged_by, good_to_know, signature, airport, group_id) values`,
