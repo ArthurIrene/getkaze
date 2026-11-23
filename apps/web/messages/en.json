@@ -43,7 +43,11 @@
     "book": "Check availability",
     "privacy": "Privacy",
     "credits": "Photo credits",
-    "myStay": "Your stay plan"
+    "myStay": "Your stay plan",
+    "experiences": "Experiences",
+    "experienceDetail": "Experience",
+    "dining": "Dining",
+    "gallery": "Gallery"
   },
   "Rooms": {
     "title": "Rooms",
@@ -629,6 +633,17 @@
     "myStayErrorDates": "Check-out must be after check-in, from today on, for at most 30 nights.",
     "myStayErrorGuests": "This room sleeps up to {n}.",
     "myStayErrorMissing": "Please pick dates, guests, and your name.",
-    "myStayErrorBack": "Use your browser's back button to fix it; your answers are kept."
+    "myStayErrorBack": "Use your browser's back button to fix it; your answers are kept.",
+    "experiencesTitle": "Experiences",
+    "experiencesLine": "what you can do around here",
+    "experiencesFilterAll": "All",
+    "experiencesFilterWildlife": "Wildlife",
+    "experiencesFilterHiking": "Hiking",
+    "experiencesFilterCulture": "Culture",
+    "experiencesPlan": "Plan this experience",
+    "experiencesCategoryWildlife": "Wildlife",
+    "experiencesCategoryHiking": "Hiking",
+    "experiencesCategoryCulture": "Culture",
+    "experiencesEmpty": "No experiences available yet."
   }
 }

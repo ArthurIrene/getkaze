@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/routing";
 const luxePagePaths: Record<string, string> = {
   ...pagePaths,
   myStay: "/my-stay",
+  experiences: "/experiences",
 };
 
 /** Localised path of a page inside the current Luxe site. Links only to pages Luxe renders. */

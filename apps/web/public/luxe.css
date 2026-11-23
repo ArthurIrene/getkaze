@@ -962,3 +962,23 @@ html {
 .tl-my-stay-item { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--paper); }
 .tl-my-stay-privacy { font-size: 0.85rem; margin-top: 8px; }
 .tl-field-error { display: block; color: #c0392b; font-size: 0.8rem; margin-top: 4px; }
+
+/* Experiences list page */
+.tl-experiences { margin: 0 16px 24px; display: flex; flex-direction: column; gap: 16px; }
+.tl-experiences-filter { margin-bottom: 8px; }
+.tl-filter { display: inline-block; }
+.tl-filter-summary { font-size: 0.9rem; font-weight: 700; cursor: pointer; list-style: none; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; display: inline-block; }
+.tl-filter-summary::-webkit-details-marker { display: none; }
+.tl-filter-list { position: absolute; margin: 6px 0 0; padding: 8px; background: var(--paper); border: 1px solid var(--border); border-radius: 8px; list-style: none; min-width: 160px; z-index: 20; }
+.tl-filter-list a { display: block; padding: 6px 10px; color: var(--ink); text-decoration: none; border-radius: 6px; }
+.tl-filter-list a:hover { background: var(--border); }
+.tl-activity-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; list-style: none; margin: 0; padding: 0; }
+.tl-activity-card { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--paper); }
+.tl-activity-card .tl-img { width: 100%; height: 180px; object-fit: cover; }
+.tl-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 999px; }
+.tl-badge--category { background: var(--accent); color: var(--paper); margin: 8px; align-self: flex-start; position: relative; top: -180px; z-index: 2; }
+.tl-activity-name { margin: 8px 12px 2px; font-size: 1rem; }
+.tl-activity-line { margin: 0 12px 2px; font-size: 0.9rem; color: var(--muted); }
+.tl-activity-distance { margin: 0 12px 8px; font-size: 0.8rem; color: var(--accent); }
+.tl-activity-plan { display: block; margin: auto 12px 12px; padding: 8px 12px; background: var(--ink); color: var(--paper); text-decoration: none; text-align: center; border-radius: 8px; font-weight: 700; font-size: 0.9rem; }
+.tl-empty { padding: 24px; text-align: center; color: var(--muted); }

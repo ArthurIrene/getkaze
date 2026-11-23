@@ -4,10 +4,10 @@ import { expect, test } from "@playwright/test";
 const LUXE = "/s/luxe-musanze";
 
 /** Page ids Luxe builds (mirrors templates/luxe/pages.ts). */
-const built = ["", "/rooms", "/contact", "/book", "/privacy"];
+const built = ["", "/rooms", "/contact", "/book", "/privacy", "/experiences"];
 
 /** Page ids Luxe does not build (must return a clean 404). */
-const notBuilt = ["/experiences", "/my-stay", "/credits", "/not-a-page"];
+const notBuilt = ["/credits", "/experience-detail", "/dining", "/gallery", "/not-a-page"];
 
 test("each built Luxe page returns 200 on the Luxe demo", async ({ page }) => {
   for (const path of built) {
@@ -34,6 +34,12 @@ test("Luxe book page renders the request form", async ({ page }) => {
   const res = await page.goto(`${LUXE}/book`);
   expect(res?.status()).toBe(200);
   await expect(page.locator("form#tl-book")).toBeVisible();
+});
+
+test("Luxe experiences page renders activity cards", async ({ page }) => {
+  const res = await page.goto(`${LUXE}/experiences`);
+  expect(res?.status()).toBe(200);
+  await expect(page.locator(".tl-activity-card").first()).toBeVisible();
 });
 
 test("Luxe privacy page renders the notice", async ({ page }) => {

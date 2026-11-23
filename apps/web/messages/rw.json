@@ -43,7 +43,11 @@
     "book": "Reba ibyumba bihari",
     "privacy": "Ubuzima bwite",
     "credits": "Abafashe amafoto",
-    "myStay": "Itegerezo ryawe ry'ijoro"
+    "myStay": "Itegerezo ryawe ry'ijoro",
+    "experiences": "Ibikorwa",
+    "experienceDetail": "Ikorwa",
+    "dining": "Kurya",
+    "gallery": "Amafoto"
   },
   "Rooms": {
     "title": "Ibyumba",
@@ -616,6 +620,17 @@
     "myStayErrorDates": "Itariki yo kugenda igomba kuba nyuma y'iyo kwinjira, uhereye uyu munsi, amajoro atarenze 30.",
     "myStayErrorGuests": "Iki cyumba cyakira abantu bagera kuri {n}.",
     "myStayErrorMissing": "Hitamo amatariki, abashyitsi, n'izina ryawe.",
-    "myStayErrorBack": "Kanda \"subira inyuma\" muri mushakisha yawe; ibyo wujuje biracyahari."
+    "myStayErrorBack": "Kanda \"subira inyuma\" muri mushakisha yawe; ibyo wujuje biracyahari.",
+    "experiencesTitle": "Ibikorwa",
+    "experiencesLine": "ibyo ushobora gukora hafi",
+    "experiencesFilterAll": "Byose",
+    "experiencesFilterWildlife": "Ibisokozo",
+    "experiencesFilterHiking": "Guhinga",
+    "experiencesFilterCulture": "Umuco",
+    "experiencesPlan": "Tegura icyo korwa",
+    "experiencesCategoryWildlife": "Ibisokozo",
+    "experiencesCategoryHiking": "Guhinga",
+    "experiencesCategoryCulture": "Umuco",
+    "experiencesEmpty": "Nta bikorwa bihari."
   }
 }

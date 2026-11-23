@@ -158,7 +158,7 @@ function businessLines(d, slug, bidKey) {
     items
       .map(
         (x) =>
-          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line)}, ${j(x.body ?? null)}, ${j(x.size ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"}, ${j(x.category ?? null)}, ${j(x.duration ?? null)}, ${j(x.whatToBring ?? null)}, ${q(x.arrangedBy ?? null)}, ${j(x.goodToKnow ?? null)}, ${x.signature ? "true" : "false"}, ${x.airport ? "true" : "false"}, ${q(x.groupId ?? null)})`,
+          `  (${q(x.id)}, ${q(bid)}, ${q(x.kind)}, ${q(x.handle)}, ${x.position}, ${j(x.name)}, ${j(x.line)}, ${j(x.body ?? null)}, ${j(x.size ?? null)}, ${x.rwf ?? "null"}, ${x.usd ?? "null"}, ${x.maxGuests ?? "null"}, ${j(x.amenities ?? [])}, ${q(x.icon ?? null)}, ${j(x.distance ?? null)}, ${x.arrange ? "true" : "false"}, ${q(x.category ?? null)}, ${j(x.duration ?? null)}, ${j(x.whatToBring ?? null)}, ${q(x.arrangedBy ?? null)}, ${j(x.goodToKnow ?? null)}, ${x.signature ? "true" : "false"}, ${x.airport ? "true" : "false"}, ${q(x.groupId ?? null)})`,
       )
       .join(",\n"),
     `on conflict (id) do update set handle = excluded.handle, position = excluded.position, name = excluded.name, line = excluded.line,`,

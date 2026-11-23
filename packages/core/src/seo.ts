@@ -127,6 +127,22 @@ export function pageSeo(
       description = "Review and send your stay plan via WhatsApp.";
       title = labels.pageTitle({ page: labels.pageName(page), name });
       break;
+    case "experiences":
+      description = "Experiences and activities around the lodge.";
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
+    case "experienceDetail":
+      description = "Experience details and booking.";
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
+    case "dining":
+      description = "Dining options at the lodge.";
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
+    case "gallery":
+      description = "Photo gallery of the lodge and surroundings.";
+      title = labels.pageTitle({ page: labels.pageName(page), name });
+      break;
   }
 
   const shownLocale = indexed.includes(locale) ? locale : "en";

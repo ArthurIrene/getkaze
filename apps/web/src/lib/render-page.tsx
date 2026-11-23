@@ -10,15 +10,17 @@ import { luxePageIds } from "@/templates/luxe/pages";
 
 /** Pages this site has that its template implements. */
 export function availablePages(template: TemplateId, view: Parameters<typeof sitePages>[0]): PageId[] {
+  if (template === "luxe") {
+    const base = sitePages(view).filter((id) => luxePageIds.includes(id));
+    // Luxe-only pages (excluded from sitePages by the core template) are added here.
+    for (const id of luxePageIds) {
+      if (!base.includes(id)) base.push(id);
+    }
+    return base;
+  }
   const pages = templates[template];
   if (pages) {
     return sitePages(view).filter((id) => id in pages);
-  }
-  if (template === "luxe") {
-    const base = sitePages(view).filter((id) => luxePageIds.includes(id));
-    // myStay is Luxe-only but not in sitePages (added here)
-    if (luxePageIds.includes("myStay")) return [...base, "myStay"];
-    return base;
   }
   return [];
 }
@@ -63,6 +65,10 @@ async function importPage(page: PageId): Promise<{ default: unknown } | undefine
       return await import("@/templates/luxe/book");
     case "privacy":
       return await import("@/templates/luxe/privacy");
+    case "myStay":
+      return await import("@/templates/luxe/my-stay");
+    case "experiences":
+      return await import("@/templates/luxe/experiences");
     default:
       return undefined;
   }

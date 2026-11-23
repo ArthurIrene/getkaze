@@ -21,6 +21,10 @@ export async function pageMetadata(page: PageId, locale: Locale, siteKey: string
     pageName: (id) => {
       if (id === "privacy") return p("title");
       if (id === "myStay") return "Your stay plan";
+      if (id === "experiences") return "Experiences";
+      if (id === "experienceDetail") return "Experience";
+      if (id === "dining") return "Dining";
+      if (id === "gallery") return "Gallery";
       return n(id);
     },
     homeDescription: (v) => t("homeDescription", v),

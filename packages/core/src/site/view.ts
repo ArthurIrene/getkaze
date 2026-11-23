@@ -61,7 +61,23 @@ export type SiteView = {
     photo: PhotoView;
     dishes: { id: string; name: string; price: PriceView; icon: IconKey; photo: PhotoView }[];
   };
-  activities: { id: string; name: string; line: string; distance: string; icon: IconKey; arrange: boolean; photo?: PhotoView }[];
+  activities: {
+    id: string;
+    name: string;
+    line: string;
+    distance: string;
+    icon: IconKey;
+    arrange: boolean;
+    photo?: PhotoView;
+    category?: "wildlife" | "hiking" | "culture";
+    duration?: string;
+    price?: PriceView;
+    body?: string;
+    whatToBring?: string[];
+    arrangedBy?: "own_guides" | "licensed_partner";
+    goodToKnow?: string;
+    photos?: PhotoView[];
+  }[];
   /** Credited photos (openly licensed), for the "Photo credits" page; empty when there are none. */
   credits: CreditView[];
   host: { name: string; greeting: string; note: string; photo: PhotoView };
@@ -169,6 +185,14 @@ export function toSiteView(site: SiteData, locale: ContentLocale): SiteView {
       icon: a.icon,
       arrange: a.arrange,
       ...(a.photo ? { photo: photo(a.photo) } : {}),
+      ...(a.category ? { category: a.category } : {}),
+      ...(a.duration ? { duration: t(a.duration) } : {}),
+      ...(a.price ? { price: prices(a.price) } : {}),
+      ...(a.body ? { body: t(a.body) } : {}),
+      ...(a.whatToBring ? { whatToBring: a.whatToBring.map(t) } : {}),
+      ...(a.arrangedBy ? { arrangedBy: a.arrangedBy } : {}),
+      ...(a.goodToKnow ? { goodToKnow: t(a.goodToKnow) } : {}),
+      ...(a.photos ? { photos: a.photos.map(photo) } : {}),
     })),
     credits: photoCredits(site, t),
     host: { name: site.host.name, greeting: t(site.host.greeting), note: t(site.host.note), photo: photo(site.host.photo) },
